@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import JoinButton from './JoinButton';
+import useInPageJoinVisible from './useInPageJoin';
 import { LAPTOPS, POOL } from '../content';
 
 function Corner({ className }: { className: string }) {
@@ -14,7 +15,10 @@ function Corner({ className }: { className: string }) {
  * to that section's own Join button and stays away for the rest of the page.
  */
 export default function StickyJoin() {
-  const [visible, setVisible] = useState(false);
+  const [inRange, setInRange] = useState(false);
+  // …and it steps aside while a section's own Join button is on screen (one primary Join in view)
+  const inPageJoin = useInPageJoinVisible();
+  const visible = inRange && !inPageJoin;
 
   useEffect(() => {
     const hero = document.getElementById('hero');
@@ -25,7 +29,7 @@ export default function StickyJoin() {
       // same rule as the navbar Join: the hero is mostly gone (its last strip may sit under the navbar after the snap)
       const pastHero = hero.getBoundingClientRect().bottom <= window.innerHeight * 0.35;
       const reachedFinal = finalCall.getBoundingClientRect().top < window.innerHeight;
-      setVisible(pastHero && !reachedFinal);
+      setInRange(pastHero && !reachedFinal);
     };
     update();
     window.addEventListener('scroll', update, { passive: true });

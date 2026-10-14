@@ -112,11 +112,18 @@ function Podium({ box, delay, label, children }: { box: Box; delay: string; labe
   );
 }
 
-/** Medal coin: drops in after its podium, flips on hover. */
-function Coin({ box, origin, delay, children }: { box: Box; origin: string; delay: string; children: ReactNode }) {
+/**
+ * The medal artwork is scaled in towards its flag's centre (the flag stays its Figma size), so the
+ * ring around each flag is about half as thick: ring ≈ 15% of the flag's width on all three.
+ * (Figma: the flag fills 62% of the silver/bronze disc, 68% of the gold one.)
+ */
+const MEDAL_RING_SCALE = { silver: 0.806, bronze: 0.806, gold: 0.884 };
+
+/** Medal coin: drops in after its podium. No flip afterwards; `float` = keeps gently hovering (India's medal). */
+function Coin({ box, origin, delay, float = false, children }: { box: Box; origin: string; delay: string; float?: boolean; children: ReactNode }) {
   return (
     <div data-coin className="absolute" style={{ ...pos(box), '--d': delay, transformOrigin: origin }}>
-      <div className="lb-spin relative h-full w-full" style={{ transformOrigin: origin }}>
+      <div className={`relative h-full w-full ${float ? 'lb-float' : ''}`} style={{ transformOrigin: origin }}>
         {children}
       </div>
     </div>
@@ -131,8 +138,11 @@ function PodiumScene({ rolling }: { rolling: boolean }) {
         <Layers layers={SILVER_BELOW} />
         <Details at={DETAILS.silver} crown="silver-crown" crownSize={[82.455, 53.479]} gaps={[16.815, 20]} nameSize={36} scoreSize={44} scoreColor="#ffffff" shadow={[4.139, 12.418]} leader={TOP.silver} rolling={rolling} />
         <Layers layers={SILVER_ABOVE} />
-        <Coin box={SILVER_MEDAL_BOX} origin="50% 50%" delay="0.2s">
-          <Layers layers={SILVER_MEDAL} />
+        <Coin box={SILVER_MEDAL_BOX} origin="50% 50%" delay="0.2s" float>
+          {/* medal artwork pulled in towards the flag: thinner ring, same flag size */}
+          <div className="absolute inset-0" style={{ transform: `scale(${MEDAL_RING_SCALE.silver})`, transformOrigin: '49.7% 49.91%' }}>
+            <Layers layers={SILVER_MEDAL} />
+          </div>
           <Flag country="india" variant="podium-india" className="absolute" style={pos(SILVER_FLAG_BOX)} />
         </Coin>
       </Podium>
@@ -142,7 +152,7 @@ function PodiumScene({ rolling }: { rolling: boolean }) {
           <Img src="bronze-crystal" box={BRONZE_PODIUM.crystal} />
         </div>
         <Coin box={BRONZE_MEDAL.frame} origin="50% 18.79%" delay="0s">
-          <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute inset-0 overflow-hidden" style={{ transform: `scale(${MEDAL_RING_SCALE.bronze})`, transformOrigin: '50.21% 18.83%' }}>
             <Img src="bronze-medal" box={BRONZE_MEDAL.medal} />
           </div>
           <Flag country="usa" variant="podium-usa-bronze" className="absolute" style={pos(BRONZE_MEDAL.flag)} />
@@ -161,7 +171,7 @@ function PodiumScene({ rolling }: { rolling: boolean }) {
           />
         </div>
         <Coin box={GOLD_MEDAL.frame} origin="50% 18.83%" delay="0.45s">
-          <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute inset-0 overflow-hidden" style={{ transform: `scale(${MEDAL_RING_SCALE.gold})`, transformOrigin: '50.12% 18.86%' }}>
             <Img src="gold-medal" box={GOLD_MEDAL.medal} />
           </div>
           <Flag country="usa" variant="podium-usa-gold" className="absolute" style={pos(GOLD_MEDAL.flag)} />

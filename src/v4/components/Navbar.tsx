@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import JoinButton from './JoinButton';
+import useInPageJoinVisible from './useInPageJoin';
 
 // Anchor jumps (nav + pedestal links) land below the bar instead of under it
 const SCROLL_PADDING = ['scroll-pt-16', 'lg:scroll-pt-20'];
@@ -7,8 +8,7 @@ const SCROLL_PADDING = ['scroll-pt-16', 'lg:scroll-pt-20'];
 /** Quick links, in page order. Each id is a section on the page. */
 const LINKS = [
   { id: 'moment', label: 'Champion' },
-  { id: 'basis', label: 'The Pool' },
-  { id: 'giveaway', label: 'Laptops' },
+  { id: 'enter', label: 'How to enter' },
   { id: 'leaderboard', label: 'Leaderboard' },
   { id: 'faqs', label: 'FAQs' },
 ];
@@ -16,14 +16,16 @@ const LINKS = [
 /**
  * Fixed top bar: co-brand logos, quick links to each section, and a Join button.
  * Transparent over the hero; picks up a dark glass backdrop once the page scrolls.
- * - Desktop: links inline (the one for the section on screen is highlighted). Join is an outline
- *   button on the first fold (next to the hero's own big Join) and turns primary once the hero scrolls away.
+ * - Desktop: links inline (the one for the section on screen is highlighted). Join is an outline button
+ *   while a section's own Join is on screen (hero, How to enter, final call) and the primary green one otherwise.
  * - Phones: links in a menu sheet; Join stays in the bottom bar (StickyJoin).
  * The hero keeps a same-height spacer (h-16 / lg:h-20) so nothing sits under the bar.
  */
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
-  const [pastHero, setPastHero] = useState(false);
+  // a section's own Join button is on screen → the navbar Join steps back to its outline style
+  const inPageJoin = useInPageJoinVisible();
+  const primary = !inPageJoin;
   const [active, setActive] = useState<string | null>(null);
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -32,8 +34,6 @@ export default function Navbar() {
     root.classList.add(...SCROLL_PADDING);
     const onScroll = () => {
       setScrolled(window.scrollY > 8);
-      const hero = document.getElementById('hero');
-      setPastHero(!!hero && hero.getBoundingClientRect().bottom <= window.innerHeight * 0.35);
       // Active link: the last section whose top has passed the middle of the screen
       const mid = window.innerHeight / 2;
       let current: string | null = null;
@@ -92,21 +92,20 @@ export default function Navbar() {
           </ul>
         </nav>
 
-        {/* Desktop Join: a quiet outline on the first fold (the hero has its own big Join),
-            turning into the primary green button once the hero scrolls away. Both sit in the
-            same spot and crossfade; only the visible one can be tapped. */}
+        {/* Desktop Join: a quiet outline while a section's own Join is on screen, otherwise the
+            primary green button. Both sit in the same spot and crossfade; only the visible one can be tapped. */}
         <div className="hidden shrink-0 md:ml-auto md:grid lg:ml-0">
           <div
-            aria-hidden={pastHero}
-            inert={pastHero}
-            className={`col-start-1 row-start-1 transition-opacity duration-300 motion-reduce:transition-none ${pastHero ? 'pointer-events-none opacity-0' : 'opacity-100'}`}
+            aria-hidden={primary}
+            inert={primary}
+            className={`col-start-1 row-start-1 transition-opacity duration-300 motion-reduce:transition-none ${primary ? 'pointer-events-none opacity-0' : 'opacity-100'}`}
           >
             <JoinButton size="nav" variant="outline" location="navbar" inPage={false} />
           </div>
           <div
-            aria-hidden={!pastHero}
-            inert={!pastHero}
-            className={`col-start-1 row-start-1 transition-opacity duration-300 motion-reduce:transition-none ${pastHero ? 'opacity-100' : 'pointer-events-none opacity-0'}`}
+            aria-hidden={!primary}
+            inert={!primary}
+            className={`col-start-1 row-start-1 transition-opacity duration-300 motion-reduce:transition-none ${primary ? 'opacity-100' : 'pointer-events-none opacity-0'}`}
           >
             <JoinButton size="nav" location="navbar" inPage={false} />
           </div>

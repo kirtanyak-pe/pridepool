@@ -1,8 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import ArenaHero from '../sections/ArenaHero';
 import Champion from '../sections/Champion';
-import Pool from '../sections/Pool';
-import Bonus from '../sections/Bonus';
+import HowToEnter from '../sections/HowToEnter';
 import Leaderboard from '../leaderboard/Leaderboard';
 import Faqs from '../sections/Faqs';
 import Footer from '../sections/Footer';
@@ -14,7 +13,7 @@ import Navbar from '../components/Navbar';
 import { onLanded } from '../components/landed';
 
 /** Sections the page snaps to, in page order */
-const SNAP_SECTIONS = ['hero', 'moment', 'basis', 'giveaway', 'leaderboard', 'join', 'faqs'];
+const SNAP_SECTIONS = ['hero', 'moment', 'enter', 'leaderboard', 'join', 'faqs'];
 
 // Safety net: scrolling unlocks after this even if the hero intro never reports back
 const INTRO_LOCK_MAX_MS = 10000;
@@ -25,7 +24,7 @@ const LANDING_HOLD_MS = 500;
 /**
  * Redesign V4 — the final version (started as a copy of V3; self-contained: everything it uses lives in src/v4).
  * First screen: reward stage with all three touchpoints visible.
- * Then the three rounds, the Figma leaderboard,
+ * Then the champion's moment, how to enter, the Figma leaderboard,
  * the final call, a short FAQ and a slim footer. The page scales like an image (html.scale-artboard).
  */
 export default function Home({ badgeStyle = 'medal' }: { badgeStyle?: 'medal' | 'stamp' }) {
@@ -105,7 +104,7 @@ export default function Home({ badgeStyle = 'medal' }: { badgeStyle?: 'medal' | 
     return () => stops.forEach((stop) => stop());
   }, []);
   // In-page links (#section) scroll smoothly. index.html has a <base href> for the assets, which
-  // would otherwise turn "#basis" into a page load (dropping ?v=…). "#" alone is the Join placeholder.
+  // would otherwise turn "#enter" into a page load (dropping ?v=…). "#" alone is the Join placeholder.
   useEffect(() => {
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const onClick = (e: MouseEvent) => {
@@ -171,11 +170,8 @@ export default function Home({ badgeStyle = 'medal' }: { badgeStyle?: 'medal' | 
         {/* Round 1 · The Champion */}
         <Champion />
 
-        {/* Round 2 · The Pool */}
-        <Pool />
-
-        {/* Round 3 · The Bonus */}
-        <Bonus />
+        {/* How to enter: the steps to join the pool and grab the prize (replaces The Pool + The Bonus) */}
+        <HowToEnter />
 
         <Leaderboard />
         <FinalCall />

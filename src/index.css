@@ -854,6 +854,17 @@ html.scale-artboard {
   to { transform: perspective(40rem) rotateY(360deg); }
 }
 
+/* V4: India's medal (World #2) keeps gently hovering once it has landed: up and slightly bigger,
+   then back down to normal. No medal flips. */
+.lb.lb-in .lb-float { animation: lb-float 2.6s ease-in-out calc(var(--d, 0s) + 1.4s) infinite; }
+@keyframes lb-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-14%) scale(1.08); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .lb-float { animation: none !important; }
+}
+
 /* Light sweeping across the gold crystal every few seconds */
 .lb-shimmer {
   background: linear-gradient(105deg, transparent 35%, rgba(255, 255, 255, 0.35) 50%, transparent 65%) no-repeat;
@@ -1004,6 +1015,35 @@ html.scale-artboard {
 }
 .fold:not([data-landed]) .odo-strip {
   animation-play-state: paused;
+}
+
+/* V4 How to enter: stepper */
+.step-fill {
+  width: 0%;
+  animation: step-fill linear forwards; /* duration set inline = how long the step stays */
+}
+@keyframes step-fill {
+  to { width: 100%; }
+}
+.step-in {
+  animation: step-in 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+@keyframes step-in {
+  from { opacity: 0; transform: translateY(0.625rem); }
+  to { opacity: 1; transform: none; }
+}
+/* a tap landing on the Join button (step 1 visual) */
+.step-tap {
+  animation: step-tap 1.8s ease-out infinite;
+}
+@keyframes step-tap {
+  0% { opacity: 0; transform: scale(1.6); }
+  25% { opacity: 1; transform: scale(0.8); }
+  45% { opacity: 0.9; transform: scale(1); }
+  100% { opacity: 0; transform: scale(1.8); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .step-in, .step-tap { animation: none; }
 }
 
 /* V4 hero Join: one attention shake once the whole intro has played */

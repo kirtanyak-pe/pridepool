@@ -42,6 +42,6 @@ export const JOIN_LABEL = `Join the ${POOL.amount} Pool`;
 /** Page anchors for the three story touchpoints (each hero tile scrolls to one). */
 export const ANCHORS = {
   champion: '#moment',
-  pool: '#basis',
-  laptops: '#giveaway',
+  pool: '#enter',
+  laptops: '#enter',
 };
