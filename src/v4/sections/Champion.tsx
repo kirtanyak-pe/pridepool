@@ -146,7 +146,7 @@ export default function Champion() {
           <div data-reveal="true" className="order-1 text-center lg:text-left">
             <p className="inline-flex items-center gap-2 rounded-full neu-inset px-3.5 py-1.5 text-[0.6875rem] font-bold uppercase tracking-[0.16em] text-accent">
               <span aria-hidden="true" className="h-1.5 w-1.5 rotate-45 bg-accent" />
-              Round 1 · The Champion
+              From the championship stage
             </p>
             <h2
               id="champion-heading"
