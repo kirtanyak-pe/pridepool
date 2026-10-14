@@ -87,25 +87,24 @@ function Stamp({ className = '', onLanded }: { className?: string; onLanded?: ()
 
 /** Stack of ₹ credit coins — the pool, on the left pedestal. */
 const BUBBLES = [
-  { left: '8%', bottom: '55%', ms: '3.2s', delay: '1.2s' },
-  { left: '62%', bottom: '70%', ms: '3.8s', delay: '2.1s' },
-  { left: '30%', bottom: '85%', ms: '3.4s', delay: '2.9s' },
-  { left: '78%', bottom: '50%', ms: '3s', delay: '3.6s' },
-  { left: '45%', bottom: '60%', ms: '3.6s', delay: '4.4s' },
+  { left: '8%', bottom: '-1.5rem', ms: '3.2s', delay: '1.2s' },
+  { left: '62%', bottom: '-1.5rem', ms: '3.8s', delay: '2.1s' },
+  { left: '30%', bottom: '-1.5rem', ms: '3.4s', delay: '2.9s' },
+  { left: '78%', bottom: '-1.5rem', ms: '3s', delay: '3.6s' },
+  { left: '45%', bottom: '-1.5rem', ms: '3.6s', delay: '4.4s' },
 ];
 
 function CoinBubbles() {
   return (
-    <div className="story-pop relative flex flex-col items-center" style={{ animationDelay: '0.9s' }}>
-      <div aria-hidden="true" className="absolute left-1/2 top-1/2 -z-10 h-[160%] w-[160%] -translate-x-1/2 -translate-y-1/2 rounded-full" style={{ background: 'radial-gradient(closest-side, rgb(var(--glow)/0.35), transparent)' }} />
-      {/* Empty slot the old coin stack filled, so the card keeps its height */}
-      <div aria-hidden="true" className="h-[4.5rem] w-14 lg:h-[7.375rem] lg:w-24" />
-      {/* ₹ coins bubbling up over the card, forever (same motion as the story version: .story-coin) */}
+    // Zero-height anchor at the card's top edge: coins start hidden behind the card and rise out of it
+    <div className="story-pop relative h-0 w-full" style={{ animationDelay: '0.9s' }}>
+      <div aria-hidden="true" className="absolute bottom-0 left-1/2 -z-10 h-24 w-24 -translate-x-1/2 translate-y-1/2 rounded-full lg:h-40 lg:w-40" style={{ background: 'radial-gradient(closest-side, rgb(var(--glow)/0.35), transparent)' }} />
+      {/* ₹ coins bubbling up from behind the card, forever (same motion as the story version: .story-coin) */}
       {BUBBLES.map((b, i) => (
         <span
           key={`b${i}`}
           aria-hidden="true"
-          className="story-coin key-cap-sm pointer-events-none absolute -z-10 flex h-5 w-5 items-center justify-center rounded-full text-[0.625rem] font-extrabold text-accent lg:h-8 lg:w-8 lg:text-[0.875rem]"
+          className="story-coin key-cap-sm pointer-events-none absolute flex h-5 w-5 items-center justify-center rounded-full text-[0.625rem] font-extrabold text-accent lg:h-8 lg:w-8 lg:text-[0.875rem]"
           style={{ left: b.left, bottom: b.bottom, '--c-ms': b.ms, '--c-delay': b.delay }}
         >
           ₹
@@ -238,7 +237,7 @@ export default function ArenaHero({ badgeStyle = 'medal', ready = true }: { badg
         {/* The reward stage — everything stays on screen */}
         <div className="relative mx-auto flex min-h-0 w-full max-w-[22rem] items-end justify-center gap-1.5 lg:max-w-none lg:flex-1 lg:gap-4 lg:pb-0 lg:pt-0">
           {/* Side cards tuck in under the photo's faded bottom edge, towards its centre */}
-          <Pedestal href={ANCHORS.pool} item={<CoinBubbles />} value={POOL.short} label={POOL.label} className="z-10 -mr-9 w-[7.5rem] lg:-mr-20 lg:w-[13.5rem]" delay="0.35s" />
+          <Pedestal href={ANCHORS.pool} item={<CoinBubbles />} tucked value={POOL.short} label={POOL.label} className="z-10 -mr-9 w-[7.5rem] lg:-mr-20 lg:w-[13.5rem]" delay="0.35s" />
           <Pedestal
             href={ANCHORS.champion}
             item={<Anish badge={badgeStyle} showBadge={titleDone} onBadgeLanded={onBadgeLanded} />}

@@ -1,6 +1,7 @@
 /**
  * Decorative candlestick chart: an uptrend whose price axis climbs to ₹1 Cr — the pool.
- * Candles grow one by one, a trend line draws on, the last candle pulses "live".
+ * One left→right pass: candles grow one by one while the trend line draws along them,
+ * the last candle lands and pulses "live", then the price lines + labels appear (top to bottom).
  * Trading colours (green up / red down) stay fixed, whatever the theme.
  */
 
@@ -24,9 +25,10 @@ const GRID = [
 ];
 
 const CANDLE_STAGGER_MS = 85;
-
-/** A price line shows up when the first candle's high reaches it (y grows downward). */
-const reachDelay = (y: number) => Math.max(0, CANDLES.findIndex(([, , h]) => h <= y)) * CANDLE_STAGGER_MS;
+const CANDLE_GROW_MS = 500;
+/** When the last candle has fully grown: the chart pass is done */
+const CHART_END_MS = (CANDLES.length - 1) * CANDLE_STAGGER_MS + CANDLE_GROW_MS;
+const LABEL_STAGGER_MS = 120;
 
 export default function CandleBackdrop({ className = '' }: { className?: string }) {
   const step = 17;
@@ -40,8 +42,8 @@ export default function CandleBackdrop({ className = '' }: { className?: string 
       preserveAspectRatio="xMidYMax meet"
       className={`pointer-events-none ${className}`}
     >
-      {GRID.map((g) => (
-        <g key={g.y} className="grid-reveal" style={{ animationDelay: `${reachDelay(g.y)}ms` }}>
+      {GRID.map((g, i) => (
+        <g key={g.y} className="grid-reveal" style={{ animationDelay: `${CHART_END_MS + i * LABEL_STAGGER_MS}ms` }}>
           <line x1="0" x2="314" y1={g.y} y2={g.y} stroke="currentColor" strokeOpacity="0.12" strokeDasharray="2 4" />
           <text x="338" y={g.y + 2.5} textAnchor="end" fontSize="7" fontFamily="ui-monospace, monospace" fill="currentColor" fillOpacity="0.45">
             {g.label}
@@ -55,14 +57,23 @@ export default function CandleBackdrop({ className = '' }: { className?: string 
         const color = up ? UP : DOWN;
         const last = i === CANDLES.length - 1;
         return (
-          <g key={i} className={`candle-grow ${last ? 'candle-live' : ''}`} style={{ animationDelay: `${i * CANDLE_STAGGER_MS}ms` }}>
+          <g
+            key={i}
+            className="candle-grow"
+            style={
+              last
+                ? // grow in like the others, then pulse "live" (one shorthand so neither animation overrides the other)
+                  { animation: `candle-grow ${CANDLE_GROW_MS}ms cubic-bezier(0.2, 0.8, 0.3, 1) ${i * CANDLE_STAGGER_MS}ms both, candle-live 1.6s ease-in-out ${CHART_END_MS + 400}ms infinite alternate` }
+                : { animationDelay: `${i * CANDLE_STAGGER_MS}ms` }
+            }
+          >
             <line x1={x + width / 2} x2={x + width / 2} y1={h} y2={l} stroke={color} strokeWidth="1" />
             <rect x={x} y={Math.min(o, c)} width={width} height={Math.max(2, Math.abs(o - c))} rx="1" fill={color} fillOpacity={up ? 0.9 : 0.75} />
           </g>
         );
       })}
 
-      <path d={closes} pathLength={1} className="chart-draw" fill="none" stroke="currentColor" strokeOpacity="0.55" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
+      <path d={closes} pathLength={1} className="chart-draw" style={{ animationDelay: '0ms', animationDuration: `${CHART_END_MS}ms`, animationTimingFunction: 'linear' }} fill="none" stroke="currentColor" strokeOpacity="0.55" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
 }
