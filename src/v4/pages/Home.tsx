@@ -40,7 +40,7 @@ export default function Home({ badgeStyle = 'medal' }: { badgeStyle?: 'medal' | 
     let settled = window.scrollY;
     let timer = 0;
     const roundOneTop = () => {
-      const wrap = document.getElementById('moment')?.parentElement;
+      const wrap = document.getElementById('moment');
       if (!wrap) return null;
       const pad = parseFloat(getComputedStyle(root).scrollPaddingTop) || 0;
       return Math.round(wrap.getBoundingClientRect().top + window.scrollY - pad);
@@ -80,14 +80,9 @@ export default function Home({ badgeStyle = 'medal' }: { badgeStyle?: 'medal' | 
       <main id="main" className="relative">
         <Background />
         <ArenaHero badgeStyle={badgeStyle} ready={ready} />
-        <div aria-hidden="true" className="pointer-events-none relative -z-[5] h-0">
-          <div className="absolute inset-x-0 top-0 h-48 bg-gradient-to-b from-bg to-transparent sm:h-64" />
-        </div>
 
         {/* Round 1 · The Champion */}
-        <div className="snap-start pt-12 lg:pt-20">
-          <Champion />
-        </div>
+        <Champion />
 
         {/* Round 2 · The Pool */}
         <Pool />

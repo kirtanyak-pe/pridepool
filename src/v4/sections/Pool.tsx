@@ -21,7 +21,7 @@ const STATS = [
 
 export default function Pool() {
   return (
-    <section id="basis" aria-labelledby="pool-heading" className="snap-start arena-container relative pb-20 pt-4 lg:pb-28 lg:pt-8">
+    <section id="basis" aria-labelledby="pool-heading" className="fold snap-start arena-container relative py-10 lg:py-12">
       <div
         aria-hidden="true"
         className="pointer-events-none absolute left-1/2 top-10 h-72 w-[40rem] max-w-full -translate-x-1/2 opacity-60 blur-[110px]"

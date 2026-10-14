@@ -3,10 +3,10 @@ import { JOIN_LABEL, JOIN_URL } from '../content';
 /**
  * THE Join button. Every Join on the page is this component, so label, link and look stay identical.
  *
- * Tracking: each one carries data-cta="join" and data-cta-location (hero, round-1…3, final, sticky),
+ * Tracking: each one carries data-cta="join" and data-cta-location (hero, round-1…3, final, sticky, navbar),
  * so analytics can count taps per position without extra code (e.g. a click trigger on [data-cta="join"]).
  */
-export type JoinLocation = 'hero' | 'round-1' | 'round-2' | 'round-3' | 'final' | 'sticky';
+export type JoinLocation = 'hero' | 'round-1' | 'round-2' | 'round-3' | 'final' | 'sticky' | 'navbar';
 
 const SIZES = {
   /** Hero and final call: full width on phones, auto width on desktop */
@@ -15,6 +15,8 @@ const SIZES = {
   md: 'flex h-14 w-full text-[0.9375rem] md:inline-flex md:h-[3.25rem] md:w-auto md:shrink-0 md:px-7',
   /** Floating bar (phones) and floating card (desktop) */
   bar: 'flex h-14 w-full text-base',
+  /** Top navbar (tablet and desktop) */
+  nav: 'inline-flex h-11 px-5 text-[0.875rem]',
 };
 
 type Props = {

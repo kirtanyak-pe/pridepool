@@ -104,7 +104,7 @@ export default function Champion() {
   }, [reduced]);
 
   return (
-    <section ref={ref} id="moment" aria-labelledby="champion-heading" className="arena-container relative pb-20 lg:pb-28">
+    <section ref={ref} id="moment" aria-labelledby="champion-heading" className="fold snap-start arena-container relative py-10 lg:py-8">
       <div
         aria-hidden="true"
         className="pointer-events-none absolute left-1/2 top-24 h-80 w-[36rem] max-w-full -translate-x-1/2 opacity-60 blur-[110px]"

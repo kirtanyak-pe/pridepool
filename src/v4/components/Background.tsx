@@ -1,6 +1,7 @@
+// Fixed to the screen: only the content scrolls over it
 export default function Background() {
   return (
-    <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
+    <div aria-hidden="true" className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
       <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, #0b0b0f 0%, #0e0e15 30%, #0d0d13 62%, #0b0b0f 100%)" }} />
       <div className="arena-drift absolute -translate-x-1/2 -translate-y-1/2 rounded-full" style={{ top: "25%", left: "12%", width: "52rem", height: "52rem", maxWidth: "150vw", animationDelay: "0s", background: "radial-gradient(closest-side, rgb(var(--glow-deep)/0.25), rgb(var(--glow-deep)/0) 70%)" }} />
       <div className="arena-drift absolute -translate-x-1/2 -translate-y-1/2 rounded-full" style={{ top: "33%", left: "88%", width: "38rem", height: "38rem", maxWidth: "150vw", animationDelay: "-6s", background: "radial-gradient(closest-side, rgb(var(--glow)/0.12), rgb(var(--glow)/0) 70%)" }} />
@@ -100,97 +101,6 @@ export default function Background() {
           </g>
         </g>
         <polyline points="36.0,445.0 108.0,420.2 180.0,411.9 252.0,411.7 324.0,414.7 396.0,401.2 468.0,401.9 540.0,398.7 612.0,381.6 684.0,364.4 756.0,346.5 828.0,318.7 900.0,288.9 972.0,268.2 1044.0,236.1 1116.0,204.6 1188.0,182.0 1260.0,165.8 1332.0,145.3 1404.0,138.4" stroke="var(--color-gold-bright)" strokeOpacity="0.4" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
-      </svg>
-      <svg viewBox="0 0 1440 520" preserveAspectRatio="xMidYMid slice" fill="none" className="arena-drift absolute inset-x-0 top-[60%] h-[30rem] w-full" style={{ maskImage: "linear-gradient(90deg, #000 0%, #000 18%, transparent 36%, transparent 64%, #000 82%, #000 100%), linear-gradient(180deg, transparent 0%, #000 22%, #000 78%, transparent 100%)", WebkitMaskImage: "linear-gradient(90deg, #000 0%, #000 18%, transparent 36%, transparent 64%, #000 82%, #000 100%), linear-gradient(180deg, transparent 0%, #000 22%, #000 78%, transparent 100%)", maskComposite: "intersect", WebkitMaskComposite: "source-in" }}>
-        <g stroke="var(--color-violet)" strokeOpacity="0.12" strokeDasharray="4 8">
-          <line x1="0" y1="110" x2="1440" y2="110" />
-          <line x1="0" y1="220" x2="1440" y2="220" />
-          <line x1="0" y1="330" x2="1440" y2="330" />
-          <line x1="0" y1="440" x2="1440" y2="440" />
-        </g>
-        <g opacity="0.22">
-          <g fill="#22c55e">
-            <rect x="34.5" y="388.06106790274384" width="3" height="106.68697056241331" rx="1.5" />
-            <rect x="20" y="416.9447126810253" width="32" height="53.055287318974706" rx="4" />
-          </g>
-          <g fill="#f43f5e">
-            <rect x="106.5" y="398.4327626203001" width="3" height="65.87990454331043" rx="1.5" />
-            <rect x="92" y="416.9447126810253" width="32" height="13.246116654276875" rx="4" />
-          </g>
-          <g fill="#f43f5e">
-            <rect x="178.5" y="401.3833314725757" width="3" height="83.24967066224667" rx="1.5" />
-            <rect x="164" y="430.19082933530217" width="32" height="22.645037208944586" rx="4" />
-          </g>
-          <g fill="#f43f5e">
-            <rect x="250.5" y="417.6357441431285" width="3" height="83.07681492835286" rx="1.5" />
-            <rect x="236" y="452.83586654424676" width="32" height="13.159412895590094" rx="4" />
-          </g>
-          <g fill="#22c55e">
-            <rect x="322.5" y="403.0896744433792" width="3" height="72.76522334080187" rx="1.5" />
-            <rect x="308" y="433.8745216311888" width="32" height="32.12075780864802" rx="4" />
-          </g>
-          <g fill="#f43f5e">
-            <rect x="394.5" y="404.1265138437973" width="3" height="57.231766776442555" rx="1.5" />
-            <rect x="380" y="433.8745216311888" width="32" height="19.290671174675253" rx="4" />
-          </g>
-          <g fill="#22c55e">
-            <rect x="466.5" y="395.2556876521187" width="3" height="80.81385531622914" rx="1.5" />
-            <rect x="452" y="406.04000877399017" width="32" height="47.125184031873914" rx="4" />
-          </g>
-          <g fill="#22c55e">
-            <rect x="538.5" y="354.4380176740142" width="3" height="81.02312746245411" rx="1.5" />
-            <rect x="524" y="374.0598557733374" width="32" height="31.980153000652763" rx="4" />
-          </g>
-          <g fill="#f43f5e">
-            <rect x="610.5" y="365.00353113211713" width="3" height="39.937361311428276" rx="1.5" />
-            <rect x="596" y="374.0598557733374" width="32" height="5" rx="4" />
-          </g>
-          <g fill="#22c55e">
-            <rect x="682.5" y="345.71885044202236" width="3" height="39.53167177431283" rx="1.5" />
-            <rect x="668" y="357.1958923598754" width="32" height="17.23223447494206" rx="4" />
-          </g>
-          <g fill="#22c55e">
-            <rect x="754.5" y="301.7346623382348" width="3" height="80.12289882704613" rx="1.5" />
-            <rect x="740" y="314.5525002219531" width="32" height="42.64339213792232" rx="4" />
-          </g>
-          <g fill="#22c55e">
-            <rect x="826.5" y="275.8858010343838" width="3" height="71.13520176403222" rx="1.5" />
-            <rect x="812" y="290.3763700838763" width="32" height="24.176130138076815" rx="4" />
-          </g>
-          <g fill="#22c55e">
-            <rect x="898.5" y="262.9768426359076" width="3" height="46.1439615057036" rx="1.5" />
-            <rect x="884" y="282.28275148071384" width="32" height="8.09361860316244" rx="4" />
-          </g>
-          <g fill="#22c55e">
-            <rect x="970.5" y="201.59226478535717" width="3" height="92.4941617462039" rx="1.5" />
-            <rect x="956" y="228.61986932709848" width="32" height="53.66288215361536" rx="4" />
-          </g>
-          <g fill="#22c55e">
-            <rect x="1042.5" y="184.45658625215327" width="3" height="70.69323100030422" rx="1.5" />
-            <rect x="1028" y="203.37014770619606" width="32" height="25.24972162090242" rx="4" />
-          </g>
-          <g fill="#22c55e">
-            <rect x="1114.5" y="190.27891887117212" width="3" height="23.284026749171318" rx="1.5" />
-            <rect x="1100" y="200.77279674120282" width="32" height="5" rx="4" />
-          </g>
-          <g fill="#22c55e">
-            <rect x="1186.5" y="136.47648104723578" width="3" height="79.46378869164735" rx="1.5" />
-            <rect x="1172" y="162.72458488285577" width="32" height="38.04821185834706" rx="4" />
-          </g>
-          <g fill="#f43f5e">
-            <rect x="1258.5" y="142.9761499704424" width="3" height="57.62117040276527" rx="1.5" />
-            <rect x="1244" y="162.72458488285577" width="32" height="18.555521202534436" rx="4" />
-          </g>
-          <g fill="#22c55e">
-            <rect x="1330.5" y="128.9630306636173" width="3" height="69.02720027577132" rx="1.5" />
-            <rect x="1316" y="155.6436200163517" width="32" height="25.63648606903851" rx="4" />
-          </g>
-          <g fill="#22c55e">
-            <rect x="1402.5" y="120.39924042727833" width="3" height="44.14128118634224" rx="1.5" />
-            <rect x="1388" y="129.38144742846524" width="32" height="26.262172587886454" rx="4" />
-          </g>
-        </g>
-        <polyline points="36.0,416.9 108.0,423.6 180.0,433.3 252.0,441.5 324.0,440.0 396.0,447.2 468.0,442.4 540.0,426.6 612.0,408.3 684.0,393.0 756.0,365.3 828.0,342.1 900.0,323.8 972.0,294.6 1044.0,263.8 1116.0,241.1 1188.0,215.6 1260.0,195.4 1332.0,180.8 1404.0,166.0" stroke="var(--color-gold-bright)" strokeOpacity="0.4" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
       </svg>
       <div className="absolute inset-x-0 bottom-0 h-[24%] overflow-hidden" style={{ perspective: "280px", perspectiveOrigin: "50% 0%" }}>
         <div className="absolute inset-0 opacity-[0.075]" style={{ transform: "rotateX(72deg)", transformOrigin: "50% 0%", backgroundImage: "linear-gradient(var(--color-violet) 1px, transparent 1px), linear-gradient(90deg, var(--color-violet) 1px, transparent 1px)", backgroundSize: "72px 72px", maskImage: "linear-gradient(to bottom, transparent 0%, #000 40%, transparent 92%)", WebkitMaskImage: "linear-gradient(to bottom, transparent 0%, #000 40%, transparent 92%)" }} />
