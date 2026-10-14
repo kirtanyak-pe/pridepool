@@ -123,7 +123,7 @@ export default function Home({ badgeStyle = 'medal' }: { badgeStyle?: 'medal' | 
     document.addEventListener('click', onClick);
     return () => document.removeEventListener('click', onClick);
   }, []);
-  // Hold the page on the hero until its intro has played (title → badge → card stamps → last shine), so the
+  // Hold the page on the hero until its intro has played (title → badge → card stamps; it lets go as the last shine starts), so the
   // story isn't scrolled past half-built. Only when the page opens at the top; never longer than
   // INTRO_LOCK_MAX_MS. Blocks wheel / touch / keyboard scrolling (no overflow:hidden, so no layout shift)
   // on the hero only; navbar links still work and leaving the hero ends the lock.

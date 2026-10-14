@@ -192,7 +192,7 @@ export default function ArenaHero({
 }: {
   badgeStyle?: 'medal' | 'stamp';
   ready?: boolean;
-  /** Fires once the whole intro has played (title → badge → card stamps → last shine) */
+  /** Fires once the intro's stamps are done (title → badge → both cards), right before the last shine */
   onIntroDone?: () => void;
 }) {
   // The rank badge waits until the title animation has fully finished, so the two never compete.
@@ -206,16 +206,15 @@ export default function ArenaHero({
   const stampOf = (n: 1 | 2) => (cards < n ? 'wait' : cards === n ? 'play' : 'done') as 'wait' | 'play' | 'done';
   // …and once both cards are down, the title's light sweep plays one more time
   const [sweepReplay, setSweepReplay] = useState(0);
-  // …and once that last shine has swept across, the hero's Join button gives one shake (and scrolling unlocks)
+  // …and once that last shine has swept across, the hero's Join button gives one shake
   const [shakeJoin, setShakeJoin] = useState(false);
   const onCardsDone = () => {
     setCards(3);
     setSweepReplay((n) => (n === 0 ? 1 : n));
-    // the shine finishes → Join shakes and the page can be scrolled
-    window.setTimeout(() => {
-      setShakeJoin(true);
-      onIntroDone?.();
-    }, JOIN_SHAKE_AFTER_MS);
+    // both cards are down → the page can be scrolled (the last shine plays as you go)
+    onIntroDone?.();
+    // the shine finishes → Join shakes
+    window.setTimeout(() => setShakeJoin(true), JOIN_SHAKE_AFTER_MS);
   };
   // Reduced motion: no intro to wait for
   useEffect(() => {
