@@ -953,3 +953,24 @@ html.scale-artboard {
   .stamp-press { animation: none; }
   .stamp-press-impact { display: none; }
 }
+
+/* V4 hero side cards (₹1 Cr, 20 Laptops): stamped in after the rank stamp, one after another.
+   Same press as .stamp-press (comes down from above, hits, squashes, ink flash), but level: no tilt.
+   Impact lands at 62% of 0.5s ≈ 0.31s. */
+.card-stamp {
+  transform-origin: 50% 85%;
+  animation: card-stamp 0.5s both;
+}
+@keyframes card-stamp {
+  0% { opacity: 0; transform: scale(2.2); filter: blur(2px) drop-shadow(0 3rem 2rem rgba(0, 0, 0, 0.6)); animation-timing-function: cubic-bezier(0.55, 0, 1, 0.45); }
+  20% { opacity: 1; }
+  62% { transform: scale(1.03, 0.92); filter: blur(0) brightness(1.6) drop-shadow(0 0 0 rgba(0, 0, 0, 0)); animation-timing-function: cubic-bezier(0.2, 0.8, 0.3, 1); }
+  100% { opacity: 1; transform: none; filter: none; }
+}
+.card-stamp-impact {
+  animation: card-stamp-impact 0.6s ease-out 0.31s both;
+}
+@keyframes card-stamp-impact {
+  from { opacity: 0.85; transform: scale(0.97); }
+  to { opacity: 0; transform: scale(1.25); }
+}

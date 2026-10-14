@@ -22,6 +22,8 @@ function Pedestal({
   className,
   delay,
   tucked = false,
+  stamp,
+  onStamped,
 }: {
   href: string;
   item: ReactNode;
@@ -32,14 +34,25 @@ function Pedestal({
   delay: string;
   /** Item sits partly behind the card instead of on top of it */
   tucked?: boolean;
+  /** Side cards: hidden until their turn, then stamped in (instead of rising with the stage) */
+  stamp?: 'wait' | 'play' | 'done';
+  onStamped?: () => void;
 }) {
+  const entrance = stamp === undefined ? 'pedestal-rise' : stamp === 'wait' ? 'invisible' : stamp === 'play' ? 'card-stamp' : '';
   return (
-    <a href={href} className={`pedestal-rise group relative flex flex-col items-center justify-end ${className}`} style={{ animationDelay: delay }}>
+    <a
+      href={href}
+      onAnimationEnd={(e) => stamp === 'play' && e.target === e.currentTarget && onStamped?.()}
+      className={`${entrance} group relative flex flex-col items-center justify-end ${className}`}
+      style={stamp === undefined ? { animationDelay: delay } : undefined}
+    >
       <div className={`relative flex w-full flex-1 items-end justify-center ${tucked ? 'z-0' : 'z-10'}`}>{item}</div>
       {/* Pedestal block: 3D key, accent rim on top */}
       {value && (
       <div className={`key-cap relative mt-2 flex w-full flex-col items-center justify-center rounded-xl px-1.5 py-2.5 text-center lg:rounded-2xl lg:py-4 ${tucked ? 'z-10' : ''}`}>
         <span aria-hidden="true" className="absolute inset-x-3 top-0 h-px bg-gradient-to-r from-transparent via-accent/70 to-transparent" />
+        {/* impact ring when the card is stamped down */}
+        {stamp === 'play' && <span aria-hidden="true" className="card-stamp-impact pointer-events-none absolute -inset-1.5 rounded-[1rem] border-2 border-accent/70 lg:rounded-[1.25rem]" />}
         <span className="text-[1.125rem] font-extrabold leading-none tracking-[-0.02em] text-fg lg:text-[1.75rem]">{value}</span>
         <span className="mt-1 text-[0.5625rem] font-bold uppercase leading-tight tracking-[0.14em] text-fg-subtle lg:text-[0.75rem]">{label}</span>
       </div>
@@ -94,7 +107,8 @@ const BUBBLES = [
   { left: '45%', bottom: '-1.5rem', ms: '3.6s', delay: '4.4s' },
 ];
 
-function CoinBubbles() {
+function CoinBubbles({ active }: { active: boolean }) {
+  if (!active) return null;
   return (
     // Zero-height anchor at the card's top edge: coins start hidden behind the card and rise out of it
     <div className="story-pop relative h-0 w-full" style={{ animationDelay: '0.9s' }}>
@@ -173,9 +187,18 @@ export default function ArenaHero({ badgeStyle = 'medal', ready = true }: { badg
   // The rank badge waits until the title animation has fully finished, so the two never compete.
   const [titleDone, setTitleDone] = useState(false);
   const onTitleDone = () => setTitleDone(true);
-  // …and once the badge has landed, the title's light sweep plays one more time
+  // …once the badge has landed, the two side cards are stamped in, one after another
+  // (reduced motion: cards are simply there)…
+  const reduced = typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const [cards, setCards] = useState<0 | 1 | 2 | 3>(reduced ? 3 : 0); // 0 waiting · 1 ₹1 Cr stamping · 2 laptops stamping · 3 done
+  const onBadgeLanded = () => setCards((c) => (c === 0 ? 1 : c));
+  const stampOf = (n: 1 | 2) => (cards < n ? 'wait' : cards === n ? 'play' : 'done') as 'wait' | 'play' | 'done';
+  // …and once both cards are down, the title's light sweep plays one more time
   const [sweepReplay, setSweepReplay] = useState(0);
-  const onBadgeLanded = () => setSweepReplay((n) => (n === 0 ? 1 : n));
+  const onCardsDone = () => {
+    setCards(3);
+    setSweepReplay((n) => (n === 0 ? 1 : n));
+  };
   return (
     <section id="hero" aria-labelledby="hero-heading" className="relative isolate flex h-[52.75rem] snap-start flex-col overflow-hidden lg:h-[56.25rem]">
       <h1 id="hero-heading" className="sr-only">
@@ -237,14 +260,34 @@ export default function ArenaHero({ badgeStyle = 'medal', ready = true }: { badg
         {/* The reward stage — everything stays on screen */}
         <div className="relative mx-auto flex min-h-0 w-full max-w-[22rem] items-end justify-center gap-1.5 lg:max-w-none lg:flex-1 lg:gap-4 lg:pb-0 lg:pt-0">
           {/* Side cards tuck in under the photo's faded bottom edge, towards its centre */}
-          <Pedestal href={ANCHORS.pool} item={<CoinBubbles />} tucked value={POOL.short} label={POOL.label} className="z-10 -mr-9 w-[7.5rem] lg:-mr-20 lg:w-[13.5rem]" delay="0.35s" />
+          <Pedestal
+            href={ANCHORS.pool}
+            item={<CoinBubbles active={cards >= 2} />}
+            tucked
+            value={POOL.short}
+            label={POOL.label}
+            className="z-10 -mr-9 w-[7.5rem] lg:-mr-20 lg:w-[13.5rem]"
+            delay="0.35s"
+            stamp={stampOf(1)}
+            onStamped={() => setCards(2)}
+          />
           <Pedestal
             href={ANCHORS.champion}
             item={<Anish badge={badgeStyle} showBadge={titleDone} onBadgeLanded={onBadgeLanded} />}
             className="w-[8.75rem] lg:w-[15rem]"
             delay="0.2s"
           />
-          <Pedestal href={ANCHORS.laptops} item={<Laptop />} tucked value={`${LAPTOPS.count}`} label="Laptops to win" className="z-10 -ml-9 w-[7.5rem] lg:-ml-20 lg:w-[13.5rem]" delay="0.5s" />
+          <Pedestal
+            href={ANCHORS.laptops}
+            item={<Laptop />}
+            tucked
+            value={`${LAPTOPS.count} ${LAPTOPS.label}`}
+            label="To win"
+            className="z-10 -ml-9 w-[7.5rem] lg:-ml-20 lg:w-[13.5rem]"
+            delay="0.5s"
+            stamp={stampOf(2)}
+            onStamped={onCardsDone}
+          />
         </div>
 
         {/* Mobile: Join never leaves the first screen */}
