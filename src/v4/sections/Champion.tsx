@@ -89,18 +89,18 @@ const EASE = 'cubic-bezier(0.22, 1, 0.36, 1)';
 const SWAP_AFTER_MS = 1000; // first quote holds the stage this long once the section is in view
 
 /** One beat of the story. The active beat is big; the other steps back. */
-function Beat({ active, label, quote, delay }: { active: boolean; label: string; quote: string; delay?: string }) {
+function Beat({ active, quote, delay }: { active: boolean; quote: string; delay?: string }) {
   return (
     <li data-reveal="near" className="relative" style={delay ? { '--reveal-delay': delay } : undefined}>
-      <span
-        aria-hidden="true"
-        className={`absolute top-1.5 rounded-full transition-all duration-500 ${active ? '-left-[1.85rem] h-3 w-3 bg-silver shadow-[0_0_12px_2px_rgba(217,217,232,0.6)]' : '-left-[1.8rem] h-2.5 w-2.5 border border-white/30 bg-bg'}`}
-      />
-      <p className={`text-[0.625rem] font-bold uppercase tracking-[0.18em] transition-colors duration-500 ${active ? 'text-silver' : 'text-fg-subtle'}`}>{label}</p>
       <blockquote
-        className={`mt-1.5 tracking-[-0.02em] ${active ? 'text-[1.5rem] font-extrabold leading-tight text-fg lg:text-[2rem]' : 'text-base font-semibold leading-snug text-fg-muted lg:text-lg'}`}
+        className={`relative tracking-[-0.02em] ${active ? 'text-[1.5rem] font-extrabold leading-tight text-fg lg:text-[2rem]' : 'text-base font-semibold leading-snug text-fg-muted lg:text-lg'}`}
         style={{ transition: `font-size 0.6s ${EASE}, color 0.6s ease, font-weight 0.6s ease` }}
       >
+        {/* timeline dot, centred on the quote's first line (em = the quote's own size, so it follows the grow/shrink) */}
+        <span
+          aria-hidden="true"
+          className={`absolute rounded-full transition-all duration-500 ${active ? '-left-[1.85rem] top-[calc(0.625em-0.375rem)] h-3 w-3 bg-silver shadow-[0_0_12px_2px_rgba(217,217,232,0.6)]' : '-left-[1.8rem] top-[calc(0.6875em-0.3125rem)] h-2.5 w-2.5 border border-white/30 bg-bg'}`}
+        />
         “{quote}”
       </blockquote>
     </li>
@@ -159,8 +159,8 @@ export default function Champion() {
           <div className="order-3 mx-auto w-full max-w-[30rem] lg:mx-0 lg:mt-8 lg:max-w-[34rem]">
             {/* Two beats: the first line takes the stage, then hands it to the second */}
             <ol className="relative space-y-6 border-l border-white/10 pl-6">
-              <Beat active={beat === 0} label="Before the final" quote={ANISH.quoteBefore} />
-              <Beat active={beat === 1} label={`After the final · World ${ANISH.rank}`} quote={ANISH.quoteAfter} delay="0.12s" />
+              <Beat active={beat === 0} quote={ANISH.quoteBefore} />
+              <Beat active={beat === 1} quote={ANISH.quoteAfter} delay="0.12s" />
             </ol>
             <p className="mt-6 text-sm leading-relaxed text-fg-subtle lg:text-base">
               {ANISH.name} of {ANISH.team}, on stage at the {ANISH.event}. Watch the moment in the card.

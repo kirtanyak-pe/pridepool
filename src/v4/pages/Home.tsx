@@ -125,24 +125,34 @@ export default function Home({ badgeStyle = 'medal' }: { badgeStyle?: 'medal' | 
   }, []);
   // Hold the page on the hero until its intro has played (title → badge → card stamps → last shine), so the
   // story isn't scrolled past half-built. Only when the page opens at the top; never longer than
-  // INTRO_LOCK_MAX_MS. Blocks wheel / touch / keyboard scrolling (no overflow:hidden, so no layout shift);
-  // links in the navbar still work.
+  // INTRO_LOCK_MAX_MS. Blocks wheel / touch / keyboard scrolling (no overflow:hidden, so no layout shift)
+  // on the hero only; navbar links still work and leaving the hero ends the lock.
   const [introDone, setIntroDone] = useState(false);
   const onIntroDone = useCallback(() => setIntroDone(true), []);
   useEffect(() => {
     if (introDone || window.scrollY > 10) return;
-    const block = (e: Event) => e.preventDefault();
+    // The lock belongs to the hero only: blocks only while the page is at the hero, and ends for good
+    // as soon as the page leaves it (e.g. a navbar link), so other sections always scroll freely.
+    const onHero = () => window.scrollY <= 10;
+    const block = (e: Event) => {
+      if (onHero()) e.preventDefault();
+    };
     const onKey = (e: KeyboardEvent) => {
-      if ([' ', 'PageDown', 'PageUp', 'ArrowDown', 'ArrowUp', 'End', 'Home'].includes(e.key) && !(e.target as Element)?.closest?.('input, textarea, [contenteditable]')) e.preventDefault();
+      if (onHero() && [' ', 'PageDown', 'PageUp', 'ArrowDown', 'ArrowUp', 'End', 'Home'].includes(e.key) && !(e.target as Element)?.closest?.('input, textarea, [contenteditable]')) e.preventDefault();
+    };
+    const onScroll = () => {
+      if (!onHero()) setIntroDone(true);
     };
     window.addEventListener('wheel', block, { passive: false });
     window.addEventListener('touchmove', block, { passive: false });
     window.addEventListener('keydown', onKey);
+    window.addEventListener('scroll', onScroll, { passive: true });
     const t = window.setTimeout(() => setIntroDone(true), INTRO_LOCK_MAX_MS);
     return () => {
       window.removeEventListener('wheel', block);
       window.removeEventListener('touchmove', block);
       window.removeEventListener('keydown', onKey);
+      window.removeEventListener('scroll', onScroll);
       window.clearTimeout(t);
     };
   }, [introDone]);
