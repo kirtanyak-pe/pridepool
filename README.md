@@ -18,38 +18,67 @@ npm run deploy     # publish to https://kirtanyak-pe.github.io/pridepool/
 
 After `npm run deploy`, the live link updates in about a minute.
 
-## Switching versions (prototype only)
+## Prototype controls (testing only)
 
-A floating button in the top-right corner switches between **Original** and **Redesign**.
-It is only for testing and is not part of the website.
+A floating button in the top-right corner opens the prototype controls. They are not part of the website.
 
-- Open a version directly with `?v=1` (Original) or `?v=2` (Redesign) on the link.
-- With no `?v=`, the page shows the last version picked on that device, or the Redesign.
+- **Version:** Original or Redesign.
+- **Accent colour** (Redesign only): Violet (the original colour), Lemonn lime (the brand green from the Lemonn logo) or Trading green.
+
+The link updates as you switch, so you can share exactly what you see:
+`?v=1` = Original, `?v=2&accent=lime` = Redesign in lime (also `violet`, `green`).
+With no parameters, the page shows the last choice on that device, or the Redesign in lime.
+
+## The Join button system (redesign)
+
+The page has one goal: get people to tap **Join the ₹1 Crore Pool**. Every Join button is the same component (`v2/components/JoinButton.tsx`), so the label, link and look are defined once.
+
+| Where | What |
+| --- | --- |
+| Hero | The first Join, above the fold on phones |
+| After each story round | `Checkpoint`: round progress (1–3 of 3), one line on why to join, then Join |
+| Final call | `FinalCall`: recap of all three rewards, Join, existing-user line, trust lines |
+| Floating | `StickyJoin`: full-width bar on phones, card on desktop |
+
+**Rule: only one Join button on screen at a time.** The floating one appears only when no other Join button is in view, and hides over the footer.
+
+**Tracking:** every Join button has `data-cta="join"` and `data-cta-location` (`hero`, `round-1`, `round-2`, `round-3`, `final`, `sticky`).
+Count taps per position with a click trigger on `[data-cta="join"]` (e.g. in Google Tag Manager); no code changes needed.
 
 ## Folder structure
 
 ```
 src/
-  index.css        Design tokens (@theme), shared component styles and animations — used by both versions
-  main.tsx         Entry point: picks the version, mounts the prototype switcher
+  index.css        Design tokens (@theme), accent palettes, shared component styles, animations — used by both versions
+  main.tsx         Entry point: picks the version, mounts the prototype controls
   v1/              ORIGINAL — the live site as it was. Don't edit; it's the comparison baseline.
     pages/           Home.tsx, TermsPage.tsx
     sections/        Hero, Basis (counter), Moment (video), Giveaway, Leaderboard, Faqs, Terms
     components/      Background, Footer, StickyJoin, CountUp, YouTubeShort, useReveal, TermsHeader
   v2/              REDESIGN
-    content.ts       All redesign copy and links in one place (Join link, Anish's rank wording, …)
-    pages/Home.tsx   The redesigned page. Imports from ../../v1/ = not redesigned yet
-    sections/        Redesigned sections (so far: Hero.tsx)
-  prototype/       PROTOTYPE ONLY — version switcher. Not part of the website.
+    content.ts       All redesign copy and links in one place (Join link + label, Anish's rank wording, …)
+    pages/Home.tsx   The redesigned page, in story order. Imports from ../../v1/ = not redesigned yet
+    sections/        Hero.tsx, FinalCall.tsx
+    components/      JoinButton.tsx, Checkpoint.tsx, StickyJoin.tsx
+  prototype/       PROTOTYPE ONLY — version + accent controls. Not part of the website.
 public/            Images, logos, cursors, font
 ```
 
 ### Redesign status
 
-| Section | Status |
+| Part | Status |
 | --- | --- |
 | Hero | ✅ Redesigned (`v2/sections/Hero.tsx`) |
-| Counter, Anish video, Laptops, Leaderboard, FAQ, Footer, floating Join button | Still the original (imported from `v1/`) |
+| Join button system (checkpoints, final call, floating bar/card) | ✅ Built (`v2/components/`, `v2/sections/FinalCall.tsx`) |
+| Section order | ✅ Story order: Anish → ₹1 Crore pool → laptops (`v2/pages/Home.tsx`) |
+| Counter, Anish video, Laptops, Leaderboard, FAQ, Footer | Still the original (imported from `v1/`) |
+
+### Accent colours
+
+The accent is everything that says "act here": the Join button, its glowing border, chips, dots and checkmarks.
+The background glow stays violet for now. The original sections still have some violet built in (e.g. leaderboard score bars); they pick up the accent when they get redesigned.
+
+Each accent is one small block of values in `src/index.css` (search "Accent palette").
 
 ## Handing off to development
 
@@ -57,9 +86,10 @@ To ship only the redesign:
 
 1. Delete `src/prototype/`.
 2. In `src/main.tsx`, remove the two prototype imports and render `<RedesignHome />` directly instead of choosing a version.
-3. Delete `src/v1/` **only after** every section `v2/pages/Home.tsx` imports from `v1/` has been redesigned.
+3. Pick the accent: in `src/index.css` → "Accent palette", copy the chosen accent's values into the first `:root` block and delete the other blocks.
+4. Delete `src/v1/` **only after** every section `v2/pages/Home.tsx` imports from `v1/` has been redesigned.
    Until then, move the still-used v1 files into `v2/` (or a shared folder) rather than deleting them.
-4. Fill in the TODOs in `src/v2/content.ts`: the real Join link and the legally approved wording for Anish's result.
+5. Fill in the TODOs in `src/v2/content.ts`: the real Join link, the "Open the app" link for existing users, and the legally approved wording for Anish's result.
 
 Styling is Tailwind CSS v4: classes such as `bg-bg`, `text-fg-muted` and `text-accent` map to the tokens in `index.css`.
 Elements with `data-reveal` fade in on scroll (`src/v1/components/useReveal.ts`).

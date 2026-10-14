@@ -1,4 +1,5 @@
-import { ANCHORS, ANISH, JOIN_URL, LAPTOPS, POOL } from '../content';
+import JoinButton from '../components/JoinButton';
+import { ANCHORS, ANISH, LAPTOPS, POOL } from '../content';
 
 /**
  * Redesign hero: a one-screen "trailer" for the three touchpoints
@@ -143,13 +144,7 @@ export default function Hero() {
           </div>
 
           <div className="arena-enter mt-6 lg:mt-8" style={{ '--e-delay': '0.54s' }}>
-            <a
-              href={JOIN_URL}
-              className="arena-cta btn-key mx-auto flex h-14 w-full max-w-[26rem] items-center justify-center gap-2 text-base font-extrabold tracking-[-0.01em] lg:mx-0 lg:inline-flex lg:h-16 lg:w-auto lg:px-10 lg:text-lg"
-            >
-              Join the {POOL.amount} Pool
-              <span aria-hidden="true">→</span>
-            </a>
+            <JoinButton location="hero" className="mx-auto max-w-[26rem] lg:mx-0" />
             <p className="mt-3.5 flex items-center justify-center gap-2 text-[0.8125rem] font-semibold text-fg-muted lg:justify-start lg:text-sm">
               <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-success shadow-[0_0_8px_2px_rgba(61,214,140,0.5)]" />
               Already on Lemonn? You’re already in.

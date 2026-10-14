@@ -6,6 +6,9 @@
 /** Where "Join the ₹1 Crore Pool" goes. TODO: app install / sign-up link with campaign tracking. */
 export const JOIN_URL = '#';
 
+/** For people who already use Lemonn (they're in the pool automatically). TODO: app deep link / store link. */
+export const OPEN_APP_URL = '#';
+
 export const ANISH = {
   name: 'Anish Singh Thakur',
   /** TODO (legal): confirm the approved wording for his result, e.g. "World #2" or "Runner-up". */
@@ -24,6 +27,9 @@ export const LAPTOPS = {
   count: 20,
   label: 'Laptops',
 };
+
+/** The one Join label, used on every Join button. */
+export const JOIN_LABEL = `Join the ${POOL.amount} Pool`;
 
 /** Page anchors for the three story touchpoints (each hero tile scrolls to one). */
 export const ANCHORS = {

@@ -1,17 +1,68 @@
 import { useEffect, useRef, useState } from 'react';
-import type { Version } from './version';
+import type { Accent, Version } from './settings';
 
-const OPTIONS: { value: Version; label: string }[] = [
+const VERSION_OPTIONS: { value: Version; label: string }[] = [
   { value: 'v1', label: 'Original' },
   { value: 'v2', label: 'Redesign' },
 ];
 
+const ACCENT_OPTIONS: { value: Accent; label: string; swatch: string }[] = [
+  { value: 'violet', label: 'Violet', swatch: '#c45fd8' },
+  { value: 'lime', label: 'Lime', swatch: '#a1e600' },
+  { value: 'green', label: 'Green', swatch: '#4ade80' },
+];
+
+type Props = {
+  version: Version;
+  onVersionChange: (v: Version) => void;
+  accent: Accent;
+  onAccentChange: (a: Accent) => void;
+};
+
+/** A row of segmented buttons (radio group). */
+function Segmented<T extends string>({
+  label,
+  options,
+  value,
+  onChange,
+  disabled = false,
+}: {
+  label: string;
+  options: { value: T; label: string; swatch?: string }[];
+  value: T;
+  onChange: (v: T) => void;
+  disabled?: boolean;
+}) {
+  return (
+    <div role="radiogroup" aria-label={label} aria-disabled={disabled} className={`grid gap-1 rounded-xl bg-white/10 p-1 ${disabled ? 'opacity-40' : ''}`} style={{ gridTemplateColumns: `repeat(${options.length}, minmax(0, 1fr))` }}>
+      {options.map((o) => {
+        const selected = o.value === value;
+        return (
+          <button
+            key={o.value}
+            type="button"
+            role="radio"
+            aria-checked={selected}
+            disabled={disabled}
+            onClick={() => onChange(o.value)}
+            className={`flex h-10 items-center justify-center gap-1.5 rounded-lg text-sm font-semibold transition-colors ${selected ? 'bg-white text-neutral-900' : 'text-white/75 enabled:hover:text-white'}`}
+          >
+            {o.swatch && <span aria-hidden="true" className="h-2.5 w-2.5 rounded-full ring-1 ring-black/20" style={{ background: o.swatch }} />}
+            {o.label}
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
 /**
- * PROTOTYPE ONLY: floating control (top right) to flip between the original page and the redesign.
+ * PROTOTYPE ONLY: floating control (top right) to flip between the original page and the redesign,
+ * and to try accent colours on the redesign.
  * Deliberately styled unlike the site so nobody mistakes it for part of the campaign.
- * Remove this folder and its two lines in main.tsx before shipping.
+ * Remove this folder and its lines in main.tsx before shipping.
  */
-export default function VersionSwitcher({ version, onChange }: { version: Version; onChange: (v: Version) => void }) {
+export default function VersionSwitcher({ version, onVersionChange, accent, onAccentChange }: Props) {
   const [open, setOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
 
@@ -29,7 +80,7 @@ export default function VersionSwitcher({ version, onChange }: { version: Versio
     };
   }, [open]);
 
-  const current = OPTIONS.find((o) => o.value === version)!;
+  const versionLabel = VERSION_OPTIONS.find((o) => o.value === version)!.label;
 
   return (
     <div ref={rootRef} className="fixed right-2 top-2 z-[100] font-sans" style={{ marginTop: 'env(safe-area-inset-top, 0px)' }}>
@@ -37,7 +88,7 @@ export default function VersionSwitcher({ version, onChange }: { version: Versio
         type="button"
         aria-expanded={open}
         aria-controls="proto-panel"
-        aria-label={`Prototype version: ${current.label}. Change version`}
+        aria-label={`Prototype version: ${versionLabel}. Change version or accent`}
         onClick={() => setOpen((o) => !o)}
         className="flex h-12 w-12 items-center justify-center"
       >
@@ -57,34 +108,31 @@ export default function VersionSwitcher({ version, onChange }: { version: Versio
       {open && (
         <div
           id="proto-panel"
-          className="absolute right-1 top-14 w-64 rounded-2xl border border-white/15 bg-neutral-900/95 p-4 text-left text-white shadow-2xl backdrop-blur-md"
+          className="absolute right-1 top-14 w-72 rounded-2xl border border-white/15 bg-neutral-900/95 p-4 text-left text-white shadow-2xl backdrop-blur-md"
         >
           <p className="text-[0.625rem] font-bold uppercase tracking-[0.16em] text-white/50">Prototype controls</p>
           <p className="mt-1 text-xs text-white/60">Only for testing. Not part of the website.</p>
 
-          <div role="radiogroup" aria-label="Page version" className="mt-3 grid grid-cols-2 gap-1 rounded-xl bg-white/10 p-1">
-            {OPTIONS.map((o) => {
-              const selected = o.value === version;
-              return (
-                <button
-                  key={o.value}
-                  type="button"
-                  role="radio"
-                  aria-checked={selected}
-                  onClick={() => {
-                    onChange(o.value);
-                    setOpen(false);
-                  }}
-                  className={`h-10 rounded-lg text-sm font-semibold transition-colors ${selected ? 'bg-white text-neutral-900' : 'text-white/75 hover:text-white'}`}
-                >
-                  {o.label}
-                </button>
-              );
-            })}
+          <p className="mt-4 text-xs font-semibold text-white/80">Version</p>
+          <div className="mt-1.5">
+            <Segmented
+              label="Page version"
+              options={VERSION_OPTIONS}
+              value={version}
+              onChange={(v) => {
+                onVersionChange(v);
+                setOpen(false);
+              }}
+            />
           </div>
 
-          <p className="mt-3 text-[0.6875rem] leading-snug text-white/45">
-            Share a version directly: add <code className="text-white/70">?v=1</code> or <code className="text-white/70">?v=2</code> to the link.
+          <p className="mt-4 text-xs font-semibold text-white/80">Accent colour {version === 'v1' && <span className="font-normal text-white/50">· Redesign only</span>}</p>
+          <div className="mt-1.5">
+            <Segmented label="Accent colour" options={ACCENT_OPTIONS} value={accent} onChange={onAccentChange} disabled={version === 'v1'} />
+          </div>
+
+          <p className="mt-4 text-[0.6875rem] leading-snug text-white/45">
+            Share exactly what you see: the link updates as you switch (<code className="text-white/70">?v=2&amp;accent=lime</code>).
           </p>
         </div>
       )}

@@ -24,7 +24,7 @@
   --color-border-subtle: #1d2133;
 
   /* Brand */
-  --color-accent: #c45fd8;
+  --color-accent: var(--accent); /* switchable — see Accent palette below */
   --color-violet: #d590e6;
   --color-violet-deep: #7b1f8f;
   --color-success: #3dd68c;
@@ -39,6 +39,44 @@
   /* Layout & motion */
   --container-arena: 80rem;
   --ease-arena-out: cubic-bezier(0.33, 1, 0.68, 1);
+}
+
+/* ───────────────────────── Accent palette ─────────────────────────
+   The Join button and highlight colour. One set of values per accent.
+   Default (no attribute) = violet, the original site's colour.
+   The prototype switcher sets data-accent="lime" | "green" on <html> for the redesign.
+   To ship one accent: copy its values into the first block and delete the others. */
+:root {
+  --accent: #c45fd8;          /* text, borders, chips, dots */
+  --accent-glow: #b145c9;     /* glows; brightest end of the button */
+  --accent-mid: #7b1f8f;      /* button middle */
+  --accent-low: #4a1159;      /* button darkest end */
+  --accent-side: #2a0833;     /* 3D edge under the button */
+  --accent-light: #e7b6f2;    /* highlight streak in glowing borders */
+  --accent-ink: #fff;         /* text on the button */
+  --accent-on-light: #9a2fb3; /* accent on white cards */
+}
+/* Lemonn lime — the brand green from the Lemonn logo */
+:root[data-accent="lime"] {
+  --accent: #a1e600;
+  --accent-glow: #c6f55a;
+  --accent-mid: #a1e600;
+  --accent-low: #7fb800;
+  --accent-side: #3d5900;
+  --accent-light: #e2fbab;
+  --accent-ink: #01040d;
+  --accent-on-light: #4d7c0f;
+}
+/* Trading green — the "price up" green */
+:root[data-accent="green"] {
+  --accent: #4ade80;
+  --accent-glow: #4ade80;
+  --accent-mid: #22c55e;
+  --accent-low: #16a34a;
+  --accent-side: #0b4a22;
+  --accent-light: #bbf7d0;
+  --accent-ink: #01040d;
+  --accent-on-light: #15803d;
 }
 
 /* ───────────────────────── Base ───────────────────────── */
@@ -174,8 +212,8 @@
     z-index: -1;
     background: conic-gradient(
       #0000 0deg 190deg,
-      #b145c9e6 268deg,
-      #e7b6f2f2 310deg,
+      color-mix(in srgb, var(--accent-glow) 90%, transparent) 268deg,
+      color-mix(in srgb, var(--accent-light) 95%, transparent) 310deg,
       #0000 350deg
     );
     width: 190%;
@@ -336,18 +374,18 @@
   }
   .btn-key {
     --k: 6px;
-    color: #fff;
+    color: var(--accent-ink);
     box-shadow:
       inset 0 1px 0 #ffffff59,
       inset 0 -2px 0 #0003,
-      0 var(--k) 0 #2a0833,
+      0 var(--k) 0 var(--accent-side),
       0 calc(var(--k) + 12px) 26px -8px #000000bf,
-      0 0 32px -6px #b145c98c;
+      0 0 32px -6px color-mix(in srgb, var(--accent-glow) 55%, transparent);
     background: linear-gradient(
       to top right,
-      #4a1159 0%,
-      #7b1f8f 50%,
-      #b145c9 100%
+      var(--accent-low) 0%,
+      var(--accent-mid) 50%,
+      var(--accent-glow) 100%
     );
     border: 1px solid #ffffff24;
     border-radius: 9999px;
@@ -538,7 +576,7 @@
   --color-fg-subtle: #6a6a7a;
   --color-gold-bright: #0b0b12;
   --color-violet: #7b1f8f;
-  --color-accent: #9a2fb3;
+  --color-accent: var(--accent-on-light);
   --color-border-subtle: #e2dfe8;
   color: var(--color-fg);
   background: linear-gradient(#fff 0%, #f1eff5 100%);
