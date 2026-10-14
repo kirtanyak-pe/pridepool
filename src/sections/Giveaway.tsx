@@ -8,7 +8,7 @@ export default function Giveaway() {
             <div className="relative w-full">
               <div aria-hidden="true" className="pointer-events-none absolute inset-x-[12%] -bottom-2 h-10 rounded-[50%] opacity-70 blur-2xl" style={{ background: "radial-gradient(closest-side, rgba(177,69,201,0.55), transparent)" }} />
               <div className="laptop-float transition-transform duration-500 ease-out motion-reduce:transition-none group-hover:[transform:rotateX(10deg)_rotateY(-14deg)_scale(1.03)]">
-                <img alt="A laptop showing a market chart" loading="lazy" width="2800" height="2858" decoding="async" className="h-auto w-full select-none" src="/laptop-hd.webp" />
+                <img alt="A laptop showing a market chart" loading="lazy" width="2800" height="2858" decoding="async" className="h-auto w-full select-none" src="laptop-hd.webp" />
               </div>
             </div>
           </figure>

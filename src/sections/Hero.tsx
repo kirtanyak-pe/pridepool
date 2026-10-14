@@ -251,7 +251,7 @@ export default function Hero() {
         <div className="arena-container relative xl:max-w-[100rem]">
           <div className="hero-figure absolute bottom-0 left-[clamp(1.25rem,4vw,3rem)]">
             <div aria-hidden="true" className="hero-figure-rim pointer-events-none absolute -inset-x-[24%] -top-[8%] bottom-[6%] -z-10" />
-            <img alt="Anish Singh Thakur" width="629" height="904" decoding="async" className="arena-enter select-none" style={{ "--e-delay": "0.34s" }} src="/anish.webp" />
+            <img alt="Anish Singh Thakur" width="629" height="904" decoding="async" className="arena-enter select-none" style={{ "--e-delay": "0.34s" }} src="anish.webp" />
             <div aria-hidden="true" className="hero-figure-base pointer-events-none absolute inset-x-[-10%] bottom-0 h-24" />
           </div>
         </div>
@@ -259,12 +259,12 @@ export default function Hero() {
       <div className="relative z-10 border-b border-white/5 backdrop-blur-sm">
         <div className="arena-container grid grid-cols-[1fr_auto_1fr] items-center gap-4 py-3.5">
           <div className="col-start-2 flex items-center gap-4 sm:gap-6">
-            <img alt="Lemonn" width="193" height="52" decoding="async" className="h-6 w-auto sm:h-7 lg:h-8" src="/lemonn-white.svg" />
+            <img alt="Lemonn" width="193" height="52" decoding="async" className="h-6 w-auto sm:h-7 lg:h-8" src="lemonn-white.svg" />
             <span aria-hidden="true" className="text-2xl font-light leading-none text-fg-muted sm:text-3xl">
               ×
             </span>
             <span className="flex h-10 w-32 items-center justify-center rounded-xl bg-white px-2 sm:h-11 sm:w-36 lg:h-12 lg:w-40">
-              <img alt="Booming Bulls Academy" width="2170" height="725" decoding="async" className="h-full w-full object-contain" src="/bomming-bulls-icon.webp" />
+              <img alt="Booming Bulls Academy" width="2170" height="725" decoding="async" className="h-full w-full object-contain" src="bomming-bulls-icon.webp" />
             </span>
           </div>
         </div>
@@ -322,7 +322,7 @@ export default function Hero() {
             </div>
             <div className="relative order-first -mb-14 w-full max-w-[16rem] justify-self-center sm:-mb-16 sm:max-w-[20rem] lg:order-none lg:mb-0 lg:max-w-[25rem] xl:hidden">
               <div aria-hidden="true" className="hero-figure-rim pointer-events-none absolute -inset-x-[24%] -top-[8%] bottom-[6%] -z-10" />
-              <img alt="Anish Singh Thakur" width="629" height="904" decoding="async" className="arena-enter h-auto w-full select-none" style={{ "--e-delay": "0.34s", maskImage: "linear-gradient(to bottom, #000 62%, transparent 84%)", WebkitMaskImage: "linear-gradient(to bottom, #000 62%, transparent 84%)" }} src="/anish.webp" />
+              <img alt="Anish Singh Thakur" width="629" height="904" decoding="async" className="arena-enter h-auto w-full select-none" style={{ "--e-delay": "0.34s", maskImage: "linear-gradient(to bottom, #000 62%, transparent 84%)", WebkitMaskImage: "linear-gradient(to bottom, #000 62%, transparent 84%)" }} src="anish.webp" />
             </div>
           </div>
         </div>

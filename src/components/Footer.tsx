@@ -10,12 +10,12 @@ export default function Footer() {
         <div className="flex flex-col gap-10 md:flex-row md:items-start md:justify-between">
           <div className="max-w-sm">
             <div className="flex items-center gap-4">
-              <img alt="Lemonn" loading="lazy" width="193" height="52" decoding="async" className="h-6 w-auto" src="/lemonn-white.svg" />
+              <img alt="Lemonn" loading="lazy" width="193" height="52" decoding="async" className="h-6 w-auto" src="lemonn-white.svg" />
               <span aria-hidden="true" className="text-xl font-light leading-none text-fg-muted">
                 ×
               </span>
               <span className="flex h-10 w-32 items-center justify-center rounded-xl bg-white px-2">
-                <img alt="Booming Bulls Academy" loading="lazy" width="2170" height="725" decoding="async" className="h-full w-full object-contain" src="/bomming-bulls-icon.webp" />
+                <img alt="Booming Bulls Academy" loading="lazy" width="2170" height="725" decoding="async" className="h-full w-full object-contain" src="bomming-bulls-icon.webp" />
               </span>
             </div>
             <p className="mt-5 text-sm font-semibold text-fg">
@@ -40,32 +40,32 @@ export default function Footer() {
               </p>
               <ul className="mt-4 flex flex-col gap-2.5">
                 <li>
-                  <a href="/#basis" className="text-sm text-fg-muted transition-colors duration-200 hover:text-fg">
+                  <a href="./#basis" className="text-sm text-fg-muted transition-colors duration-200 hover:text-fg">
                     Why this campaign
                   </a>
                 </li>
                 <li>
-                  <a href="/#giveaway" className="text-sm text-fg-muted transition-colors duration-200 hover:text-fg">
+                  <a href="./#giveaway" className="text-sm text-fg-muted transition-colors duration-200 hover:text-fg">
                     Laptop giveaway
                   </a>
                 </li>
                 <li>
-                  <a href="/#moment" className="text-sm text-fg-muted transition-colors duration-200 hover:text-fg">
+                  <a href="./#moment" className="text-sm text-fg-muted transition-colors duration-200 hover:text-fg">
                     The moment
                   </a>
                 </li>
                 <li>
-                  <a href="/#leaderboard" className="text-sm text-fg-muted transition-colors duration-200 hover:text-fg">
+                  <a href="./#leaderboard" className="text-sm text-fg-muted transition-colors duration-200 hover:text-fg">
                     Leaderboard
                   </a>
                 </li>
                 <li>
-                  <a href="/#faqs" className="text-sm text-fg-muted transition-colors duration-200 hover:text-fg">
+                  <a href="./#faqs" className="text-sm text-fg-muted transition-colors duration-200 hover:text-fg">
                     FAQs
                   </a>
                 </li>
                 <li>
-                  <a href="/terms-and-conditions" className="text-sm text-fg-muted transition-colors duration-200 hover:text-fg">
+                  <a href="terms-and-conditions" className="text-sm text-fg-muted transition-colors duration-200 hover:text-fg">
                     Terms & conditions
                   </a>
                 </li>

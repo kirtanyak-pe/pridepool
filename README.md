@@ -9,7 +9,10 @@ It was rebuilt from the live site with the same layout, tokens, animations and c
 npm install
 npm run dev        # http://localhost:5173 (or the port shown)
 npm run build      # production build → dist/
+npm run deploy     # publish to https://kirtanyak-pe.github.io/pridepool/
 ```
+
+After `npm run deploy`, the live link updates in about a minute.
 
 ## Where things live
 
