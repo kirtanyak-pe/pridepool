@@ -3,12 +3,13 @@ import { ANISH } from '../content';
 
 /**
  * V3 Round 1 · The Champion — the moment itself, embedded.
- * A silver-framed "replay" card holds the YouTube Short (plays right here, nobody leaves the page);
+ * A silver-framed "replay" card holds the YouTube Short (our cover until tapped, then it plays right here);
  * beside it, his two lines from the stage as a two-beat story.
  * Keeps id="moment" so links to #moment still land here.
  */
 
 function MomentCard() {
+  const [playing, setPlaying] = useState(false);
   return (
     <div data-reveal="true" className="relative mx-auto w-full max-w-[17.5rem] lg:max-w-[22rem]">
       <div aria-hidden="true" className="arena-halo absolute -inset-4 -z-10 rounded-[2.25rem] bg-silver/20 blur-2xl" />
@@ -29,17 +30,44 @@ function MomentCard() {
             </span>
           </div>
 
-          {/* The embedded YouTube Short (loads when it scrolls near) */}
-          <div className="relative aspect-[9/16] bg-black">
-            <iframe
-              src={`https://www.youtube-nocookie.com/embed/${ANISH.videoId}?rel=0&modestbranding=1&playsinline=1`}
-              title={`${ANISH.name} on stage at the ${ANISH.event}`}
-              loading="lazy"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-              referrerPolicy="strict-origin-when-cross-origin"
-              allowFullScreen
-              className="absolute inset-0 h-full w-full"
-            />
+          {/* The YouTube Short, trimmed to its lower 7:10 (the top of the frame is empty wall).
+              Until tapped it's our own cover + play button, so no YouTube UI shows; the tap loads
+              the player (no control bar) and starts it. The video sits on the box's bottom edge. */}
+          <div className="relative aspect-[7/10] overflow-hidden bg-black">
+            {playing ? (
+              <iframe
+                src={`https://www.youtube-nocookie.com/embed/${ANISH.videoId}?autoplay=1&controls=0&rel=0&modestbranding=1&playsinline=1`}
+                title={`${ANISH.name} on stage at the ${ANISH.event}`}
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                referrerPolicy="strict-origin-when-cross-origin"
+                allowFullScreen
+                className="absolute inset-x-0 bottom-0 aspect-[9/16] w-full"
+              />
+            ) : (
+              <button
+                type="button"
+                onClick={() => setPlaying(true)}
+                aria-label={`Play: ${ANISH.name} on stage at the ${ANISH.event}`}
+                className="group absolute inset-0 block size-full"
+              >
+                <img
+                  src={`https://i.ytimg.com/vi/${ANISH.videoId}/oar2.jpg`}
+                  alt=""
+                  width="1080"
+                  height="1920"
+                  loading="lazy"
+                  decoding="async"
+                  className="absolute inset-0 size-full object-cover object-bottom transition-transform duration-500 ease-out group-hover:scale-[1.03] motion-reduce:transition-none"
+                />
+                <span aria-hidden="true" className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-black/20" />
+                {/* Our play button */}
+                <span aria-hidden="true" className="key-cap-sm absolute left-1/2 top-1/2 flex size-16 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full text-accent transition-transform duration-200 group-hover:scale-110 group-active:scale-95 lg:size-20">
+                  <svg viewBox="0 0 24 24" width="40%" height="40%" fill="currentColor" className="translate-x-[8%]">
+                    <path d="M7 4.5v15a1 1 0 0 0 1.5.86l12.5-7.5a1 1 0 0 0 0-1.72L8.5 3.64A1 1 0 0 0 7 4.5Z" />
+                  </svg>
+                </span>
+              </button>
+            )}
           </div>
 
           {/* Caption */}
