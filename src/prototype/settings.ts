@@ -14,7 +14,7 @@ export type Accent = 'violet' | 'lime' | 'green';
 export type Bg = 'violet' | 'green' | 'blue' | 'graphite';
 export type HeroStyle = 'story' | 'trailer';
 
-const DEFAULTS = { version: 'v2' as Version, accent: 'lime' as Accent, bg: 'violet' as Bg, hero: 'story' as HeroStyle };
+const DEFAULTS = { version: 'v3' as Version, accent: 'lime' as Accent, bg: 'violet' as Bg, hero: 'story' as HeroStyle };
 const VERSIONS: Version[] = ['v1', 'v2', 'v3'];
 const ACCENTS: Accent[] = ['violet', 'lime', 'green'];
 const BGS: Bg[] = ['violet', 'green', 'blue', 'graphite'];
