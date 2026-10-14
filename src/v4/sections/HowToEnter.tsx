@@ -103,12 +103,11 @@ export default function HowToEnter() {
   const auto = !reduced;
   // a new run of the fill bar each time a step becomes active (also when the loop comes back to the same step)
   const [run, setRun] = useState(0);
-  // mouse resting on the active step's tab or on the panel → pause
-  const [hoverTab, setHoverTab] = useState<number | null>(null);
-  const [hoverPanel, setHoverPanel] = useState(false);
+  // mouse resting on the stepper rail (the tabs with their progress bars) → pause; the card below doesn't pause it
+  const [hoverRail, setHoverRail] = useState(false);
   // …and while the section is off screen (no stepping or re-rendering for nobody)
   const [onScreen, setOnScreen] = useState(true);
-  const paused = hoverTab === active || hoverPanel || !onScreen;
+  const paused = hoverRail || !onScreen;
 
   useEffect(() => {
     const el = ref.current;
@@ -156,7 +155,13 @@ export default function HowToEnter() {
 
       <div data-reveal="near" className="relative mx-auto mt-8 w-full max-w-4xl lg:mt-10" style={{ '--reveal-delay': '0.1s' }}>
         {/* Stepper rail: three steps, the active one fills while it plays */}
-        <div role="tablist" aria-label="Steps to enter" className="grid grid-cols-3 gap-2 lg:gap-4">
+        <div
+          role="tablist"
+          aria-label="Steps to enter"
+          onPointerEnter={(e) => mouseOnly(e, () => setHoverRail(true))}
+          onPointerLeave={(e) => mouseOnly(e, () => setHoverRail(false))}
+          className="grid grid-cols-3 gap-2 lg:gap-4"
+        >
           {STEPS.map((s, i) => {
             const done = i < active;
             const isActive = i === active;
@@ -169,8 +174,6 @@ export default function HowToEnter() {
                 aria-selected={isActive}
                 aria-controls="enter-panel"
                 onClick={() => pick(i)}
-                onPointerEnter={(e) => mouseOnly(e, () => setHoverTab(i))}
-                onPointerLeave={(e) => mouseOnly(e, () => setHoverTab(null))}
                 className="group flex min-h-12 flex-col gap-2.5 text-left"
               >
                 {/* progress bar */}
@@ -206,8 +209,6 @@ export default function HowToEnter() {
           id="enter-panel"
           role="tabpanel"
           aria-labelledby={`enter-tab-${active}`}
-          onPointerEnter={(e) => mouseOnly(e, () => setHoverPanel(true))}
-          onPointerLeave={(e) => mouseOnly(e, () => setHoverPanel(false))}
           className="neu-raised mt-5 overflow-hidden rounded-2xl lg:mt-6"
         >
           <div key={active} className="step-in grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.9fr)]">
