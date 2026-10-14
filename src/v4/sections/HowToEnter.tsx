@@ -48,18 +48,26 @@ const STEPS: Step[] = [
 /* ───────── One small visual per step ───────── */
 
 function JoinVisual() {
-  // a phone screen showing the result of joining: you're in
+  // the result of joining: a compact entry pass (fits the short phone strip and the tall desktop column)
   return (
     <div className="flex h-full items-center justify-center">
-      <div className="flex h-full max-h-[13rem] w-[7.5rem] flex-col items-center rounded-[1.25rem] border-2 border-white/15 bg-bg/80 px-3 pb-4 pt-3 lg:w-[9.5rem]">
-        <span className="h-1 w-8 rounded-full bg-white/15" />
-        <img src="lemonn-white.svg" alt="" width="193" height="52" className="mt-3 h-3.5 w-auto opacity-80 lg:h-4" />
-        <span className="story-pop mt-auto flex size-10 items-center justify-center rounded-full bg-accent text-lg font-extrabold text-[var(--accent-ink)] shadow-[0_0_1.5rem_rgb(var(--accent-glow-rgb)/0.5)] lg:size-12" style={{ animationDelay: '0.25s' }}>
-          ✓
-        </span>
-        <span className="mt-2 text-center text-[0.75rem] font-extrabold leading-tight text-fg lg:text-[0.875rem]">You’re in the pool</span>
-        <span className="mt-0.5 text-center font-mono text-[0.5625rem] font-bold tracking-[0.12em] text-accent lg:text-[0.625rem]">{POOL.amount.toUpperCase()} PRIZE POOL</span>
-        <span className="mt-auto" />
+      <div className="w-full max-w-[16rem] rounded-2xl border border-white/[0.12] bg-bg/80 p-4 shadow-[0_1rem_2rem_-1rem_rgba(0,0,0,0.8)] lg:max-w-[18rem] lg:p-5">
+        <div className="flex items-center justify-between gap-3">
+          <img src="lemonn-white.svg" alt="" width="193" height="52" className="h-3.5 w-auto opacity-80 lg:h-4" />
+          <span className="font-mono text-[0.5625rem] font-bold tracking-[0.16em] text-fg-subtle lg:text-[0.625rem]">ENTRY</span>
+        </div>
+        <div className="mt-3 flex items-center gap-3 lg:mt-4">
+          <span
+            className="story-pop flex size-10 shrink-0 items-center justify-center rounded-full bg-accent text-lg font-extrabold text-[var(--accent-ink)] shadow-[0_0_1.5rem_rgb(var(--accent-glow-rgb)/0.5)] lg:size-12 lg:text-xl"
+            style={{ animationDelay: '0.25s' }}
+          >
+            ✓
+          </span>
+          <div className="min-w-0">
+            <p className="text-[0.9375rem] font-extrabold leading-tight text-fg lg:text-base">You’re in the pool</p>
+            <p className="mt-1 whitespace-nowrap font-mono text-[0.5625rem] font-bold tracking-[0.12em] text-accent lg:text-[0.625rem]">{POOL.amount.toUpperCase()} PRIZE POOL</p>
+          </div>
+        </div>
       </div>
     </div>
   );
