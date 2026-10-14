@@ -27,7 +27,7 @@ After `npm run deploy`, the live link updates in about a minute.
 
 A floating button in the top-right corner opens the prototype controls. They are not part of the website.
 
-- **Version:** Original, V2 Story or V3 Stage (`?v=1` / `?v=2` / `?v=3`).
+- **Version:** Original, V2, V3 or V4 Final (`?v=1` … `?v=4`). V4 opens by default.
 - **First screen** (V2 only): Story (animated scenes: Anish → ₹1 Crore → 20 laptops → all rewards) or Static.
 - **Rank badge** (V3 only): Medal (circular "WORLD · #2 · TRADER" beside Anish) or Stamp ("WORLD'S #2 TRADER" stamped in 3D behind him). Either appears only after the title animation has finished.
 - **Accent colour** (Redesign only): Violet (the original colour), Lemonn lime (the brand green from the Lemonn logo) or Trading green.
@@ -36,7 +36,7 @@ A floating button in the top-right corner opens the prototype controls. They are
 The link updates as you switch, so you can share exactly what you see, e.g. for A/B tests:
 `?v=1` = Original, `?v=2&accent=lime&bg=violet` = Redesign, lime accent, violet background.
 Values: `accent` = `violet` | `lime` | `green`; `bg` = `violet` | `green` | `blue` | `graphite`; `badge` = `medal` | `stamp` (V3).
-With no parameters, the page shows the last choice on that device, or V3 with green accent and green background.
+With no parameters, the page shows the last choice on that device, or V4 with green accent and green background.
 
 ## The Join button system (redesign)
 
@@ -76,6 +76,8 @@ src/
     leaderboard/     Leaderboard.tsx + Flag.tsx + layers.ts — built from the Figma leaderboard
                      (file CCpQIcDySK63UMO0KJkkda, node 2:94); layers.ts holds every podium layer's exact
                      Figma position; SVG assets in public/leaderboard/
+  v4/              FINAL VERSION — started as a copy of V3; self-contained (its own content.ts, components,
+                   sections, leaderboard). Hand this folder (+ index.css, public/) to development.
   prototype/       PROTOTYPE ONLY — version + accent controls. Not part of the website.
 public/            Images, logos, cursors, font
 ```

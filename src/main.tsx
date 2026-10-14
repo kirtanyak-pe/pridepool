@@ -4,6 +4,7 @@ import './index.css';
 import OriginalHome from './v1/pages/Home';
 import RedesignHome from './v2/pages/Home';
 import StageHome from './v3/pages/Home';
+import FinalHome from './v4/pages/Home';
 import TermsPage from './v1/pages/TermsPage';
 import useReveal from './v1/components/useReveal';
 // PROTOTYPE ONLY: version + accent switcher. Remove these two imports, the switcher below and src/prototype/ before shipping.
@@ -27,7 +28,7 @@ function App() {
 
   return (
     <>
-      {version === 'v3' ? <StageHome badgeStyle={badge} /> : version === 'v2' ? <RedesignHome heroStyle={hero} /> : <OriginalHome />}
+      {version === 'v4' ? <FinalHome badgeStyle={badge} /> : version === 'v3' ? <StageHome badgeStyle={badge} /> : version === 'v2' ? <RedesignHome heroStyle={hero} /> : <OriginalHome />}
       <VersionSwitcher version={version} onVersionChange={setVersion} accent={accent} onAccentChange={setAccent} bg={bg} onBgChange={setBg} hero={hero} onHeroChange={setHero} badge={badge} onBadgeChange={setBadge} />
     </>
   );
