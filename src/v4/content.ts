@@ -18,7 +18,8 @@ export const ANISH = {
   team: 'Booming Bulls',
   /** His words on the championship stage (from the YouTube short below). */
   quoteBefore: 'I came here to become the champion.',
-  quoteAfter: 'One more minute and I would be the champion.',
+  /** \n = forced line break on the page */
+  quoteAfter: 'One more minute and\nI would be the champion.',
   videoId: 'WDVdQ0wyrvI',
 };
 

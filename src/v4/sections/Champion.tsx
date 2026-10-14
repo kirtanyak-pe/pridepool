@@ -93,7 +93,7 @@ function Beat({ active, quote, delay }: { active: boolean; quote: string; delay?
   return (
     <li data-reveal="near" className="relative" style={delay ? { '--reveal-delay': delay } : undefined}>
       <blockquote
-        className={`relative tracking-[-0.02em] ${active ? 'text-[1.5rem] font-extrabold leading-tight text-fg lg:text-[2rem]' : 'text-base font-semibold leading-snug text-fg-muted lg:text-lg'}`}
+        className={`relative whitespace-pre-line tracking-[-0.02em] ${active ? 'text-[1.5rem] font-extrabold leading-tight text-fg lg:text-[2rem]' : 'text-base font-semibold leading-snug text-fg-muted lg:text-lg'}`}
         style={{ transition: `font-size 0.6s ${EASE}, color 0.6s ease, font-weight 0.6s ease` }}
       >
         {/* timeline dot, centred on the quote's first line (em = the quote's own size, so it follows the grow/shrink) */}
