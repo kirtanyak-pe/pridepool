@@ -266,7 +266,7 @@ export default function ArenaHero({ badgeStyle = 'medal', ready = true }: { badg
             tucked
             value={POOL.short}
             label={POOL.label}
-            className="z-10 -mr-9 w-[7.5rem] lg:-mr-20 lg:w-[13.5rem]"
+            className="z-10 -mr-16 w-[7.5rem] lg:-mr-[7.75rem] lg:w-[13.5rem]"
             delay="0.35s"
             stamp={stampOf(1)}
             onStamped={() => setCards(2)}
@@ -283,7 +283,7 @@ export default function ArenaHero({ badgeStyle = 'medal', ready = true }: { badg
             tucked
             value={`${LAPTOPS.count} ${LAPTOPS.label}`}
             label="To win"
-            className="z-10 -ml-9 w-[7.5rem] lg:-ml-20 lg:w-[13.5rem]"
+            className="z-10 -ml-16 w-[7.5rem] lg:-ml-[7.75rem] lg:w-[13.5rem]"
             delay="0.5s"
             stamp={stampOf(2)}
             onStamped={onCardsDone}
