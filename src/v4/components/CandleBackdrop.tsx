@@ -4,9 +4,7 @@
  * the last candle lands and pulses "live", then the price lines + labels appear (top to bottom).
  * Trading colours (green up / red down) stay fixed, whatever the theme.
  */
-
-const UP = '#3dd68c';
-const DOWN = '#f2545b';
+import { UP, DOWN } from './trading';
 
 // Hand-tuned uptrend (y grows downward in SVG): [open, close, high, low]
 const CANDLES: [number, number, number, number][] = [

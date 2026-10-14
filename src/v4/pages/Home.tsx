@@ -10,6 +10,7 @@ import FinalCall from '../sections/FinalCall';
 import StickyJoin from '../components/StickyJoin';
 import Background from '../components/Background';
 import Navbar from '../components/Navbar';
+import CandleCursor from '../components/CandleCursor';
 import { onLanded } from '../components/landed';
 
 /** Sections the page snaps to, in page order */
@@ -22,6 +23,12 @@ const INTRO_LOCK_MAX_MS = 10000;
 const LANDING_HOLD_MS = 500;
 // Slow networks: the longest the intro waits for the hero photo + font after the hold
 const LANDING_WAIT_MAX_MS = 1500;
+
+// The candle cursor needs a mouse (or trackpad); not in Windows high-contrast mode, which keeps the system cursor
+const HAS_MOUSE =
+  typeof window !== 'undefined' &&
+  window.matchMedia('(any-hover: hover) and (any-pointer: fine)').matches &&
+  !window.matchMedia('(forced-colors: active)').matches;
 
 /**
  * Redesign V4 — the final version (started as a copy of V3; self-contained: everything it uses lives in src/v4).
@@ -199,6 +206,7 @@ export default function Home({ badgeStyle = 'medal' }: { badgeStyle?: 'medal' | 
       <Footer />
       {/* Mounts with the hero so it can see the hero's Join button */}
       {ready && <StickyJoin />}
+      {HAS_MOUSE && <CandleCursor />}
     </>
   );
 }

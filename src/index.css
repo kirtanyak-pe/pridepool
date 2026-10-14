@@ -1039,6 +1039,69 @@ html.scale-artboard {
   }
 }
 
+/* V4: the candle cursor (v4/components/CandleCursor.tsx). While the page scrolls, the mouse cursor becomes a
+   candle; html.has-candle-cursor is set only for that time, so the normal cursor is back as soon as it's still.
+   Same dark outline as the cursors above, so it reads on photos and green buttons. */
+html.has-candle-cursor,
+html.has-candle-cursor * {
+  cursor: none !important;
+}
+.candle-cursor {
+  --c: var(--up);
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 2147483647;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+  opacity: 0;
+  /* fades out as the normal cursor comes back… */
+  transition: opacity 0.15s ease;
+  will-change: transform;
+}
+.candle-cursor[data-on] {
+  opacity: 1;
+  /* …but appears at once, so there's never a moment with no cursor */
+  transition-duration: 0s;
+}
+.candle-cursor[data-red] {
+  --c: var(--down);
+}
+.candle-cursor-body,
+.candle-cursor-wick {
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: block;
+  background: var(--c);
+  transition: background-color 0.15s ease;
+}
+.candle-cursor-wick {
+  width: 2px;
+  margin-left: -1px;
+  border-radius: 1px;
+  box-shadow: 0 0 0 1px #0b0b0f;
+}
+.candle-cursor-body {
+  width: 10px;
+  margin-left: -5px;
+  border-radius: 2px;
+  box-shadow:
+    0 0 0 1.5px #0b0b0f,
+    0 0 12px color-mix(in srgb, var(--c) 55%, transparent);
+}
+/* high-contrast mode keeps the system cursor (forced colours would wipe the candle's colours) */
+@media (forced-colors: active) {
+  html.has-candle-cursor,
+  html.has-candle-cursor * {
+    cursor: auto !important;
+  }
+  .candle-cursor {
+    display: none;
+  }
+}
+
 /* V4: a section's animations wait until it has landed (data-landed, set in v4/pages/Home.tsx) */
 .reveal-ready .fold:not([data-landed]) [data-reveal][data-revealed] {
   opacity: 0;
