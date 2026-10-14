@@ -105,7 +105,7 @@ function CoinBubbles() {
           key={`b${i}`}
           aria-hidden="true"
           className="story-coin key-cap-sm pointer-events-none absolute flex h-5 w-5 items-center justify-center rounded-full text-[0.625rem] font-extrabold text-accent lg:h-8 lg:w-8 lg:text-[0.875rem]"
-          style={{ left: b.left, bottom: b.bottom, '--c-ms': b.ms, '--c-delay': b.delay }}
+          style={{ left: b.left, bottom: b.bottom, '--c-ms': b.ms, '--c-delay': b.delay, animationFillMode: 'backwards' }}
         >
           ₹
         </span>

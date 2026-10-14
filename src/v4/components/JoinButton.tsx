@@ -27,17 +27,24 @@ type Props = {
    * so there's only ever one Join button in view. The floating one itself passes false.
    */
   inPage?: boolean;
+  /** primary = the green 3D key; outline = quiet secondary look (navbar on the first fold) */
+  variant?: 'primary' | 'outline';
   className?: string;
 };
 
-export default function JoinButton({ location, size = 'lg', inPage = true, className = '' }: Props) {
+const VARIANTS = {
+  primary: 'arena-cta btn-key',
+  outline: 'rounded-full border border-accent/70 text-accent transition-colors duration-200 hover:bg-accent/10',
+};
+
+export default function JoinButton({ location, size = 'lg', inPage = true, variant = 'primary', className = '' }: Props) {
   return (
     <a
       href={JOIN_URL}
       data-cta="join"
       data-cta-location={location}
       data-cta-inpage={inPage ? '' : undefined}
-      className={`arena-cta btn-key items-center justify-center gap-2 font-extrabold tracking-[-0.01em] ${SIZES[size]} ${className}`}
+      className={`${VARIANTS[variant]} items-center justify-center gap-2 font-extrabold tracking-[-0.01em] ${SIZES[size]} ${className}`}
     >
       {JOIN_LABEL}
       <span aria-hidden="true">→</span>

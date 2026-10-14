@@ -16,8 +16,8 @@ const LINKS = [
 /**
  * Fixed top bar: co-brand logos, quick links to each section, and a Join button.
  * Transparent over the hero; picks up a dark glass backdrop once the page scrolls.
- * - Desktop: links inline (the one for the section on screen is highlighted). Join slides in
- *   once the hero has scrolled away, so there's never a second Join next to the hero's own.
+ * - Desktop: links inline (the one for the section on screen is highlighted). Join is an outline
+ *   button on the first fold (next to the hero's own big Join) and turns primary once the hero scrolls away.
  * - Phones: links in a menu sheet; Join stays in the bottom bar (StickyJoin).
  * The hero keeps a same-height spacer (h-16 / lg:h-20) so nothing sits under the bar.
  */
@@ -92,13 +92,24 @@ export default function Navbar() {
           </ul>
         </nav>
 
-        {/* Desktop Join: slides in after the hero */}
-        <div
-          aria-hidden={!pastHero}
-          inert={!pastHero}
-          className={`hidden shrink-0 transition-[opacity,transform] duration-300 ease-arena-out motion-reduce:transition-none md:block ${pastHero ? 'opacity-100' : 'pointer-events-none translate-y-1 opacity-0'} md:ml-auto lg:ml-0`}
-        >
-          <JoinButton size="nav" location="navbar" inPage={false} />
+        {/* Desktop Join: a quiet outline on the first fold (the hero has its own big Join),
+            turning into the primary green button once the hero scrolls away. Both sit in the
+            same spot and crossfade; only the visible one can be tapped. */}
+        <div className="hidden shrink-0 md:ml-auto md:grid lg:ml-0">
+          <div
+            aria-hidden={pastHero}
+            inert={pastHero}
+            className={`col-start-1 row-start-1 transition-opacity duration-300 motion-reduce:transition-none ${pastHero ? 'pointer-events-none opacity-0' : 'opacity-100'}`}
+          >
+            <JoinButton size="nav" variant="outline" location="navbar" inPage={false} />
+          </div>
+          <div
+            aria-hidden={!pastHero}
+            inert={!pastHero}
+            className={`col-start-1 row-start-1 transition-opacity duration-300 motion-reduce:transition-none ${pastHero ? 'opacity-100' : 'pointer-events-none opacity-0'}`}
+          >
+            <JoinButton size="nav" location="navbar" inPage={false} />
+          </div>
         </div>
 
         {/* Phone menu button (left of the prototype switcher, which sits in the top-right corner) */}
