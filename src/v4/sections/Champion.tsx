@@ -12,7 +12,7 @@ import { onLanded } from '../components/landed';
 function MomentCard() {
   const [playing, setPlaying] = useState(false);
   return (
-    <div data-reveal="true" className="relative mx-auto w-full max-w-[17.5rem] lg:max-w-[22rem]">
+    <div data-reveal="true" className="relative mx-auto w-full max-w-[20rem] lg:max-w-[22rem]">
       <div aria-hidden="true" className="arena-halo absolute -inset-4 -z-10 rounded-[2.25rem] bg-silver/20 blur-2xl" />
       {/* Silver frame = his #2 finish, same metal as the podium */}
       <div className="rounded-[1.75rem] p-[2px]" style={{ background: 'linear-gradient(160deg, #ffffff 0%, var(--color-silver) 30%, #6f6f82 70%, var(--color-silver) 100%)' }}>
@@ -31,10 +31,11 @@ function MomentCard() {
             </span>
           </div>
 
-          {/* The YouTube Short, trimmed to its lower 7:10 (the top of the frame is empty wall).
+          {/* The YouTube Short, trimmed from the top (empty wall): phones show its bottom two-thirds (27:32),
+              desktop its lower 7:10.
               Until tapped it's our own cover + play button, so no YouTube UI shows; the tap loads
               the player (no control bar) and starts it. The video sits on the box's bottom edge. */}
-          <div className="relative aspect-[7/10] overflow-hidden bg-black">
+          <div className="relative aspect-[27/32] overflow-hidden bg-black lg:aspect-[7/10]">
             {playing ? (
               <iframe
                 src={`https://www.youtube-nocookie.com/embed/${ANISH.videoId}?autoplay=1&controls=0&rel=0&modestbranding=1&playsinline=1`}
