@@ -135,9 +135,13 @@ function PodiumScene({ rolling }: { rolling: boolean }) {
     <div className="lb-scene relative -mx-[15%] w-[130%] lg:mx-0 lg:w-full" style={{ aspectRatio: '2033 / 813.0808715820312', containerType: 'inline-size' }}>
       {/* Paint order as in Figma: silver, bronze, gold on top */}
       <Podium box={GROUPS.silver} delay="0.2s" label={`2nd place, ${TOP.silver.name}, ${TOP.silver.score}`}>
-        <Layers layers={SILVER_BELOW} />
+        <div className="lb-body absolute inset-0">
+          <Layers layers={SILVER_BELOW} />
+        </div>
         <Details at={DETAILS.silver} crown="silver-crown" crownSize={[82.455, 53.479]} gaps={[16.815, 20]} nameSize={36} scoreSize={44} scoreColor="#ffffff" shadow={[4.139, 12.418]} leader={TOP.silver} rolling={rolling} />
-        <Layers layers={SILVER_ABOVE} />
+        <div className="lb-body absolute inset-0">
+          <Layers layers={SILVER_ABOVE} />
+        </div>
         <Coin box={SILVER_MEDAL_BOX} origin="50% 50%" delay="0.2s" float>
           {/* medal artwork pulled in towards the flag: thinner ring, same flag size */}
           <div className="absolute inset-0" style={{ transform: `scale(${MEDAL_RING_SCALE.silver})`, transformOrigin: '49.7% 49.91%' }}>
@@ -148,7 +152,7 @@ function PodiumScene({ rolling }: { rolling: boolean }) {
       </Podium>
 
       <Podium box={GROUPS.bronze} delay="0s" label={`3rd place, ${TOP.bronze.name}, ${TOP.bronze.score}`}>
-        <div className="absolute overflow-hidden" style={pos(BRONZE_PODIUM.frame)}>
+        <div className="lb-body absolute overflow-hidden" style={pos(BRONZE_PODIUM.frame)}>
           <Img src="bronze-crystal" box={BRONZE_PODIUM.crystal} />
         </div>
         <Coin box={BRONZE_MEDAL.frame} origin="50% 18.79%" delay="0s">
@@ -161,7 +165,7 @@ function PodiumScene({ rolling }: { rolling: boolean }) {
       </Podium>
 
       <Podium box={GROUPS.gold} delay="0.45s" label={`1st place, ${TOP.gold.name}, ${TOP.gold.score}`}>
-        <div className="absolute overflow-hidden" style={pos(GOLD_PODIUM.frame)}>
+        <div className="lb-body absolute overflow-hidden" style={pos(GOLD_PODIUM.frame)}>
           <Img src="gold-crystal" box={GOLD_PODIUM.crystal} />
           {/* Light sweeping across the gold crystal (masked to its shape) */}
           <span

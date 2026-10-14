@@ -854,6 +854,12 @@ html.scale-artboard {
   to { transform: perspective(40rem) rotateY(360deg); }
 }
 
+/* V4 phones: the podium bodies (crystals only, not names/medals) stretch down from their top so their
+   bases run behind the standings card instead of ending just above it. Desktop keeps the Figma shape. */
+@media (max-width: 1023.98px) {
+  .lb .lb-body { transform: scaleY(1.3); transform-origin: 50% 0; }
+}
+
 /* V4: India's medal (World #2) keeps gently hovering once it has landed: up and slightly bigger,
    then back down to normal. No medal flips. */
 .lb.lb-in .lb-float { animation: lb-float 2.6s ease-in-out calc(var(--d, 0s) + 1.4s) infinite; }
