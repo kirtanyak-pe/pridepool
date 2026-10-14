@@ -247,7 +247,7 @@ export default function ArenaHero({
             </div>
             <p className="mt-4 flex items-center gap-2 text-[1rem] font-semibold text-fg-muted">
               <span aria-hidden="true" className="h-2 w-2 rounded-full bg-success shadow-[0_0_8px_2px_rgba(61,214,140,0.5)]" />
-              Already on Lemonn? You’re already in.
+              Existing Lemonn users are already in.
             </p>
           </div>
         </div>
@@ -297,7 +297,7 @@ export default function ArenaHero({
           </div>
           <p className="mt-3 flex items-center justify-center gap-2 text-[0.8125rem] font-semibold text-fg-muted">
             <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-success shadow-[0_0_8px_2px_rgba(61,214,140,0.5)]" />
-            Already on Lemonn? You’re already in.
+            Existing Lemonn users are already in.
           </p>
         </div>
       </div>
