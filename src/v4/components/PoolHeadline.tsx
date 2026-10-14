@@ -1,4 +1,7 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
+
+// The sweep's light has left the text well before its 1.9s ease-out tail ends — what follows starts here
+const SWEEP_VISIBLE_MS = 1100;
 import Odometer from '../components/Odometer';
 import { POOL } from '../content';
 
@@ -17,15 +20,26 @@ const ease = 'cubic-bezier(0.22, 1, 0.36, 1)';
 
 /** One-time light sweep: a copy of the text, filled only with a bright streak (styles: .shimmer-once). */
 function Sweep({ children, delay = '0s', onDone }: { children: React.ReactNode; delay?: string; onDone?: () => void }) {
+  const timer = useRef<number | undefined>(undefined);
+  useEffect(() => () => window.clearTimeout(timer.current), []);
   return (
-    <span aria-hidden="true" className="shimmer-once pointer-events-none absolute inset-0 whitespace-nowrap" style={{ animationDelay: delay }} onAnimationEnd={onDone}>
+    <span
+      aria-hidden="true"
+      className="shimmer-once pointer-events-none absolute inset-0 whitespace-nowrap"
+      style={{ animationDelay: delay }}
+      onAnimationStart={() => onDone && (timer.current = window.setTimeout(onDone, SWEEP_VISIBLE_MS))}
+      onAnimationEnd={onDone}
+    >
       {children}
     </span>
   );
 }
 
-/** onComplete fires once, when the whole title animation — including the light sweep — has finished. */
-export default function PoolHeadline({ align = 'center', onComplete }: { align?: 'center' | 'left'; onComplete?: () => void }) {
+/**
+ * onComplete fires once, when the whole title animation — including the light sweep — has finished.
+ * Bump `replay` to run the light sweep once more (e.g. after the rank badge lands).
+ */
+export default function PoolHeadline({ align = 'center', onComplete, replay = 0 }: { align?: 'center' | 'left'; onComplete?: () => void; replay?: number }) {
   const reduced = typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const [phase, setPhase] = useState<Phase>(reduced ? 'final' : 'roll');
   const [sweep, setSweep] = useState(false);
@@ -101,7 +115,7 @@ export default function PoolHeadline({ align = 'center', onComplete }: { align?:
             <span className="invisible inline-block">0</span>
           </span>
           {sweep && (
-            <Sweep>
+            <Sweep key={replay}>
               <span className="tabular-nums">₹1</span>
               <span className="pl-[0.22em]">Crore</span>
             </Sweep>
@@ -118,7 +132,7 @@ export default function PoolHeadline({ align = 'center', onComplete }: { align?:
           >
             <span className="relative inline-block">
               <span className="text-grad-silver">{POOL.title}</span>
-              {sweep && <Sweep delay="0.3s" onDone={complete}>{POOL.title}</Sweep>}
+              {sweep && <Sweep key={replay} delay="0.3s" onDone={complete}>{POOL.title}</Sweep>}
             </span>
           </p>
         </div>

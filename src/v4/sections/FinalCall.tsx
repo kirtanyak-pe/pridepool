@@ -24,7 +24,7 @@ export default function FinalCall() {
   ];
 
   return (
-    <section id="join" aria-labelledby="join-heading" className="arena-container relative pb-20 lg:pb-28">
+    <section id="join" aria-labelledby="join-heading" className="snap-start arena-container relative pb-20 lg:pb-28">
       <div
         aria-hidden="true"
         className="pointer-events-none absolute left-1/2 top-1/2 h-80 w-[40rem] max-w-full -translate-x-1/2 -translate-y-1/2 opacity-60 blur-[110px]"

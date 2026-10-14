@@ -543,6 +543,17 @@
     );
   }
 }
+/* Glow blooms in behind the figure once the image has entered (image: 0.55s delay + 0.9s) */
+.figure-glow-in {
+  animation: figure-glow-in 1.1s cubic-bezier(0.22, 1, 0.36, 1) 1.3s both;
+}
+@keyframes figure-glow-in {
+  from { opacity: 0; transform: scale(0.8); }
+  to { opacity: 1; transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .figure-glow-in { animation: none; }
+}
 .hero-figure-base {
   background: linear-gradient(
     to top,
@@ -744,6 +755,15 @@
   from { stroke-dashoffset: 1; }
   to { stroke-dashoffset: 0; }
 }
+/* Price lines appear as the candles climb to them (delay set per line) */
+.grid-reveal {
+  transform-box: fill-box;
+  animation: grid-reveal 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+@keyframes grid-reveal {
+  from { opacity: 0; transform: translateX(-0.5rem); }
+  to { opacity: 1; transform: none; }
+}
 /* Last candle "live" pulse */
 .candle-live {
   animation: candle-live 1.6s ease-in-out 2.2s infinite alternate;
@@ -756,7 +776,8 @@
   .ticker-track,
   .candle-grow,
   .chart-draw,
-  .candle-live {
+  .candle-live,
+  .grid-reveal {
     animation: none !important;
   }
 }
@@ -894,4 +915,30 @@ html.scale-artboard {
 @media (prefers-reduced-motion: reduce) {
   .rank-stamp { animation: none; }
   .rank-stamp-impact { display: none; }
+}
+
+/* V4 rank stamp: a real rubber stamp. It comes down from above the page, accelerating (ease-in),
+   hits once, squashes under the press, and leaves its ink: a bright flash that settles.
+   No spring or bounce. Tilted +9deg. Impact lands at 62% of 0.55s ≈ 0.34s. */
+.stamp-press {
+  transform: rotate(9deg);
+  animation: stamp-press 0.55s both;
+}
+@keyframes stamp-press {
+  0% { opacity: 0; transform: rotate(11deg) scale(2.6); filter: blur(2px) drop-shadow(0 3rem 2rem rgba(0, 0, 0, 0.6)); animation-timing-function: cubic-bezier(0.55, 0, 1, 0.45); }
+  20% { opacity: 1; }
+  62% { transform: rotate(9deg) scale(0.94, 0.92); filter: blur(0) brightness(1.6) drop-shadow(0 0 0 rgba(0, 0, 0, 0)); animation-timing-function: cubic-bezier(0.2, 0.8, 0.3, 1); }
+  100% { opacity: 1; transform: rotate(9deg); filter: none; }
+}
+.stamp-press-impact {
+  transform: rotate(9deg);
+  animation: stamp-press-impact 0.6s ease-out 0.34s both;
+}
+@keyframes stamp-press-impact {
+  from { opacity: 0.85; transform: rotate(9deg) scale(0.95); }
+  to { opacity: 0; transform: rotate(9deg) scale(1.35); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .stamp-press { animation: none; }
+  .stamp-press-impact { display: none; }
 }

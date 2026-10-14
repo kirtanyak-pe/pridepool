@@ -9,32 +9,30 @@ function Corner({ className }: { className: string }) {
 /**
  * The floating Join button: a full-width bar on phones, a card on desktop.
  *
- * Rule: only one Join button on screen at a time. It appears whenever no in-page Join button
- * (hero, round checkpoints, final call) is in view, and stays away over the footer
- * and anything marked data-sticky-avoid.
+ * Rule: it appears from the second fold (once the hero has scrolled away) and stays
+ * until the "Enter the Pride Pool" section (#join) comes into view — it then hands over
+ * to that section's own Join button and stays away for the rest of the page.
  */
 export default function StickyJoin() {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    const watched = [
-      ...document.querySelectorAll('[data-cta-inpage]'),
-      // Content the floating button must never cover (e.g. the V3 leaderboard table)
-      ...document.querySelectorAll('[data-sticky-avoid]'),
-      document.getElementById('footer'),
-    ].filter((el): el is Element => el !== null);
-    if (!watched.length) return;
+    const hero = document.getElementById('hero');
+    const finalCall = document.getElementById('join');
+    if (!hero || !finalCall) return;
 
-    const onScreen = new Set<Element>();
-    const io = new IntersectionObserver((entries) => {
-      for (const entry of entries) {
-        if (entry.isIntersecting) onScreen.add(entry.target);
-        else onScreen.delete(entry.target);
-      }
-      setVisible(onScreen.size === 0);
-    });
-    watched.forEach((el) => io.observe(el));
-    return () => io.disconnect();
+    const update = () => {
+      const pastHero = hero.getBoundingClientRect().bottom <= 0;
+      const reachedFinal = finalCall.getBoundingClientRect().top < window.innerHeight;
+      setVisible(pastHero && !reachedFinal);
+    };
+    update();
+    window.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', update);
+    return () => {
+      window.removeEventListener('scroll', update);
+      window.removeEventListener('resize', update);
+    };
   }, []);
 
   return (

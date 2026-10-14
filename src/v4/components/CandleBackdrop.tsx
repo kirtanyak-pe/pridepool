@@ -23,6 +23,11 @@ const GRID = [
   { y: 139, label: '₹25 L' },
 ];
 
+const CANDLE_STAGGER_MS = 85;
+
+/** A price line shows up when the first candle's high reaches it (y grows downward). */
+const reachDelay = (y: number) => Math.max(0, CANDLES.findIndex(([, , h]) => h <= y)) * CANDLE_STAGGER_MS;
+
 export default function CandleBackdrop({ className = '' }: { className?: string }) {
   const step = 17;
   const width = 9;
@@ -36,7 +41,7 @@ export default function CandleBackdrop({ className = '' }: { className?: string 
       className={`pointer-events-none ${className}`}
     >
       {GRID.map((g) => (
-        <g key={g.y}>
+        <g key={g.y} className="grid-reveal" style={{ animationDelay: `${reachDelay(g.y)}ms` }}>
           <line x1="0" x2="314" y1={g.y} y2={g.y} stroke="currentColor" strokeOpacity="0.12" strokeDasharray="2 4" />
           <text x="338" y={g.y + 2.5} textAnchor="end" fontSize="7" fontFamily="ui-monospace, monospace" fill="currentColor" fillOpacity="0.45">
             {g.label}
@@ -50,7 +55,7 @@ export default function CandleBackdrop({ className = '' }: { className?: string 
         const color = up ? UP : DOWN;
         const last = i === CANDLES.length - 1;
         return (
-          <g key={i} className={`candle-grow ${last ? 'candle-live' : ''}`} style={{ animationDelay: `${i * 85}ms` }}>
+          <g key={i} className={`candle-grow ${last ? 'candle-live' : ''}`} style={{ animationDelay: `${i * CANDLE_STAGGER_MS}ms` }}>
             <line x1={x + width / 2} x2={x + width / 2} y1={h} y2={l} stroke={color} strokeWidth="1" />
             <rect x={x} y={Math.min(o, c)} width={width} height={Math.max(2, Math.abs(o - c))} rx="1" fill={color} fillOpacity={up ? 0.9 : 0.75} />
           </g>

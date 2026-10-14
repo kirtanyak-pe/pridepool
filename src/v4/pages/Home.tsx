@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import ArenaHero from '../sections/ArenaHero';
 import Champion from '../sections/Champion';
 import Pool from '../sections/Pool';
@@ -11,6 +12,10 @@ import Checkpoint from '../components/Checkpoint';
 import StickyJoin from '../components/StickyJoin';
 import { LAPTOPS, POOL } from '../content';
 import Background from '../components/Background';
+import Navbar from '../components/Navbar';
+
+// Pause after landing before the hero starts building
+const LANDING_HOLD_MS = 500;
 
 /**
  * Redesign V4 — the final version (started as a copy of V3; self-contained: everything it uses lives in src/v4).
@@ -19,17 +24,33 @@ import Background from '../components/Background';
  * the final call, a short FAQ and a slim footer. The page scales like an image (html.scale-artboard).
  */
 export default function Home({ badgeStyle = 'medal' }: { badgeStyle?: 'medal' | 'stamp' }) {
+  const [ready, setReady] = useState(false);
+  // Gentle section snapping: when a scroll ends near a section's start, it settles there (under the Navbar).
+  // Proximity, not mandatory, so the round checkpoints between sections stay reachable.
+  useEffect(() => {
+    const root = document.documentElement;
+    root.classList.add('snap-y', 'snap-proximity');
+    return () => root.classList.remove('snap-y', 'snap-proximity');
+  }, []);
+  useEffect(() => {
+    // Warm the hero images during the hold so they're there when the stage builds
+    ['anish.webp', 'laptop-hd.webp'].forEach((src) => (new Image().src = src));
+    const t = window.setTimeout(() => setReady(true), LANDING_HOLD_MS);
+    return () => window.clearTimeout(t);
+  }, []);
+
   return (
     <>
+      <Navbar />
       <main id="main" className="relative">
         <Background />
-        <ArenaHero badgeStyle={badgeStyle} />
+        <ArenaHero badgeStyle={badgeStyle} ready={ready} />
         <div aria-hidden="true" className="pointer-events-none relative -z-[5] h-0">
           <div className="absolute inset-x-0 top-0 h-48 bg-gradient-to-b from-bg to-transparent sm:h-64" />
         </div>
 
         {/* Round 1 · The Champion */}
-        <div className="pt-12 lg:pt-20">
+        <div className="snap-start pt-12 lg:pt-20">
           <Champion />
         </div>
         <Checkpoint round={1} name="The Champion" lead="Celebrate Anish’s run" />
@@ -47,7 +68,8 @@ export default function Home({ badgeStyle = 'medal' }: { badgeStyle?: 'medal' | 
         <Faqs />
       </main>
       <Footer />
-      <StickyJoin />
+      {/* Mounts with the hero so it can see the hero's Join button */}
+      {ready && <StickyJoin />}
     </>
   );
 }
