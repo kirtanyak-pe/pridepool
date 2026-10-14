@@ -967,6 +967,21 @@ html.scale-artboard {
   62% { transform: scale(1.03, 0.92); filter: blur(0) brightness(1.6) drop-shadow(0 0 0 rgba(0, 0, 0, 0)); animation-timing-function: cubic-bezier(0.2, 0.8, 0.3, 1); }
   100% { opacity: 1; transform: none; filter: none; }
 }
+/* V4 hero Join: one attention shake once the whole intro has played */
+.join-shake {
+  animation: join-shake 0.7s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+@keyframes join-shake {
+  0%, 100% { transform: none; }
+  15% { transform: translateX(-0.375rem) rotate(-1.5deg); }
+  30% { transform: translateX(0.375rem) rotate(1.5deg); }
+  45% { transform: translateX(-0.3rem) rotate(-1deg); }
+  60% { transform: translateX(0.25rem) rotate(0.75deg); }
+  75% { transform: translateX(-0.125rem); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .join-shake { animation: none; }
+}
 .card-stamp-impact {
   animation: card-stamp-impact 0.6s ease-out 0.31s both;
 }

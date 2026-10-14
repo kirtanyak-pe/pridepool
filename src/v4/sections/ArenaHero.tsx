@@ -1,4 +1,4 @@
-import { useState, type ReactNode } from 'react';
+import { useEffect, useState, type ReactNode } from 'react';
 import JoinButton from '../components/JoinButton';
 import PoolHeadline from '../components/PoolHeadline';
 import { ANCHORS, ANISH, LAPTOPS, POOL } from '../content';
@@ -52,7 +52,7 @@ function Pedestal({
         <span aria-hidden="true" className="absolute inset-x-3 top-0 h-px bg-gradient-to-r from-transparent via-accent/70 to-transparent" />
         {/* impact ring when the card is stamped down */}
         {stamp === 'play' && <span aria-hidden="true" className="card-stamp-impact pointer-events-none absolute -inset-1.5 rounded-[1rem] border-2 border-accent/70 lg:rounded-[1.25rem]" />}
-        <span className="text-[1.125rem] font-extrabold leading-none tracking-[-0.02em] text-fg lg:text-[1.75rem]">{value}</span>
+        <span className="text-[1rem] font-extrabold uppercase leading-none tracking-[-0.01em] text-fg lg:text-[1.625rem]">{value}</span>
         <span className="mt-1 text-[0.5625rem] font-bold uppercase leading-tight tracking-[0.14em] text-fg-subtle lg:text-[0.75rem]">{label}</span>
       </div>
       )}
@@ -182,7 +182,19 @@ function Headline({ align, onComplete, replay }: { align: 'center' | 'left'; onC
   );
 }
 
-export default function ArenaHero({ badgeStyle = 'medal', ready = true }: { badgeStyle?: 'medal' | 'stamp'; ready?: boolean }) {
+/** The title's last shine takes this long to sweep across (PoolHeadline: SWEEP_VISIBLE_MS) */
+const JOIN_SHAKE_AFTER_MS = 1100;
+
+export default function ArenaHero({
+  badgeStyle = 'medal',
+  ready = true,
+  onIntroDone,
+}: {
+  badgeStyle?: 'medal' | 'stamp';
+  ready?: boolean;
+  /** Fires once the whole intro has played (title → badge → card stamps → last shine) */
+  onIntroDone?: () => void;
+}) {
   // The rank badge waits until the title animation has fully finished, so the two never compete.
   const [titleDone, setTitleDone] = useState(false);
   const onTitleDone = () => setTitleDone(true);
@@ -194,10 +206,21 @@ export default function ArenaHero({ badgeStyle = 'medal', ready = true }: { badg
   const stampOf = (n: 1 | 2) => (cards < n ? 'wait' : cards === n ? 'play' : 'done') as 'wait' | 'play' | 'done';
   // …and once both cards are down, the title's light sweep plays one more time
   const [sweepReplay, setSweepReplay] = useState(0);
+  // …and once that last shine has swept across, the hero's Join button gives one shake (and scrolling unlocks)
+  const [shakeJoin, setShakeJoin] = useState(false);
   const onCardsDone = () => {
     setCards(3);
     setSweepReplay((n) => (n === 0 ? 1 : n));
+    // the shine finishes → Join shakes and the page can be scrolled
+    window.setTimeout(() => {
+      setShakeJoin(true);
+      onIntroDone?.();
+    }, JOIN_SHAKE_AFTER_MS);
   };
+  // Reduced motion: no intro to wait for
+  useEffect(() => {
+    if (reduced) onIntroDone?.();
+  }, [reduced, onIntroDone]);
   return (
     <section id="hero" aria-labelledby="hero-heading" className="relative isolate flex h-[52.75rem] snap-start flex-col overflow-hidden lg:h-[56.25rem]">
       <h1 id="hero-heading" className="sr-only">
@@ -220,7 +243,9 @@ export default function ArenaHero({ badgeStyle = 'medal', ready = true }: { badg
             Celebrating <strong className="font-bold text-fg">{ANISH.name}</strong>, India’s World {ANISH.rank} at the {ANISH.event}, with {POOL.amount} in brokerage credits and {LAPTOPS.count} laptops.
           </p>
           <div className="arena-enter mt-10" style={{ '--e-delay': '0.6s' }}>
-            <JoinButton location="hero" />
+            <div className={`w-fit ${shakeJoin ? 'join-shake' : ''}`}>
+              <JoinButton location="hero" />
+            </div>
             <p className="mt-4 flex items-center gap-2 text-[1rem] font-semibold text-fg-muted">
               <span aria-hidden="true" className="h-2 w-2 rounded-full bg-success shadow-[0_0_8px_2px_rgba(61,214,140,0.5)]" />
               Already on Lemonn? You’re already in.
@@ -268,7 +293,9 @@ export default function ArenaHero({ badgeStyle = 'medal', ready = true }: { badg
 
         {/* Mobile: Join never leaves the first screen */}
         <div className="arena-enter shrink-0 text-center lg:hidden" style={{ '--e-delay': '0.6s' }}>
-          <JoinButton location="hero" className="mx-auto max-w-[26rem]" />
+          <div className={shakeJoin ? 'join-shake' : ''}>
+            <JoinButton location="hero" className="mx-auto max-w-[26rem]" />
+          </div>
           <p className="mt-3 flex items-center justify-center gap-2 text-[0.8125rem] font-semibold text-fg-muted">
             <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-success shadow-[0_0_8px_2px_rgba(61,214,140,0.5)]" />
             Already on Lemonn? You’re already in.
