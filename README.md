@@ -60,8 +60,8 @@ src/
   v2/              REDESIGN
     content.ts       All redesign copy and links in one place (Join link + label, Anish's rank wording, …)
     pages/Home.tsx   The redesigned page, in story order. Imports from ../../v1/ = not redesigned yet
-    sections/        Hero.tsx, FinalCall.tsx
-    components/      JoinButton.tsx, Checkpoint.tsx, StickyJoin.tsx
+    sections/        Hero.tsx, Champion.tsx (Round 1), FinalCall.tsx
+    components/      JoinButton.tsx, Checkpoint.tsx, StickyJoin.tsx, VideoMoment.tsx
   prototype/       PROTOTYPE ONLY — version + accent controls. Not part of the website.
 public/            Images, logos, cursors, font
 ```
@@ -73,7 +73,8 @@ public/            Images, logos, cursors, font
 | Hero | ✅ Redesigned (`v2/sections/Hero.tsx`) |
 | Join button system (checkpoints, final call, floating bar/card) | ✅ Built (`v2/components/`, `v2/sections/FinalCall.tsx`) |
 | Section order | ✅ Story order: Anish → ₹1 Crore pool → laptops (`v2/pages/Home.tsx`) |
-| Counter, Anish video, Laptops, Leaderboard, FAQ, Footer | Still the original (imported from `v1/`) |
+| Round 1 · The Champion | ✅ New section (`v2/sections/Champion.tsx`): player card, two-beat quote story, in-page video. Replaces the old video block |
+| Counter, Laptops, Leaderboard, FAQ, Footer | Still the original (imported from `v1/`) |
 
 ### Colours: accent + background
 

@@ -15,6 +15,11 @@ export const ANISH = {
   rank: '#2',
   rankLabel: 'World rank',
   event: 'World Trading Championship',
+  team: 'Booming Bulls',
+  /** His words on the championship stage (from the YouTube short below). */
+  quoteBefore: 'I came here to become the champion.',
+  quoteAfter: 'One more minute and I would be the champion.',
+  videoId: 'WDVdQ0wyrvI',
 };
 
 export const POOL = {

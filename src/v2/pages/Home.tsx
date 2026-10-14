@@ -1,4 +1,5 @@
 import Hero from '../sections/Hero';
+import Champion from '../sections/Champion';
 import FinalCall from '../sections/FinalCall';
 import Checkpoint from '../components/Checkpoint';
 import StickyJoin from '../components/StickyJoin';
@@ -9,7 +10,6 @@ import { LAPTOPS, POOL } from '../content';
 import Background from '../../v1/components/Background';
 import Footer from '../../v1/components/Footer';
 import Basis from '../../v1/sections/Basis';
-import Moment from '../../v1/sections/Moment';
 import Giveaway from '../../v1/sections/Giveaway';
 import Leaderboard from '../../v1/sections/Leaderboard';
 import Faqs from '../../v1/sections/Faqs';
@@ -32,7 +32,7 @@ export default function Home() {
 
         {/* Round 1 · The Champion */}
         <div className="pt-12 lg:pt-20">
-          <Moment />
+          <Champion />
         </div>
         <Checkpoint round={1} name="The Champion" lead="Celebrate Anish’s run" />
 
