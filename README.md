@@ -35,7 +35,7 @@ A floating button in the top-right corner opens the prototype controls. They are
 The link updates as you switch, so you can share exactly what you see, e.g. for A/B tests:
 `?v=1` = Original, `?v=2&accent=lime&bg=violet` = Redesign, lime accent, violet background.
 Values: `accent` = `violet` | `lime` | `green`; `bg` = `violet` | `green` | `blue` | `graphite`.
-With no parameters, the page shows the last choice on that device, or V3 with lime accent and violet background.
+With no parameters, the page shows the last choice on that device, or V3 with green accent and green background.
 
 ## The Join button system (redesign)
 

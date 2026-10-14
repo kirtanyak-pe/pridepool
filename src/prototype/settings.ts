@@ -14,7 +14,7 @@ export type Accent = 'violet' | 'lime' | 'green';
 export type Bg = 'violet' | 'green' | 'blue' | 'graphite';
 export type HeroStyle = 'story' | 'trailer';
 
-const DEFAULTS = { version: 'v3' as Version, accent: 'lime' as Accent, bg: 'violet' as Bg, hero: 'story' as HeroStyle };
+const DEFAULTS = { version: 'v3' as Version, accent: 'green' as Accent, bg: 'green' as Bg, hero: 'story' as HeroStyle };
 const VERSIONS: Version[] = ['v1', 'v2', 'v3'];
 const ACCENTS: Accent[] = ['violet', 'lime', 'green'];
 const BGS: Bg[] = ['violet', 'green', 'blue', 'graphite'];
@@ -64,9 +64,9 @@ export function usePrototypeSettings() {
     load('v', 'pridepool:version', VERSIONS, (raw) => (raw === '1' ? 'v1' : raw === '2' ? 'v2' : raw === '3' ? 'v3' : raw), DEFAULTS.version),
   );
   const [accent, setAccentState] = useState<Accent>(() =>
-    load('accent', 'pridepool:accent', ACCENTS, (raw) => raw, DEFAULTS.accent),
+    load('accent', 'pridepool:accent-2', ACCENTS, (raw) => raw, DEFAULTS.accent),
   );
-  const [bg, setBgState] = useState<Bg>(() => load('bg', 'pridepool:bg', BGS, (raw) => raw, DEFAULTS.bg));
+  const [bg, setBgState] = useState<Bg>(() => load('bg', 'pridepool:bg-2', BGS, (raw) => raw, DEFAULTS.bg));
   const [hero, setHeroState] = useState<HeroStyle>(() => load('hero', 'pridepool:hero', HEROES, (raw) => raw, DEFAULTS.hero));
 
   // Apply the colours before paint (no flash of the wrong colour). The Original is always violet.
@@ -94,7 +94,7 @@ export function usePrototypeSettings() {
   const setAccent = useCallback(
     (next: Accent) => {
       setAccentState(next);
-      save('pridepool:accent', next);
+      save('pridepool:accent-2', next);
       syncUrl(version, next, bg, hero);
     },
     [version, bg, hero],
@@ -103,7 +103,7 @@ export function usePrototypeSettings() {
   const setBg = useCallback(
     (next: Bg) => {
       setBgState(next);
-      save('pridepool:bg', next);
+      save('pridepool:bg-2', next);
       syncUrl(version, accent, next, hero);
     },
     [version, accent, hero],

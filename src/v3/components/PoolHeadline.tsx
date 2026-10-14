@@ -103,7 +103,7 @@ export default function PoolHeadline({ align = 'center' }: { align?: 'center' | 
           >
             <span className="relative inline-block">
               <span className="text-grad-silver">{POOL.title}</span>
-              {sweep && <Sweep delay="0.2s">{POOL.title}</Sweep>}
+              {sweep && <Sweep delay="0.3s">{POOL.title}</Sweep>}
             </span>
           </p>
         </div>

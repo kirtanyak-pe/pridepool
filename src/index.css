@@ -860,7 +860,7 @@ html.scale-artboard {
   background-clip: text;
   /* bloom around the streak */
   filter: drop-shadow(0 0 0.08em #fff) drop-shadow(0 0 0.35em rgba(255, 255, 255, 0.95)) drop-shadow(0 0 0.9em rgb(var(--accent-glow-rgb) / 0.75));
-  animation: shimmer-once 1.2s cubic-bezier(0.4, 0, 0.2, 1) both;
+  animation: shimmer-once 1.9s cubic-bezier(0.4, 0, 0.2, 1) both;
 }
 @keyframes shimmer-once {
   from { background-position: 130% 0; }
