@@ -152,7 +152,7 @@ export default function Champion() {
               id="champion-heading"
               className="mx-auto mt-4 max-w-[18ch] text-balance text-[clamp(1.875rem,6vw,3rem)] font-extrabold leading-[1.05] tracking-[-0.03em] text-fg [text-shadow:0_0_50px_rgb(var(--glow)/0.45)] lg:mx-0"
             >
-              One minute from the world title
+              One minute from the title
             </h2>
           </div>
 
@@ -163,7 +163,7 @@ export default function Champion() {
               <Beat active={beat === 1} quote={ANISH.quoteAfter} delay="0.12s" />
             </ol>
             <p className="mt-6 text-sm leading-relaxed text-fg-subtle lg:text-base">
-              {ANISH.name} of {ANISH.team}, on stage at the {ANISH.event}. Watch the moment in the card.
+              {ANISH.name} of {ANISH.team}, speaking on stage at the {ANISH.event}.
             </p>
           </div>
         </div>
