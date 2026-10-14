@@ -51,9 +51,10 @@ export default function Background() {
         }}
       />
       <div className="arena-halo absolute left-1/2 top-[58%] h-[30rem] w-[30rem] -translate-x-1/2 -translate-y-1/2 rounded-full blur-3xl lg:left-[68%] lg:top-[55%] lg:h-[48rem] lg:w-[48rem]" style={{ background: 'radial-gradient(closest-side, rgb(var(--glow-deep)/0.6), transparent)' }} />
-      {/* Candles: behind the stage on phones; desktop keeps them on the right only, away from the text and Join button */}
+      {/* Candles: behind the stage on phones; desktop keeps them on the right only, away from the text and Join button.
+          Own layer (will-change), so the chart's animations never repaint the blurred halo and masked grid. */}
       <CandleBackdrop
-        className="absolute inset-x-0 bottom-[16%] h-[38%] w-full text-fg opacity-35 lg:bottom-[6%] lg:left-auto lg:h-[60%] lg:w-[58%] lg:[mask-image:linear-gradient(to_right,transparent,#000_30%)]"
+        className="absolute inset-x-0 bottom-[16%] h-[38%] w-full text-fg opacity-35 will-change-transform lg:bottom-[6%] lg:left-auto lg:h-[60%] lg:w-[58%] lg:[mask-image:linear-gradient(to_right,transparent,#000_30%)]"
       />
       {/* Desktop: dark scrim behind the hero's headline column; fades out as the hero scrolls away */}
       <div

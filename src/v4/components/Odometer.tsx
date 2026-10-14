@@ -9,8 +9,9 @@ export default function Odometer({ text, label, delayOffset = 0 }: { text: strin
         return (
           <span key={i} aria-hidden="true" className="inline-block h-[1em] overflow-hidden">
             <span className="odo-strip block" style={{ '--d': Number(ch), animationDelay: delay }}>
-              {/* the strip rolls to its (10 + digit)th row, so rows beyond that never show */}
-              {Array.from({ length: 11 + Number(ch) }, (_, n) => (
+              {/* the strip rolls to its (10 + digit)th row; later rows never show, except the one right below,
+                  whose glow (text-shadow) still bleeds into the window, so it stays */}
+              {Array.from({ length: 12 + Number(ch) }, (_, n) => (
                 <span key={n} className="block h-[1em]">{n % 10}</span>
               ))}
             </span>
