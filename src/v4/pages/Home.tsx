@@ -13,6 +13,7 @@ import StickyJoin from '../components/StickyJoin';
 import { LAPTOPS, POOL } from '../content';
 import Background from '../components/Background';
 import Navbar from '../components/Navbar';
+import { onLanded } from '../components/landed';
 
 /** Sections the page snaps to, in page order */
 const SNAP_SECTIONS = ['hero', 'moment', 'basis', 'giveaway', 'leaderboard', 'join', 'faqs'];
@@ -96,6 +97,14 @@ export default function Home({ badgeStyle = 'medal' }: { badgeStyle?: 'medal' | 
       window.removeEventListener('scroll', onScroll);
       window.clearTimeout(timer);
     };
+  }, []);
+  // Each section's reveal / count-up animations wait until it has landed (see components/landed.ts):
+  // the fold gets data-landed, and index.css holds its animations until then.
+  useEffect(() => {
+    const stops = Array.from(document.querySelectorAll<HTMLElement>('main .fold')).map((el) =>
+      onLanded(el, () => el.setAttribute('data-landed', '')),
+    );
+    return () => stops.forEach((stop) => stop());
   }, []);
   // In-page links (#section) scroll smoothly. index.html has a <base href> for the assets, which
   // would otherwise turn "#basis" into a page load (dropping ?v=…). "#" alone is the Join placeholder.

@@ -967,6 +967,21 @@ html.scale-artboard {
   62% { transform: scale(1.03, 0.92); filter: blur(0) brightness(1.6) drop-shadow(0 0 0 rgba(0, 0, 0, 0)); animation-timing-function: cubic-bezier(0.2, 0.8, 0.3, 1); }
   100% { opacity: 1; transform: none; filter: none; }
 }
+/* V4: a section's animations wait until it has landed (data-landed, set in v4/pages/Home.tsx) */
+.reveal-ready .fold:not([data-landed]) [data-reveal][data-revealed] {
+  opacity: 0;
+  transform: translateY(1.25rem);
+}
+.reveal-ready .fold:not([data-landed]) [data-reveal="near"][data-revealed] {
+  transform: translateY(0.75rem);
+}
+.reveal-ready .fold:not([data-landed]) [data-reveal="fade"][data-revealed] {
+  transform: none;
+}
+.fold:not([data-landed]) .odo-strip {
+  animation-play-state: paused;
+}
+
 /* V4 hero Join: one attention shake once the whole intro has played */
 .join-shake {
   animation: join-shake 0.7s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;

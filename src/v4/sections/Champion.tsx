@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { ANISH } from '../content';
+import { onLanded } from '../components/landed';
 
 /**
  * V3 Round 1 · The Champion — the moment itself, embedded.
@@ -61,8 +62,9 @@ function MomentCard() {
                 />
                 <span aria-hidden="true" className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-black/20" />
                 {/* Our play button */}
-                <span aria-hidden="true" className="key-cap-sm absolute left-1/2 top-1/2 flex size-16 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full text-accent transition-transform duration-200 group-hover:scale-110 group-active:scale-95 lg:size-20">
-                  <svg viewBox="0 0 24 24" width="40%" height="40%" fill="currentColor" className="translate-x-[8%]">
+                <span aria-hidden="true" className="key-cap-sm absolute left-1/2 top-1/2 flex size-12 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full text-accent transition-transform duration-200 group-hover:scale-110 group-active:scale-95 lg:size-16">
+                  {/* the triangle's centroid sits at the box centre: that's what reads as centred */}
+                  <svg viewBox="0 0 24 24" width="42%" height="42%" fill="currentColor">
                     <path d="M7 4.5v15a1 1 0 0 0 1.5.86l12.5-7.5a1 1 0 0 0 0-1.72L8.5 3.64A1 1 0 0 0 7 4.5Z" />
                   </svg>
                 </span>
@@ -111,22 +113,16 @@ export default function Champion() {
   // 0 = "I came here to become the champion." is big; 1 = "One more minute…" is big
   const [beat, setBeat] = useState<0 | 1>(reduced ? 1 : 0);
 
-  // Once the section is in view, hold the first line for a second, then hand the stage to the second.
+  // Once the section has landed, hold the first line for a second, then hand the stage to the second.
   useEffect(() => {
     const el = ref.current;
     if (!el || reduced) return;
     let timer = 0;
-    const io = new IntersectionObserver(
-      ([e]) => {
-        if (!e.isIntersecting) return;
-        io.disconnect();
-        timer = window.setTimeout(() => setBeat(1), SWAP_AFTER_MS);
-      },
-      { threshold: 0.35 },
-    );
-    io.observe(el);
+    const stop = onLanded(el, () => {
+      timer = window.setTimeout(() => setBeat(1), SWAP_AFTER_MS);
+    });
     return () => {
-      io.disconnect();
+      stop();
       window.clearTimeout(timer);
     };
   }, [reduced]);

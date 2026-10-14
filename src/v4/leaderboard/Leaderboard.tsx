@@ -1,3 +1,4 @@
+import { onLanded } from '../components/landed';
 import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react';
 import Odometer from '../components/Odometer';
 import Flag, { type Country } from './Flag';
@@ -224,21 +225,7 @@ export default function Leaderboard() {
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      setInView(true);
-      return;
-    }
-    const io = new IntersectionObserver(
-      ([e]) => {
-        if (e.isIntersecting) {
-          setInView(true);
-          io.disconnect();
-        }
-      },
-      { threshold: 0.15 },
-    );
-    io.observe(el);
-    return () => io.disconnect();
+    return onLanded(el, () => setInView(true));
   }, []);
 
   return (
