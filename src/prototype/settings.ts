@@ -2,19 +2,20 @@ import { useCallback, useLayoutEffect, useState } from 'react';
 
 /**
  * PROTOTYPE ONLY: what the switcher (top right) controls.
- *   version: v1 = Original (the live site as it was), v2 = Redesign
+ *   version: v1 = Original (the live site as it was), v2 = Redesign (story/static first screen),
+ *            v3 = Redesign (reward-stage first screen, page scales like an image)
  *   accent:  the redesign's accent colour: Join buttons, chips, checkmarks (the Original always stays violet)
  *   bg:      the redesign's background colour: glows, grid, leaderboard bars (the Original always stays violet)
  *   hero:    the redesign's first screen: story mode (animated scenes) or trailer (static)
  * Read from the URL (?v=2&accent=lime&bg=violet), else the last choice on this device, else the defaults.
  */
-export type Version = 'v1' | 'v2';
+export type Version = 'v1' | 'v2' | 'v3';
 export type Accent = 'violet' | 'lime' | 'green';
 export type Bg = 'violet' | 'green' | 'blue' | 'graphite';
 export type HeroStyle = 'story' | 'trailer';
 
 const DEFAULTS = { version: 'v2' as Version, accent: 'lime' as Accent, bg: 'violet' as Bg, hero: 'story' as HeroStyle };
-const VERSIONS: Version[] = ['v1', 'v2'];
+const VERSIONS: Version[] = ['v1', 'v2', 'v3'];
 const ACCENTS: Accent[] = ['violet', 'lime', 'green'];
 const BGS: Bg[] = ['violet', 'green', 'blue', 'graphite'];
 const HEROES: HeroStyle[] = ['story', 'trailer'];
@@ -42,14 +43,16 @@ function save(key: string, value: string) {
 /** Keep the current choice in the URL so a shared link opens the same thing. */
 function syncUrl(version: Version, accent: Accent, bg: Bg, hero: HeroStyle) {
   const url = new URL(window.location.href);
-  url.searchParams.set('v', version === 'v1' ? '1' : '2');
-  if (version === 'v2') {
+  url.searchParams.set('v', version.slice(1));
+  if (version !== 'v1') {
     url.searchParams.set('accent', accent);
     url.searchParams.set('bg', bg);
-    url.searchParams.set('hero', hero);
   } else {
     url.searchParams.delete('accent');
     url.searchParams.delete('bg');
+  }
+  if (version === 'v2') url.searchParams.set('hero', hero);
+  else {
     url.searchParams.delete('hero');
   }
   url.hash = '';
@@ -58,7 +61,7 @@ function syncUrl(version: Version, accent: Accent, bg: Bg, hero: HeroStyle) {
 
 export function usePrototypeSettings() {
   const [version, setVersionState] = useState<Version>(() =>
-    load('v', 'pridepool:version', VERSIONS, (raw) => (raw === '1' ? 'v1' : raw === '2' ? 'v2' : raw), DEFAULTS.version),
+    load('v', 'pridepool:version', VERSIONS, (raw) => (raw === '1' ? 'v1' : raw === '2' ? 'v2' : raw === '3' ? 'v3' : raw), DEFAULTS.version),
   );
   const [accent, setAccentState] = useState<Accent>(() =>
     load('accent', 'pridepool:accent', ACCENTS, (raw) => raw, DEFAULTS.accent),
@@ -69,10 +72,13 @@ export function usePrototypeSettings() {
   // Apply the colours before paint (no flash of the wrong colour). The Original is always violet.
   useLayoutEffect(() => {
     const root = document.documentElement;
-    if (version === 'v2' && accent !== 'violet') root.dataset.accent = accent;
+    const redesign = version !== 'v1';
+    if (redesign && accent !== 'violet') root.dataset.accent = accent;
     else delete root.dataset.accent;
-    if (version === 'v2' && bg !== 'violet') root.dataset.bg = bg;
+    if (redesign && bg !== 'violet') root.dataset.bg = bg;
     else delete root.dataset.bg;
+    // V3 scales the whole page like an image (see html.scale-artboard in index.css)
+    root.classList.toggle('scale-artboard', version === 'v3');
   }, [version, accent, bg]);
 
   const setVersion = useCallback(

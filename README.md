@@ -3,7 +3,12 @@
 Editable source for the campaign page at https://pridepool-v1.vercel.app, plus a redesign in progress.
 
 - **Original (v1):** a rebuild of the live site with the same layout, tokens, animations and copy. Frozen as a reference.
-- **Redesign (v2):** the new version, built section by section. Sections not redesigned yet reuse the original ones.
+- **Redesign V2:** story-order page with the Join button system. First screen: animated Story mode or Static.
+- **Redesign V3:** same page, but the first screen is a reward stage where all three touchpoints stay visible
+  (nothing to miss if you look away), and the whole page **scales like an image**: designed on a 390×844 mobile
+  canvas and a 1440×900 desktop canvas (≥1024px), scaled to fit any screen's width and height.
+
+All versions are kept side by side for comparison; nothing is deleted between iterations.
 
 Live prototype: https://kirtanyak-pe.github.io/pridepool/
 
@@ -22,8 +27,8 @@ After `npm run deploy`, the live link updates in about a minute.
 
 A floating button in the top-right corner opens the prototype controls. They are not part of the website.
 
-- **Version:** Original or Redesign.
-- **First screen** (Redesign only): Story (animated scenes: Anish → ₹1 Crore → 20 laptops → all rewards) or Static.
+- **Version:** Original, V2 Story or V3 Stage (`?v=1` / `?v=2` / `?v=3`).
+- **First screen** (V2 only): Story (animated scenes: Anish → ₹1 Crore → 20 laptops → all rewards) or Static.
 - **Accent colour** (Redesign only): Violet (the original colour), Lemonn lime (the brand green from the Lemonn logo) or Trading green.
 - **Background colour** (Redesign only): the "second colour" in the background glows, grid, light behind Anish, heading glows and leaderboard bars. Violet (original), Green, Blue or Grey.
 
@@ -63,6 +68,9 @@ src/
     pages/Home.tsx   The redesigned page, in story order. Imports from ../../v1/ = not redesigned yet
     sections/        StoryHero.tsx (animated first screen), Hero.tsx (static), Champion.tsx (Round 1), FinalCall.tsx
     components/      JoinButton.tsx, Checkpoint.tsx, StickyJoin.tsx, VideoMoment.tsx, TickerTape.tsx, CandleBackdrop.tsx
+  v3/              REDESIGN V3 — reuses v2 sections/components; only the first screen is new so far
+    pages/Home.tsx   V3 page
+    sections/        ArenaHero.tsx (reward stage)
   prototype/       PROTOTYPE ONLY — version + accent controls. Not part of the website.
 public/            Images, logos, cursors, font
 ```
@@ -85,6 +93,15 @@ Two independent colour sets, both in `src/index.css`:
 - **Background palette:** the atmosphere: background glows, grid lines, the light behind Anish, heading glows and the leaderboard bars.
 
 Each option is one small block of values. With no attribute on `<html>`, both are violet, exactly the original site's colours.
+
+### How V3 scaling works
+
+`html.scale-artboard` in `src/index.css` sets the root font size from the screen size. Everything is sized in `rem`, so the whole page scales together:
+
+- Phones/tablets (<1024px): 16px at 390×844, never below 13px.
+- Desktop (≥1024px): 16px at 1440×900; e.g. 19.2px on a 1920×1080 monitor, 25.6px on 2560×1440.
+
+When building new V3 sections, size everything in `rem` (Tailwind's default) — avoid `px` for layout.
 
 ## Handing off to development
 

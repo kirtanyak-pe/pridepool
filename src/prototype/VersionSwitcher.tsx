@@ -3,7 +3,8 @@ import type { Accent, Bg, HeroStyle, Version } from './settings';
 
 const VERSION_OPTIONS: { value: Version; label: string }[] = [
   { value: 'v1', label: 'Original' },
-  { value: 'v2', label: 'Redesign' },
+  { value: 'v2', label: 'V2 Story' },
+  { value: 'v3', label: 'V3 Stage' },
 ];
 
 const ACCENT_OPTIONS: { value: Accent; label: string; swatch: string }[] = [
@@ -116,7 +117,7 @@ export default function VersionSwitcher({ version, onVersionChange, accent, onAc
             <circle cx="10" cy="17" r="2" />
           </svg>
           <span className="absolute -bottom-1 -right-1 rounded-full bg-white px-1 text-[0.5625rem] font-bold leading-[14px] text-neutral-900">
-            {version === 'v1' ? 'V1' : 'V2'}
+            {version.toUpperCase()}
           </span>
         </span>
       </button>
@@ -142,9 +143,9 @@ export default function VersionSwitcher({ version, onVersionChange, accent, onAc
             />
           </div>
 
-          <p className="mt-4 text-xs font-semibold text-white/80">First screen {version === 'v1' && <span className="font-normal text-white/50">· Redesign only</span>}</p>
+          <p className="mt-4 text-xs font-semibold text-white/80">First screen {version !== 'v2' && <span className="font-normal text-white/50">· V2 only</span>}</p>
           <div className="mt-1.5">
-            <Segmented label="First screen" options={HERO_OPTIONS} value={hero} onChange={onHeroChange} disabled={version === 'v1'} />
+            <Segmented label="First screen" options={HERO_OPTIONS} value={hero} onChange={onHeroChange} disabled={version !== 'v2'} />
           </div>
 
           <p className="mt-4 text-xs font-semibold text-white/80">Accent colour {version === 'v1' && <span className="font-normal text-white/50">· Redesign only</span>}</p>

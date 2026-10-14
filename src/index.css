@@ -760,3 +760,28 @@
     animation: none !important;
   }
 }
+
+/* ───────────────────────── V3: the page scales like an image ─────────────────────────
+   Designed on two canvases: mobile 390×844 and desktop (≥1024px) 1440×900.
+   Everything is sized in rem, so setting the root font size scales the whole page
+   to fit the screen's width AND height — same composition on a phone, laptop or big monitor.
+   (Active only while the V3 prototype is shown: <html class="scale-artboard">.) */
+html.scale-artboard {
+  /* 16px at 390 wide / 844 tall; never below 13px so text stays readable */
+  font-size: max(13px, min(calc(100vw / 390 * 16), calc(100svh / 844 * 16)));
+}
+@media (min-width: 1024px) {
+  html.scale-artboard {
+    /* 16px at 1440 wide / 900 tall */
+    font-size: max(12px, min(calc(100vw / 1440 * 16), calc(100vh / 900 * 16)));
+  }
+}
+
+/* V3 reward stage: pedestals rise into place */
+.pedestal-rise {
+  animation: pedestal-rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+@keyframes pedestal-rise {
+  from { opacity: 0; transform: translateY(2.5rem); }
+  to { opacity: 1; transform: none; }
+}

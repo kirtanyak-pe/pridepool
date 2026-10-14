@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import JoinButton from '../components/JoinButton';
 import TickerTape from '../components/TickerTape';
+import Odometer from '../components/Odometer';
 import CandleBackdrop from '../components/CandleBackdrop';
 import { ANCHORS, ANISH, LAPTOPS, POOL } from '../content';
 
@@ -55,26 +56,6 @@ function ChampionScene() {
 }
 
 /* ── Scene 2: ₹1 Crore rolling up like a slot machine, credit coins rising ── */
-function Odometer({ text, label }: { text: string; label: string }) {
-  let digitIndex = 0;
-  return (
-    <span aria-label={label} role="img" className="inline-flex leading-none tabular-nums">
-      {[...text].map((ch, i) => {
-        if (!/\d/.test(ch)) return <span key={i} aria-hidden="true">{ch}</span>;
-        const delay = `${digitIndex++ * 70}ms`;
-        return (
-          <span key={i} aria-hidden="true" className="inline-block h-[1em] overflow-hidden">
-            <span className="odo-strip block" style={{ '--d': Number(ch), animationDelay: delay }}>
-              {Array.from({ length: 20 }, (_, n) => (
-                <span key={n} className="block h-[1em]">{n % 10}</span>
-              ))}
-            </span>
-          </span>
-        );
-      })}
-    </span>
-  );
-}
 
 const COINS = [
   { left: '2%', bottom: '4%', ms: '3.1s', delay: '0s' },
