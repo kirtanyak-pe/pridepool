@@ -32,6 +32,41 @@ export default function Home({ badgeStyle = 'medal' }: { badgeStyle?: 'medal' | 
     root.classList.add('snap-y', 'snap-proximity');
     return () => root.classList.remove('snap-y', 'snap-proximity');
   }, []);
+  // First fold ↔ second fold act like pages: a scroll that stops between the hero and Round 1
+  // always finishes on one of them (the way you were heading), never half and half.
+  useEffect(() => {
+    const root = document.documentElement;
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let settled = window.scrollY;
+    let timer = 0;
+    const roundOneTop = () => {
+      const wrap = document.getElementById('moment')?.parentElement;
+      if (!wrap) return null;
+      const pad = parseFloat(getComputedStyle(root).scrollPaddingTop) || 0;
+      return Math.round(wrap.getBoundingClientRect().top + window.scrollY - pad);
+    };
+    const onEnd = () => {
+      const target = roundOneTop();
+      const y = window.scrollY;
+      if (target !== null && y > 2 && y < target - 2) {
+        window.scrollTo({ top: y > settled ? target : 0, behavior: reduced ? 'auto' : 'smooth' });
+        return; // the snap scroll ends here again and records the settled spot
+      }
+      settled = y;
+    };
+    const hasScrollEnd = 'onscrollend' in window;
+    const onScroll = () => {
+      window.clearTimeout(timer);
+      timer = window.setTimeout(onEnd, 140);
+    };
+    if (hasScrollEnd) window.addEventListener('scrollend', onEnd);
+    else window.addEventListener('scroll', onScroll, { passive: true });
+    return () => {
+      window.removeEventListener('scrollend', onEnd);
+      window.removeEventListener('scroll', onScroll);
+      window.clearTimeout(timer);
+    };
+  }, []);
   useEffect(() => {
     // Warm the hero images during the hold so they're there when the stage builds
     ['anish.webp', 'laptop-hd.webp'].forEach((src) => (new Image().src = src));
@@ -53,7 +88,6 @@ export default function Home({ badgeStyle = 'medal' }: { badgeStyle?: 'medal' | 
         <div className="snap-start pt-12 lg:pt-20">
           <Champion />
         </div>
-        <Checkpoint round={1} name="The Champion" lead="Celebrate Anish’s run" />
 
         {/* Round 2 · The Pool */}
         <Pool />

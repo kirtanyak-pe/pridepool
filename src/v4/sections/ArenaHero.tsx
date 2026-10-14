@@ -98,7 +98,7 @@ function CoinBubbles() {
   return (
     // Zero-height anchor at the card's top edge: coins start hidden behind the card and rise out of it
     <div className="story-pop relative h-0 w-full" style={{ animationDelay: '0.9s' }}>
-      <div aria-hidden="true" className="absolute bottom-0 left-1/2 -z-10 h-24 w-24 -translate-x-1/2 translate-y-1/2 rounded-full lg:h-40 lg:w-40" style={{ background: 'radial-gradient(closest-side, rgb(var(--glow)/0.35), transparent)' }} />
+      <div aria-hidden="true" className="absolute bottom-0 left-1/2 -z-10 h-28 w-28 -translate-x-1/2 translate-y-[80%] rounded-full lg:h-44 lg:w-44" style={{ background: 'radial-gradient(closest-side, rgb(var(--glow)/0.35), transparent)' }} />
       {/* ₹ coins bubbling up from behind the card, forever (same motion as the story version: .story-coin) */}
       {BUBBLES.map((b, i) => (
         <span
@@ -163,7 +163,7 @@ function Headline({ align, onComplete, replay }: { align: 'center' | 'left'; onC
     <div className={align === 'center' ? 'text-center' : 'text-left'}>
       <PoolHeadline align={align} onComplete={onComplete} replay={replay} />
       <p className="arena-enter mt-1.5 inline-flex items-center gap-1.5 font-mono text-[0.75rem] font-bold uppercase tracking-[0.08em] text-success lg:mt-2 lg:text-[1rem]" style={{ '--e-delay': '0.3s' }}>
-        <span aria-hidden="true">▲</span> Brokerage credits for India’s traders
+        Brokerage credits for India’s traders
       </p>
     </div>
   );
