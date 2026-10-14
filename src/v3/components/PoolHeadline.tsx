@@ -5,14 +5,14 @@ import { POOL } from '../../v2/content';
 /**
  * The ₹1 Crore headline:
  *   1. ₹1,00,00,000 rolls up like a slot machine
- *   2. then, all at once: the zeros turn into "Crore", the line shrinks, PRIDE POOL rises in below
+ *   2. right after it lands, all at once: the zeros turn into "Crore", the line shrinks, PRIZE POOL rises in below
  *   3. once it has settled (end of the shrink), a bright light sweeps across the text once, like a reflection
  * The final state stays on screen. With reduced motion it starts at the final state (no sweep).
  */
 type Phase = 'roll' | 'final';
 
-const ROLL_DONE_MS = 2100; // last digit lands (9 digits × 70 ms stagger + 1.5 s roll)
-const HOLD_MS = 350; // short beat so the full number registers
+const ROLL_DONE_MS = 1650; // last digit has visibly landed (8 × 70 ms stagger + the roll's ease-out; its slow tail is invisible)
+const HOLD_MS = 80; // tiny beat so the full number registers
 const ease = 'cubic-bezier(0.22, 1, 0.36, 1)';
 
 /** One-time light sweep: a copy of the text, filled only with a bright streak (styles: .shimmer-once). */

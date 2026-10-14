@@ -118,13 +118,7 @@ function Anish() {
 function Headline({ align }: { align: 'center' | 'left' }) {
   return (
     <div className={align === 'center' ? 'text-center' : 'text-left'}>
-      <p className="arena-enter inline-flex items-center gap-2 rounded-full border border-accent/40 bg-accent/10 px-3 py-1 text-[0.625rem] font-bold uppercase tracking-[0.2em] text-accent lg:px-4 lg:py-1.5 lg:text-[0.8125rem]" style={{ '--e-delay': '0.05s' }}>
-        <span aria-hidden="true" className="h-1.5 w-1.5 rotate-45 bg-accent" />
-        The Pride Pool
-      </p>
-      <div className="mt-2.5 lg:mt-4">
-        <PoolHeadline align={align} />
-      </div>
+      <PoolHeadline align={align} />
       <p className="arena-enter mt-1.5 inline-flex items-center gap-1.5 font-mono text-[0.75rem] font-bold uppercase tracking-[0.08em] text-success lg:mt-2 lg:text-[1rem]" style={{ '--e-delay': '0.3s' }}>
         <span aria-hidden="true">▲</span> Brokerage credits for India’s traders
       </p>
@@ -136,7 +130,7 @@ export default function ArenaHero() {
   return (
     <section id="hero" aria-labelledby="hero-heading" className="relative isolate flex h-[52.75rem] flex-col overflow-hidden lg:h-[56.25rem]">
       <h1 id="hero-heading" className="sr-only">
-        {POOL.amount} Pride Pool: Lemonn × Booming Bulls, celebrating {ANISH.name}, World {ANISH.rank}, with {LAPTOPS.count} laptops to win
+        {POOL.amount} {POOL.title}: Lemonn × Booming Bulls, celebrating {ANISH.name}, World {ANISH.rank}, with {LAPTOPS.count} laptops to win
       </h1>
 
       {/* Stage lighting + trading chart */}

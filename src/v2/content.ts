@@ -25,8 +25,8 @@ export const ANISH = {
 export const POOL = {
   amount: '₹1 Crore',
   short: '₹1 Cr',
-  /** Headline name of the pool. TODO: confirm "Pride Pool" vs "Prize Pool". */
-  title: 'Pride Pool',
+  /** Headline name of the pool (V3 hero). The campaign itself is still "The Pride Pool". */
+  title: 'Prize Pool',
   label: 'Credits pool',
 };
 
