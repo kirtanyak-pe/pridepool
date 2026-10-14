@@ -43,14 +43,35 @@ function Pedestal({
   );
 }
 
-function Medal() {
+function Medal({ className = '' }: { className?: string }) {
   return (
     <div
-      className="story-stamp flex aspect-square w-[4.75rem] flex-col items-center justify-center rounded-full border border-white/60 text-bg shadow-[inset_0_2px_0_rgba(255,255,255,0.9),inset_0_-3px_0_rgba(0,0,0,0.18),0_5px_0_#8f8fa3,0_14px_24px_-6px_rgba(0,0,0,0.8)] lg:w-[8.5rem]"
+      className={`story-stamp absolute z-20 flex aspect-square flex-col items-center justify-center rounded-full border border-white/60 text-bg shadow-[inset_0_2px_0_rgba(255,255,255,0.9),inset_0_-3px_0_rgba(0,0,0,0.18),0_5px_0_#8f8fa3,0_14px_24px_-6px_rgba(0,0,0,0.8)] ${className}`}
       style={{ background: 'radial-gradient(circle at 35% 28%, #ffffff 0%, var(--color-silver) 45%, #a9a9bd 100%)', animationDelay: '1s' }}
+      aria-label={`World's ${ANISH.rank} trader`}
     >
-      <span className="text-[0.5rem] font-extrabold uppercase leading-none tracking-[0.18em] opacity-70 lg:text-[0.875rem]">World</span>
-      <span className="mt-0.5 text-[1.75rem] font-extrabold leading-none tracking-[-0.04em] lg:text-[3.25rem]">{ANISH.rank}</span>
+      <span aria-hidden="true" className="text-[0.5rem] font-extrabold uppercase leading-none tracking-[0.18em] opacity-70 lg:text-[0.8125rem]">World</span>
+      <span aria-hidden="true" className="my-0.5 text-[1.625rem] font-extrabold leading-none tracking-[-0.04em] lg:my-1 lg:text-[2.875rem]">{ANISH.rank}</span>
+      <span aria-hidden="true" className="text-[0.5rem] font-extrabold uppercase leading-none tracking-[0.18em] opacity-70 lg:text-[0.8125rem]">Trader</span>
+    </div>
+  );
+}
+
+/** Stack of ₹ credit coins — the pool, on the left pedestal. */
+function CoinStack() {
+  return (
+    <div className="story-pop relative flex flex-col items-center" style={{ animationDelay: '0.9s' }}>
+      <div aria-hidden="true" className="absolute left-1/2 top-1/2 -z-10 h-[160%] w-[160%] -translate-x-1/2 -translate-y-1/2 rounded-full" style={{ background: 'radial-gradient(closest-side, rgb(var(--glow)/0.35), transparent)' }} />
+      {[0, 1, 2, 3].map((i) => (
+        <span
+          key={i}
+          aria-hidden="true"
+          className="key-cap-sm -mt-2 flex h-6 w-14 items-center justify-center rounded-full text-[0.75rem] font-extrabold text-accent first:mt-0 lg:-mt-3.5 lg:h-10 lg:w-24 lg:text-[1.125rem]"
+          style={{ zIndex: 4 - i }}
+        >
+          ₹
+        </span>
+      ))}
     </div>
   );
 }
@@ -78,6 +99,7 @@ function Laptop() {
 function Anish() {
   return (
     <div className="relative">
+      <Medal className="-left-[34%] top-[4%] w-[5.25rem] lg:-left-[24%] lg:top-[5%] lg:w-[8.75rem]" />
       <div aria-hidden="true" className="hero-figure-rim pointer-events-none absolute -inset-x-[35%] -top-[8%] bottom-[5%] -z-10" />
       <img
         src="anish.webp"
@@ -169,7 +191,7 @@ export default function ArenaHero() {
 
         {/* The reward stage — everything stays on screen */}
         <div className="relative mx-auto flex min-h-0 w-full max-w-[22rem] flex-1 items-end justify-center gap-1.5 pb-2 pt-3 lg:h-[44rem] lg:max-w-none lg:flex-1 lg:gap-4 lg:pb-12 lg:pt-0">
-          <Pedestal href={ANCHORS.champion} item={<Medal />} value={ANISH.rank} label={ANISH.rankLabel} className="w-[6.25rem] lg:w-[11.5rem]" delay="0.35s" />
+          <Pedestal href={ANCHORS.pool} item={<CoinStack />} value={POOL.short} label={POOL.label} className="w-[6.25rem] lg:w-[11.5rem]" delay="0.35s" />
           <Pedestal
             href={ANCHORS.champion}
             item={<Anish />}

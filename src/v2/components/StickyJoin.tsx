@@ -10,7 +10,8 @@ function Corner({ className }: { className: string }) {
  * The floating Join button: a full-width bar on phones, a card on desktop.
  *
  * Rule: only one Join button on screen at a time. It appears whenever no in-page Join button
- * (hero, round checkpoints, final call) is in view, and stays away over the footer.
+ * (hero, round checkpoints, final call) is in view, and stays away over the footer
+ * and anything marked data-sticky-avoid.
  */
 export default function StickyJoin() {
   const [visible, setVisible] = useState(false);
@@ -18,6 +19,8 @@ export default function StickyJoin() {
   useEffect(() => {
     const watched = [
       ...document.querySelectorAll('[data-cta-inpage]'),
+      // Content the floating button must never cover (e.g. the V3 leaderboard table)
+      ...document.querySelectorAll('[data-sticky-avoid]'),
       document.getElementById('footer'),
     ].filter((el): el is Element => el !== null);
     if (!watched.length) return;

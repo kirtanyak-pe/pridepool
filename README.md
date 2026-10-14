@@ -68,9 +68,13 @@ src/
     pages/Home.tsx   The redesigned page, in story order. Imports from ../../v1/ = not redesigned yet
     sections/        StoryHero.tsx (animated first screen), Hero.tsx (static), Champion.tsx (Round 1), FinalCall.tsx
     components/      JoinButton.tsx, Checkpoint.tsx, StickyJoin.tsx, VideoMoment.tsx, TickerTape.tsx, CandleBackdrop.tsx
-  v3/              REDESIGN V3 — reuses v2 sections/components; only the first screen is new so far
-    pages/Home.tsx   V3 page
-    sections/        ArenaHero.tsx (reward stage)
+  v3/              REDESIGN V3 — full page (reuses v2 JoinButton, Checkpoint, StickyJoin, FinalCall, content.ts)
+    pages/Home.tsx   V3 page: hero → Round 1 → Round 2 → Round 3 → leaderboard → final call → FAQ → footer
+    sections/        ArenaHero (reward stage), Champion (embedded video moment), Pool (3-step flow),
+                     Bonus (laptop loot drop + locked rules), Faqs (5, trust first), Footer (slim)
+    leaderboard/     Leaderboard.tsx + Flag.tsx + layers.ts — built from the Figma leaderboard
+                     (file CCpQIcDySK63UMO0KJkkda, node 2:94); layers.ts holds every podium layer's exact
+                     Figma position; SVG assets in public/leaderboard/
   prototype/       PROTOTYPE ONLY — version + accent controls. Not part of the website.
 public/            Images, logos, cursors, font
 ```
