@@ -79,7 +79,7 @@ export default function Hero() {
               width: p.size,
               height: p.size,
               background: p.color,
-              boxShadow: '0 0 8px 1.5px rgba(231,182,242,0.6)',
+              boxShadow: '0 0 8px 1.5px rgb(var(--glow-light)/0.6)',
               '--p-duration': p.d,
               '--p-delay': p.delay,
               '--p-opacity': p.o,
@@ -124,7 +124,7 @@ export default function Hero() {
         {/* ── Copy + CTA ── */}
         <div className="relative z-10 -mt-24 text-center sm:-mt-28 lg:order-1 lg:mt-0 lg:self-center lg:pb-16 lg:text-left">
           <h1 id="hero-heading" className="arena-enter font-extrabold tracking-[-0.045em]" style={{ '--e-delay': '0.2s' }}>
-            <span className="arena-reveal block text-[clamp(3.5rem,16vw,8rem)] leading-[0.9] text-white [text-shadow:0_0_60px_rgba(177,69,201,0.55),0_4px_24px_rgba(1,4,13,0.9)]" style={{ '--r-delay': '0.25s' }}>
+            <span className="arena-reveal block text-[clamp(3.5rem,16vw,8rem)] leading-[0.9] text-white [text-shadow:0_0_60px_rgb(var(--glow)/0.55),0_4px_24px_rgba(1,4,13,0.9)]" style={{ '--r-delay': '0.25s' }}>
               {POOL.amount}
             </span>
             <span className="arena-reveal mt-1 block pb-[0.12em] text-[clamp(1.5rem,7vw,3.25rem)] uppercase leading-none tracking-[0.02em] text-grad-silver" style={{ '--r-delay': '0.45s' }}>

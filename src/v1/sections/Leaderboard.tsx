@@ -21,7 +21,7 @@ function Row({ rank, name, score, pct, index }: RowProps) {
   const delay = `${Math.min(0.06 + 0.045 * index, 0.3).toFixed(3)}s`;
   return (
     <li data-reveal="near" style={{ '--reveal-delay': delay }} className="group relative grid grid-cols-[2.75rem_minmax(0,1fr)_auto] items-center gap-3 px-3 py-3 transition-colors duration-200 hover:bg-black/[0.03] sm:grid-cols-[3.5rem_minmax(0,1fr)_auto] sm:gap-5 sm:px-5 sm:py-3.5">
-      <span aria-hidden="true" className="absolute inset-y-2 left-0 w-[3px] rounded-r-full bg-[#9a2fb3] opacity-0 transition-opacity duration-200 group-hover:opacity-100" />
+      <span aria-hidden="true" className="absolute inset-y-2 left-0 w-[3px] rounded-r-full bg-glow-on-light opacity-0 transition-opacity duration-200 group-hover:opacity-100" />
       <span className="inline-flex h-8 w-10 items-center justify-center rounded-lg border border-black/10 bg-black/[0.05] font-mono text-[0.8125rem] font-bold tabular-nums text-fg">
         <span className="sr-only">
           Rank{" "}
@@ -29,7 +29,7 @@ function Row({ rank, name, score, pct, index }: RowProps) {
         {rank}
       </span>
       <span className="flex min-w-0 items-center gap-3">
-        <span aria-hidden="true" className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#b145c9] to-[#4a1159] p-[1.5px]">
+        <span aria-hidden="true" className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-glow to-glow-dark p-[1.5px]">
           <span className="flex h-full w-full items-center justify-center rounded-full bg-white font-mono text-[0.6875rem] font-bold text-fg">
     {name.slice(0, 2).toUpperCase()}
     </span>
@@ -39,7 +39,7 @@ function Row({ rank, name, score, pct, index }: RowProps) {
     {name}
     </span>
           <span aria-hidden="true" className="mt-1.5 block h-1.5 w-full max-w-[16rem] overflow-hidden rounded-full bg-black/[0.08]">
-            <span className="block h-full rounded-full bg-gradient-to-r from-[#7b1f8f] to-[#c45fd8]" style={{ width: `${pct}%` }} />
+            <span className="block h-full rounded-full bg-gradient-to-r from-glow-deep to-glow-bright" style={{ width: `${pct}%` }} />
           </span>
         </span>
       </span>
@@ -69,7 +69,7 @@ export default function Leaderboard() {
             Tournament standings
           </span>
         </p>
-        <h2 id="leaderboard-heading" className="mt-5 text-[clamp(1.75rem,5vw,3rem)] font-extrabold leading-[1.05] tracking-[-0.03em] text-fg [text-shadow:0_0_60px_rgba(177,69,201,0.55)]">
+        <h2 id="leaderboard-heading" className="mt-5 text-[clamp(1.75rem,5vw,3rem)] font-extrabold leading-[1.05] tracking-[-0.03em] text-fg [text-shadow:0_0_60px_rgb(var(--glow)/0.55)]">
           The Leaderboard
         </h2>
         <p className="mx-auto mt-4 max-w-[52ch] text-pretty text-[0.9375rem] leading-relaxed text-fg-muted">

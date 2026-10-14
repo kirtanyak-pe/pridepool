@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import type { Accent, Version } from './settings';
+import type { Accent, Bg, Version } from './settings';
 
 const VERSION_OPTIONS: { value: Version; label: string }[] = [
   { value: 'v1', label: 'Original' },
@@ -12,11 +12,20 @@ const ACCENT_OPTIONS: { value: Accent; label: string; swatch: string }[] = [
   { value: 'green', label: 'Green', swatch: '#4ade80' },
 ];
 
+const BG_OPTIONS: { value: Bg; label: string; swatch: string }[] = [
+  { value: 'violet', label: 'Violet', swatch: '#7b1f8f' },
+  { value: 'green', label: 'Green', swatch: '#047857' },
+  { value: 'blue', label: 'Blue', swatch: '#1e40af' },
+  { value: 'graphite', label: 'Grey', swatch: '#404050' },
+];
+
 type Props = {
   version: Version;
   onVersionChange: (v: Version) => void;
   accent: Accent;
   onAccentChange: (a: Accent) => void;
+  bg: Bg;
+  onBgChange: (b: Bg) => void;
 };
 
 /** A row of segmented buttons (radio group). */
@@ -45,7 +54,7 @@ function Segmented<T extends string>({
             aria-checked={selected}
             disabled={disabled}
             onClick={() => onChange(o.value)}
-            className={`flex h-10 items-center justify-center gap-1.5 rounded-lg text-sm font-semibold transition-colors ${selected ? 'bg-white text-neutral-900' : 'text-white/75 enabled:hover:text-white'}`}
+            className={`flex h-10 min-w-0 items-center justify-center gap-1.5 rounded-lg px-1 text-[0.8125rem] font-semibold transition-colors ${selected ? 'bg-white text-neutral-900' : 'text-white/75 enabled:hover:text-white'}`}
           >
             {o.swatch && <span aria-hidden="true" className="h-2.5 w-2.5 rounded-full ring-1 ring-black/20" style={{ background: o.swatch }} />}
             {o.label}
@@ -58,11 +67,11 @@ function Segmented<T extends string>({
 
 /**
  * PROTOTYPE ONLY: floating control (top right) to flip between the original page and the redesign,
- * and to try accent colours on the redesign.
+ * and to try accent and background colours on the redesign.
  * Deliberately styled unlike the site so nobody mistakes it for part of the campaign.
  * Remove this folder and its lines in main.tsx before shipping.
  */
-export default function VersionSwitcher({ version, onVersionChange, accent, onAccentChange }: Props) {
+export default function VersionSwitcher({ version, onVersionChange, accent, onAccentChange, bg, onBgChange }: Props) {
   const [open, setOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
 
@@ -88,7 +97,7 @@ export default function VersionSwitcher({ version, onVersionChange, accent, onAc
         type="button"
         aria-expanded={open}
         aria-controls="proto-panel"
-        aria-label={`Prototype version: ${versionLabel}. Change version or accent`}
+        aria-label={`Prototype version: ${versionLabel}. Change version or colours`}
         onClick={() => setOpen((o) => !o)}
         className="flex h-12 w-12 items-center justify-center"
       >
@@ -108,7 +117,7 @@ export default function VersionSwitcher({ version, onVersionChange, accent, onAc
       {open && (
         <div
           id="proto-panel"
-          className="absolute right-1 top-14 w-72 rounded-2xl border border-white/15 bg-neutral-900/95 p-4 text-left text-white shadow-2xl backdrop-blur-md"
+          className="absolute right-1 top-14 w-[19rem] rounded-2xl border border-white/15 bg-neutral-900/95 p-4 text-left text-white shadow-2xl backdrop-blur-md"
         >
           <p className="text-[0.625rem] font-bold uppercase tracking-[0.16em] text-white/50">Prototype controls</p>
           <p className="mt-1 text-xs text-white/60">Only for testing. Not part of the website.</p>
@@ -131,8 +140,15 @@ export default function VersionSwitcher({ version, onVersionChange, accent, onAc
             <Segmented label="Accent colour" options={ACCENT_OPTIONS} value={accent} onChange={onAccentChange} disabled={version === 'v1'} />
           </div>
 
+          <p className="mt-4 text-xs font-semibold text-white/80">
+            Background colour <span className="font-normal text-white/50">· glows &amp; bars{version === 'v1' && ' · Redesign only'}</span>
+          </p>
+          <div className="mt-1.5">
+            <Segmented label="Background colour" options={BG_OPTIONS} value={bg} onChange={onBgChange} disabled={version === 'v1'} />
+          </div>
+
           <p className="mt-4 text-[0.6875rem] leading-snug text-white/45">
-            Share exactly what you see: the link updates as you switch (<code className="text-white/70">?v=2&amp;accent=lime</code>).
+            Share exactly what you see: the link updates as you switch (<code className="text-white/70">?v=2&amp;accent=lime&amp;bg=green</code>).
           </p>
         </div>
       )}

@@ -25,8 +25,14 @@
 
   /* Brand */
   --color-accent: var(--accent); /* switchable — see Accent palette below */
-  --color-violet: #d590e6;
-  --color-violet-deep: #7b1f8f;
+  --color-violet: rgb(var(--glow-soft)); /* switchable — see Background palette below */
+  --color-violet-deep: rgb(var(--glow-deep));
+  /* Background palette as Tailwind colours (e.g. from-glow-deep, bg-glow-on-light) */
+  --color-glow: rgb(var(--glow));
+  --color-glow-deep: rgb(var(--glow-deep));
+  --color-glow-bright: rgb(var(--glow-bright));
+  --color-glow-dark: rgb(var(--glow-dark));
+  --color-glow-on-light: rgb(var(--glow-on-light));
   --color-success: #3dd68c;
   --color-focus: #fff;
 
@@ -49,6 +55,7 @@
 :root {
   --accent: #c45fd8;          /* text, borders, chips, dots */
   --accent-glow: #b145c9;     /* glows; brightest end of the button */
+  --accent-glow-rgb: 177 69 201; /* same colour as R G B, for see-through glows */
   --accent-mid: #7b1f8f;      /* button middle */
   --accent-low: #4a1159;      /* button darkest end */
   --accent-side: #2a0833;     /* 3D edge under the button */
@@ -60,6 +67,7 @@
 :root[data-accent="lime"] {
   --accent: #a1e600;
   --accent-glow: #c6f55a;
+  --accent-glow-rgb: 198 245 90;
   --accent-mid: #a1e600;
   --accent-low: #7fb800;
   --accent-side: #3d5900;
@@ -71,12 +79,56 @@
 :root[data-accent="green"] {
   --accent: #4ade80;
   --accent-glow: #4ade80;
+  --accent-glow-rgb: 74 222 128;
   --accent-mid: #22c55e;
   --accent-low: #16a34a;
   --accent-side: #0b4a22;
   --accent-light: #bbf7d0;
   --accent-ink: #01040d;
   --accent-on-light: #15803d;
+}
+
+/* ───────────────────────── Background palette ─────────────────────────
+   The "second colour": background glows, grid lines, light rim behind Anish,
+   heading glows and the leaderboard bars. Values are R G B (so glows can be see-through).
+   Default (no attribute) = violet, the original site's colour.
+   The prototype switcher sets data-bg="green" | "blue" | "graphite" on <html> for the redesign.
+   To ship one: copy its values into the first block and delete the others. */
+:root {
+  --glow-deep: 123 31 143;    /* main background glow */
+  --glow: 177 69 201;         /* brighter glows, heading glow */
+  --glow-light: 231 182 242;  /* sparks, highlights */
+  --glow-soft: 213 144 230;   /* grid lines, soft labels */
+  --glow-dark: 74 17 89;      /* darkest shade (avatar rings) */
+  --glow-bright: 196 95 216;  /* bright end of the leaderboard bars */
+  --glow-on-light: 154 47 179; /* on white cards */
+}
+:root[data-bg="green"] {
+  --glow-deep: 4 120 87;
+  --glow: 16 185 129;
+  --glow-light: 167 243 208;
+  --glow-soft: 110 231 183;
+  --glow-dark: 6 78 59;
+  --glow-bright: 52 211 153;
+  --glow-on-light: 5 150 105;
+}
+:root[data-bg="blue"] {
+  --glow-deep: 30 64 175;
+  --glow: 59 130 246;
+  --glow-light: 191 219 254;
+  --glow-soft: 147 197 253;
+  --glow-dark: 23 37 84;
+  --glow-bright: 96 165 250;
+  --glow-on-light: 37 99 235;
+}
+:root[data-bg="graphite"] {
+  --glow-deep: 64 64 80;
+  --glow: 120 120 140;
+  --glow-light: 214 214 224;
+  --glow-soft: 165 165 180;
+  --glow-dark: 40 40 52;
+  --glow-bright: 150 150 168;
+  --glow-on-light: 82 82 100;
 }
 
 /* ───────────────────────── Base ───────────────────────── */
@@ -333,9 +385,9 @@
   }
   .neu-raised {
     background: linear-gradient(145deg, #131830 0%, #0a0e1d 55%, #05070f 100%);
-    border: 1px solid #b145c921;
+    border: 1px solid rgb(var(--glow) / 0.13);
     box-shadow:
-      inset 0 1px #e7b6f229,
+      inset 0 1px rgb(var(--glow-light) / 0.16),
       inset 1px 1px #ffffff0f,
       inset -1px -1px #0000008c,
       -10px -10px 26px #ffffff0d,
@@ -476,8 +528,8 @@
 .hero-figure-rim {
   background: radial-gradient(
     56% 44% at 50% 40%,
-    #7b1f8f8c 0%,
-    #7b1f8f2e 45%,
+    rgb(var(--glow-deep) / 0.55) 0%,
+    rgb(var(--glow-deep) / 0.18) 45%,
     #0000 72%
   );
 }
@@ -575,7 +627,7 @@
   --color-fg-muted: #474756;
   --color-fg-subtle: #6a6a7a;
   --color-gold-bright: #0b0b12;
-  --color-violet: #7b1f8f;
+  --color-violet: rgb(var(--glow-deep));
   --color-accent: var(--accent-on-light);
   --color-border-subtle: #e2dfe8;
   color: var(--color-fg);

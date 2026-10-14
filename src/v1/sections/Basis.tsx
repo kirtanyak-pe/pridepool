@@ -4,7 +4,7 @@ export default function Basis() {
   return (
     <section id="basis" aria-labelledby="basis-heading" className="arena-container relative pb-16 pt-14 lg:pb-20 lg:pt-24">
       <div data-reveal="true" className="relative overflow-hidden rounded-3xl key-light px-6 py-8 text-center sm:px-10 sm:py-10">
-        <div aria-hidden="true" className="pointer-events-none absolute left-1/2 top-1/2 h-64 w-[40rem] max-w-full -translate-x-1/2 -translate-y-1/2 opacity-60 blur-3xl" style={{ background: "radial-gradient(closest-side, rgba(177,69,201,0.35), transparent)" }} />
+        <div aria-hidden="true" className="pointer-events-none absolute left-1/2 top-1/2 h-64 w-[40rem] max-w-full -translate-x-1/2 -translate-y-1/2 opacity-60 blur-3xl" style={{ background: "radial-gradient(closest-side, rgb(var(--glow)/0.35), transparent)" }} />
         <div className="relative">
           <h2 id="basis-heading" className="inline-flex items-center gap-2 text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-violet">
             <span aria-hidden="true" className="relative flex h-2 w-2">
@@ -13,7 +13,7 @@ export default function Basis() {
             </span>
             Live counter
           </h2>
-          <p className="mt-4 text-[clamp(2.25rem,6vw,4.5rem)] font-extrabold leading-none tracking-[-0.03em] text-gold-bright [text-shadow:0_0_70px_rgba(231,182,242,0.45)]">
+          <p className="mt-4 text-[clamp(2.25rem,6vw,4.5rem)] font-extrabold leading-none tracking-[-0.03em] text-gold-bright [text-shadow:0_0_70px_rgb(var(--glow-light)/0.45)]">
             <CountUp />
           </p>
           <p className="mt-2 text-[clamp(1rem,1.8vw,1.25rem)] font-bold text-fg">

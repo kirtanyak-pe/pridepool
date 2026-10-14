@@ -2,7 +2,7 @@ export default function Footer() {
   return (
     <footer id="footer" className="relative isolate overflow-hidden border-t border-white/5 bg-bg">
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10">
-        <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse 70% 75% at 50% 100%, rgba(177,69,201,0.30), rgba(177,69,201,0.08) 45%, transparent 75%), radial-gradient(ellipse 45% 40% at 15% 100%, rgba(123,31,143,0.22), transparent 70%)" }} />
+        <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse 70% 75% at 50% 100%, rgb(var(--glow)/0.30), rgb(var(--glow)/0.08) 45%, transparent 75%), radial-gradient(ellipse 45% 40% at 15% 100%, rgb(var(--glow-deep)/0.22), transparent 70%)" }} />
         <div className="absolute inset-0 opacity-[0.09]" style={{ backgroundImage: "linear-gradient(var(--color-gold-bright) 1px, transparent 1px), linear-gradient(90deg, var(--color-gold-bright) 1px, transparent 1px)", backgroundSize: "56px 56px", maskImage: "linear-gradient(to bottom, transparent 0%, #000 35%, #000 100%)", WebkitMaskImage: "linear-gradient(to bottom, transparent 0%, #000 35%, #000 100%)" }} />
       </div>
       <span aria-hidden="true" className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-accent/50 to-transparent" />

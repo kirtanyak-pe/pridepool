@@ -13,7 +13,7 @@ const path = window.location.pathname.replace(/\/$/, '');
 const isTerms = path.endsWith('/terms-and-conditions');
 
 function App() {
-  const { version, setVersion, accent, setAccent } = usePrototypeSettings();
+  const { version, setVersion, accent, setAccent, bg, setBg } = usePrototypeSettings();
   useReveal(`${path}:${version}`);
 
   useEffect(() => {
@@ -27,7 +27,7 @@ function App() {
   return (
     <>
       {version === 'v2' ? <RedesignHome /> : <OriginalHome />}
-      <VersionSwitcher version={version} onVersionChange={setVersion} accent={accent} onAccentChange={setAccent} />
+      <VersionSwitcher version={version} onVersionChange={setVersion} accent={accent} onAccentChange={setAccent} bg={bg} onBgChange={setBg} />
     </>
   );
 }

@@ -3,15 +3,18 @@ import { useCallback, useLayoutEffect, useState } from 'react';
 /**
  * PROTOTYPE ONLY: what the switcher (top right) controls.
  *   version: v1 = Original (the live site as it was), v2 = Redesign
- *   accent:  the redesign's accent colour (the Original always stays violet)
- * Read from the URL (?v=2&accent=lime), else the last choice on this device, else the defaults.
+ *   accent:  the redesign's accent colour: Join buttons, chips, checkmarks (the Original always stays violet)
+ *   bg:      the redesign's background colour: glows, grid, leaderboard bars (the Original always stays violet)
+ * Read from the URL (?v=2&accent=lime&bg=violet), else the last choice on this device, else the defaults.
  */
 export type Version = 'v1' | 'v2';
 export type Accent = 'violet' | 'lime' | 'green';
+export type Bg = 'violet' | 'green' | 'blue' | 'graphite';
 
-const DEFAULTS = { version: 'v2' as Version, accent: 'lime' as Accent };
+const DEFAULTS = { version: 'v2' as Version, accent: 'lime' as Accent, bg: 'violet' as Bg };
 const VERSIONS: Version[] = ['v1', 'v2'];
 const ACCENTS: Accent[] = ['violet', 'lime', 'green'];
+const BGS: Bg[] = ['violet', 'green', 'blue', 'graphite'];
 
 function load<T extends string>(param: string, key: string, allowed: T[], map: (raw: string) => string, fallback: T): T {
   const fromUrl = new URLSearchParams(window.location.search).get(param);
@@ -34,11 +37,16 @@ function save(key: string, value: string) {
 }
 
 /** Keep the current choice in the URL so a shared link opens the same thing. */
-function syncUrl(version: Version, accent: Accent) {
+function syncUrl(version: Version, accent: Accent, bg: Bg) {
   const url = new URL(window.location.href);
   url.searchParams.set('v', version === 'v1' ? '1' : '2');
-  if (version === 'v2') url.searchParams.set('accent', accent);
-  else url.searchParams.delete('accent');
+  if (version === 'v2') {
+    url.searchParams.set('accent', accent);
+    url.searchParams.set('bg', bg);
+  } else {
+    url.searchParams.delete('accent');
+    url.searchParams.delete('bg');
+  }
   url.hash = '';
   window.history.replaceState(null, '', url);
 }
@@ -50,32 +58,44 @@ export function usePrototypeSettings() {
   const [accent, setAccentState] = useState<Accent>(() =>
     load('accent', 'pridepool:accent', ACCENTS, (raw) => raw, DEFAULTS.accent),
   );
+  const [bg, setBgState] = useState<Bg>(() => load('bg', 'pridepool:bg', BGS, (raw) => raw, DEFAULTS.bg));
 
-  // Apply the accent before paint (no flash of the wrong colour). The Original is always violet.
+  // Apply the colours before paint (no flash of the wrong colour). The Original is always violet.
   useLayoutEffect(() => {
     const root = document.documentElement;
     if (version === 'v2' && accent !== 'violet') root.dataset.accent = accent;
     else delete root.dataset.accent;
-  }, [version, accent]);
+    if (version === 'v2' && bg !== 'violet') root.dataset.bg = bg;
+    else delete root.dataset.bg;
+  }, [version, accent, bg]);
 
   const setVersion = useCallback(
     (next: Version) => {
       setVersionState(next);
       save('pridepool:version', next);
-      syncUrl(next, accent);
+      syncUrl(next, accent, bg);
       window.scrollTo({ top: 0, behavior: 'instant' });
     },
-    [accent],
+    [accent, bg],
   );
 
   const setAccent = useCallback(
     (next: Accent) => {
       setAccentState(next);
       save('pridepool:accent', next);
-      syncUrl(version, next);
+      syncUrl(version, next, bg);
     },
-    [version],
+    [version, bg],
   );
 
-  return { version, setVersion, accent, setAccent };
+  const setBg = useCallback(
+    (next: Bg) => {
+      setBgState(next);
+      save('pridepool:bg', next);
+      syncUrl(version, accent, next);
+    },
+    [version, accent],
+  );
+
+  return { version, setVersion, accent, setAccent, bg, setBg };
 }

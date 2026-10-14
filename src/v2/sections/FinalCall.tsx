@@ -55,7 +55,7 @@ export default function FinalCall() {
               </p>
               <h2
                 id="join-heading"
-                className="mt-4 text-[clamp(1.875rem,6vw,3rem)] font-extrabold leading-[1.05] tracking-[-0.03em] text-fg [text-shadow:0_0_50px_rgba(177,69,201,0.45)]"
+                className="mt-4 text-[clamp(1.875rem,6vw,3rem)] font-extrabold leading-[1.05] tracking-[-0.03em] text-fg [text-shadow:0_0_50px_rgb(var(--glow)/0.45)]"
               >
                 Enter the Pride Pool
               </h2>

@@ -24,10 +24,12 @@ A floating button in the top-right corner opens the prototype controls. They are
 
 - **Version:** Original or Redesign.
 - **Accent colour** (Redesign only): Violet (the original colour), Lemonn lime (the brand green from the Lemonn logo) or Trading green.
+- **Background colour** (Redesign only): the "second colour" in the background glows, grid, light behind Anish, heading glows and leaderboard bars. Violet (original), Green, Blue or Grey.
 
-The link updates as you switch, so you can share exactly what you see:
-`?v=1` = Original, `?v=2&accent=lime` = Redesign in lime (also `violet`, `green`).
-With no parameters, the page shows the last choice on that device, or the Redesign in lime.
+The link updates as you switch, so you can share exactly what you see, e.g. for A/B tests:
+`?v=1` = Original, `?v=2&accent=lime&bg=violet` = Redesign, lime accent, violet background.
+Values: `accent` = `violet` | `lime` | `green`; `bg` = `violet` | `green` | `blue` | `graphite`.
+With no parameters, the page shows the last choice on that device, or the Redesign with lime accent and violet background.
 
 ## The Join button system (redesign)
 
@@ -73,12 +75,14 @@ public/            Images, logos, cursors, font
 | Section order | ✅ Story order: Anish → ₹1 Crore pool → laptops (`v2/pages/Home.tsx`) |
 | Counter, Anish video, Laptops, Leaderboard, FAQ, Footer | Still the original (imported from `v1/`) |
 
-### Accent colours
+### Colours: accent + background
 
-The accent is everything that says "act here": the Join button, its glowing border, chips, dots and checkmarks.
-The background glow stays violet for now. The original sections still have some violet built in (e.g. leaderboard score bars); they pick up the accent when they get redesigned.
+Two independent colour sets, both in `src/index.css`:
 
-Each accent is one small block of values in `src/index.css` (search "Accent palette").
+- **Accent palette:** everything that says "act here": the Join button, its glowing border, chips, dots and checkmarks.
+- **Background palette:** the atmosphere: background glows, grid lines, the light behind Anish, heading glows and the leaderboard bars.
+
+Each option is one small block of values. With no attribute on `<html>`, both are violet, exactly the original site's colours.
 
 ## Handing off to development
 
@@ -86,7 +90,7 @@ To ship only the redesign:
 
 1. Delete `src/prototype/`.
 2. In `src/main.tsx`, remove the two prototype imports and render `<RedesignHome />` directly instead of choosing a version.
-3. Pick the accent: in `src/index.css` → "Accent palette", copy the chosen accent's values into the first `:root` block and delete the other blocks.
+3. Pick the colours: in `src/index.css` → "Accent palette" and "Background palette", copy the chosen option's values into the first `:root` block of each and delete the other blocks.
 4. Delete `src/v1/` **only after** every section `v2/pages/Home.tsx` imports from `v1/` has been redesigned.
    Until then, move the still-used v1 files into `v2/` (or a shared folder) rather than deleting them.
 5. Fill in the TODOs in `src/v2/content.ts`: the real Join link, the "Open the app" link for existing users, and the legally approved wording for Anish's result.
