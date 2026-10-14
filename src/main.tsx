@@ -1,21 +1,35 @@
 import { StrictMode, useEffect } from 'react';
 import { createRoot } from 'react-dom/client';
 import './index.css';
-import Home from './pages/Home';
-import TermsPage from './pages/TermsPage';
-import useReveal from './components/useReveal';
+import OriginalHome from './v1/pages/Home';
+import RedesignHome from './v2/pages/Home';
+import TermsPage from './v1/pages/TermsPage';
+import useReveal from './v1/components/useReveal';
+// PROTOTYPE ONLY: version switcher. Remove these two imports, the switcher below and src/prototype/ before shipping.
+import { useVersion } from './prototype/version';
+import VersionSwitcher from './prototype/VersionSwitcher';
 
 const path = window.location.pathname.replace(/\/$/, '');
 const isTerms = path.endsWith('/terms-and-conditions');
 
 function App() {
-  useReveal(path);
+  const [version, setVersion] = useVersion();
+  useReveal(`${path}:${version}`);
+
   useEffect(() => {
     document.title = isTerms
       ? 'Terms & Conditions — The Pride Pool · Lemonn × Booming Bulls'
       : '₹1 Crore Brokerage Credits Pool — Lemonn × Booming Bulls';
   }, []);
-  return isTerms ? <TermsPage /> : <Home />;
+
+  if (isTerms) return <TermsPage />;
+
+  return (
+    <>
+      {version === 'v2' ? <RedesignHome /> : <OriginalHome />}
+      <VersionSwitcher version={version} onChange={setVersion} />
+    </>
+  );
 }
 
 createRoot(document.getElementById('root')!).render(
