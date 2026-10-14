@@ -9,7 +9,8 @@ import { ANISH, JOIN_LABEL, LAPTOPS, POOL } from '../content';
  * The story: Anish finished World #2 → to celebrate, a ₹1 Crore prize pool → join it, trade, win
  * brokerage credits or one of 20 laptops. Told as a stepper: 01 Join → 02 Trade → 03 Win.
  * - Once the section lands, the steps play on their own (the rail fills, then moves to the next step).
- * - Tapping a step jumps to it and stops the auto-play.
+ * - It keeps playing: tapping a step jumps to it and carries on from there.
+ * - Mouse over the active step (its tab or the panel) pauses the fill; it resumes from the same spot on leave.
  * id="enter": the hero's ₹1 Cr and 20 Laptops cards and the navbar link land here.
  *
  * TODO (product): the step copy below is a PLACEHOLDER until the product team shares the real steps.
@@ -90,7 +91,13 @@ export default function HowToEnter() {
   const reduced = typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const [active, setActive] = useState(0);
   const [landed, setLanded] = useState(false);
-  const [auto, setAuto] = useState(!reduced); // stops for good once someone picks a step
+  const auto = !reduced;
+  // a new run of the fill bar each time a step becomes active (also when the loop comes back to the same step)
+  const [run, setRun] = useState(0);
+  // mouse resting on the active step's tab or on the panel → pause
+  const [hoverTab, setHoverTab] = useState<number | null>(null);
+  const [hoverPanel, setHoverPanel] = useState(false);
+  const paused = hoverTab === active || hoverPanel;
 
   useEffect(() => {
     const el = ref.current;
@@ -98,17 +105,15 @@ export default function HowToEnter() {
     return onLanded(el, () => setLanded(true));
   }, []);
 
-  // Auto-play: move on every STEP_MS (loops back to step 1 after the last one)
-  useEffect(() => {
-    if (!landed || !auto) return;
-    const t = window.setTimeout(() => setActive((a) => (a + 1) % STEPS.length), STEP_MS);
-    return () => window.clearTimeout(t);
-  }, [landed, auto, active]);
-
-  const pick = (i: number) => {
-    setAuto(false);
+  // Auto-play: the active step's fill bar is the clock. When it's full, move on (loops after the last step).
+  // Pausing the bar (play-state) pauses the stepper, and it resumes from the same spot.
+  const go = (i: number) => {
     setActive(i);
+    setRun((r) => r + 1);
   };
+  const next = () => go((active + 1) % STEPS.length);
+  const pick = (i: number) => go(i);
+  const mouseOnly = (e: React.PointerEvent, fn: () => void) => e.pointerType === 'mouse' && fn();
 
   const step = STEPS[active];
   const Visual = VISUALS[active];
@@ -146,16 +151,20 @@ export default function HowToEnter() {
                 aria-selected={isActive}
                 aria-controls="enter-panel"
                 onClick={() => pick(i)}
+                onPointerEnter={(e) => mouseOnly(e, () => setHoverTab(i))}
+                onPointerLeave={(e) => mouseOnly(e, () => setHoverTab(null))}
                 className="group flex min-h-12 flex-col gap-2.5 text-left"
               >
                 {/* progress bar */}
                 <span aria-hidden="true" className="relative block h-1.5 w-full overflow-hidden rounded-full bg-white/10">
                   <span
-                    key={isActive ? `${active}-${auto && landed}` : 'idle'}
+                    key={isActive ? `run-${run}-${auto && landed}` : 'idle'}
+                    onAnimationEnd={isActive ? next : undefined}
                     className={`absolute inset-y-0 left-0 rounded-full bg-accent ${isActive && auto && landed ? 'step-fill' : ''}`}
                     style={{
                       width: done || (isActive && !(auto && landed)) ? '100%' : isActive ? undefined : '0%',
                       animationDuration: `${STEP_MS}ms`,
+                      animationPlayState: paused ? 'paused' : 'running',
                     }}
                   />
                 </span>
@@ -175,7 +184,14 @@ export default function HowToEnter() {
         </div>
 
         {/* The active step, in detail */}
-        <div id="enter-panel" role="tabpanel" aria-labelledby={`enter-tab-${active}`} className="neu-raised mt-5 overflow-hidden rounded-2xl lg:mt-6">
+        <div
+          id="enter-panel"
+          role="tabpanel"
+          aria-labelledby={`enter-tab-${active}`}
+          onPointerEnter={(e) => mouseOnly(e, () => setHoverPanel(true))}
+          onPointerLeave={(e) => mouseOnly(e, () => setHoverPanel(false))}
+          className="neu-raised mt-5 overflow-hidden rounded-2xl lg:mt-6"
+        >
           <div key={active} className="step-in grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.9fr)]">
             <div className="p-5 lg:p-8">
               <p className="font-mono text-[0.625rem] font-bold tracking-[0.16em] text-success lg:text-[0.6875rem]">

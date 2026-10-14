@@ -10,7 +10,8 @@ function Corner({ className }: { className: string }) {
 /**
  * The floating Join button: a full-width bar on phones, a card on desktop.
  *
- * Rule: it appears from the second fold (once the hero has scrolled away) and stays
+ * Rule: it appears from the second fold (once the hero has scrolled away), steps aside for the whole
+ * "How to enter" section (which has its own Join), and stays
  * until the "Enter the Pride Pool" section (#join) comes into view — it then hands over
  * to that section's own Join button and stays away for the rest of the page.
  */
@@ -29,7 +30,11 @@ export default function StickyJoin() {
       // same rule as the navbar Join: the hero is mostly gone (its last strip may sit under the navbar after the snap)
       const pastHero = hero.getBoundingClientRect().bottom <= window.innerHeight * 0.35;
       const reachedFinal = finalCall.getBoundingClientRect().top < window.innerHeight;
-      setInRange(pastHero && !reachedFinal);
+      // "How to enter" has its own Join: stay away for the whole section (back at the leaderboard)
+      const enter = document.getElementById('enter')?.getBoundingClientRect();
+      const mid = window.innerHeight / 2;
+      const inEnter = !!enter && enter.top < mid && enter.bottom > mid;
+      setInRange(pastHero && !reachedFinal && !inEnter);
     };
     update();
     window.addEventListener('scroll', update, { passive: true });
