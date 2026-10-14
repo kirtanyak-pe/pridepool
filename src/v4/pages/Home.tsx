@@ -8,9 +8,7 @@ import Faqs from '../sections/Faqs';
 import Footer from '../sections/Footer';
 
 import FinalCall from '../sections/FinalCall';
-import Checkpoint from '../components/Checkpoint';
 import StickyJoin from '../components/StickyJoin';
-import { LAPTOPS, POOL } from '../content';
 import Background from '../components/Background';
 import Navbar from '../components/Navbar';
 import { onLanded } from '../components/landed';
@@ -27,14 +25,14 @@ const LANDING_HOLD_MS = 500;
 /**
  * Redesign V4 — the final version (started as a copy of V3; self-contained: everything it uses lives in src/v4).
  * First screen: reward stage with all three touchpoints visible.
- * Then the three rounds (each ending in a Join checkpoint), the Figma leaderboard,
+ * Then the three rounds, the Figma leaderboard,
  * the final call, a short FAQ and a slim footer. The page scales like an image (html.scale-artboard).
  */
 export default function Home({ badgeStyle = 'medal' }: { badgeStyle?: 'medal' | 'stamp' }) {
   const [ready, setReady] = useState(false);
   // Section snapping, one rule for the whole page: when a scroll stops and ⅓ of the section
   // you're heading into is visible (below the Navbar), it settles on that section; otherwise it
-  // settles back. A section plus its Join checkpoint can be taller than the screen (e.g. the
+  // settles back. A section can be taller than the screen (e.g. the
   // leaderboard): inside those you scroll freely, so nothing is ever unreachable.
   useEffect(() => {
     const root = document.documentElement;
@@ -62,7 +60,7 @@ export default function Home({ badgeStyle = 'medal' }: { badgeStyle?: 'medal' | 
       const cur = points[i];
       const next = points[i + 1] ?? null;
       const blockEnd = Math.min(next ?? maxY + window.innerHeight, maxY + view);
-      const long = blockEnd - cur > view + 2; // section (+ checkpoint) taller than the screen
+      const long = blockEnd - cur > view + 2; // section taller than the screen
       const goingDown = y > settled;
       let target: number | null = null;
 
@@ -175,11 +173,9 @@ export default function Home({ badgeStyle = 'medal' }: { badgeStyle?: 'medal' | 
 
         {/* Round 2 · The Pool */}
         <Pool />
-        <Checkpoint round={2} name="The Pool" lead={`A ${POOL.amount} pool for India’s traders`} />
 
         {/* Round 3 · The Bonus */}
         <Bonus />
-        <Checkpoint round={3} name="The Bonus" lead={`${LAPTOPS.count} laptops for participants`} />
 
         <Leaderboard />
         <FinalCall />
