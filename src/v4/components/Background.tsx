@@ -1,152 +1,67 @@
-// Fixed to the screen: only the content scrolls over it
+import { useEffect, useRef } from 'react';
+import CandleBackdrop from './CandleBackdrop';
+
+/**
+ * The page background: the hero's stage (grid, green halo, trading chart, edge fades),
+ * fixed to the screen. Every section, the hero included, scrolls over it; nothing in it moves.
+ *
+ * Only its darkness changes with scroll (--stage-p: 0 on the hero → 1 one screen down):
+ * - the desktop scrim behind the hero headline fades out (later sections are centred)
+ * - a dim layer fades in, so the chart and halo sit back behind text-heavy sections
+ */
 export default function Background() {
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    let frame = 0;
+    const update = () => {
+      frame = 0;
+      const p = Math.min(1, Math.max(0, window.scrollY / window.innerHeight));
+      el.style.setProperty('--stage-p', p.toFixed(3));
+    };
+    const onScroll = () => {
+      if (!frame) frame = requestAnimationFrame(update);
+    };
+    update();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    return () => {
+      cancelAnimationFrame(frame);
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onScroll);
+    };
+  }, []);
+
   return (
-    <div aria-hidden="true" className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
-      <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, #0b0b0f 0%, #0e0e15 30%, #0d0d13 62%, #0b0b0f 100%)" }} />
-      <div className="arena-drift absolute -translate-x-1/2 -translate-y-1/2 rounded-full" style={{ top: "25%", left: "12%", width: "52rem", height: "52rem", maxWidth: "150vw", animationDelay: "0s", background: "radial-gradient(closest-side, rgb(var(--glow-deep)/0.25), rgb(var(--glow-deep)/0) 70%)" }} />
-      <div className="arena-drift absolute -translate-x-1/2 -translate-y-1/2 rounded-full" style={{ top: "33%", left: "88%", width: "38rem", height: "38rem", maxWidth: "150vw", animationDelay: "-6s", background: "radial-gradient(closest-side, rgb(var(--glow)/0.12), rgb(var(--glow)/0) 70%)" }} />
-      <div className="arena-drift absolute -translate-x-1/2 -translate-y-1/2 rounded-full" style={{ top: "48%", left: "72%", width: "42rem", height: "42rem", maxWidth: "150vw", animationDelay: "-12s", background: "radial-gradient(closest-side, rgb(var(--glow-deep)/0.23), rgb(var(--glow-deep)/0) 70%)" }} />
-      <div className="arena-drift absolute -translate-x-1/2 -translate-y-1/2 rounded-full" style={{ top: "66%", left: "16%", width: "44rem", height: "44rem", maxWidth: "150vw", animationDelay: "-18s", background: "radial-gradient(closest-side, rgb(var(--glow-deep)/0.23), rgb(var(--glow-deep)/0) 70%)" }} />
-      <div className="arena-drift absolute -translate-x-1/2 -translate-y-1/2 rounded-full" style={{ top: "78%", left: "82%", width: "32rem", height: "32rem", maxWidth: "150vw", animationDelay: "-24s", background: "radial-gradient(closest-side, rgb(var(--glow)/0.11), rgb(var(--glow)/0) 70%)" }} />
-      <div className="arena-drift absolute -translate-x-1/2 -translate-y-1/2 rounded-full" style={{ top: "90%", left: "40%", width: "46rem", height: "46rem", maxWidth: "150vw", animationDelay: "-30s", background: "radial-gradient(closest-side, rgb(var(--glow-deep)/0.2), rgb(var(--glow-deep)/0) 70%)" }} />
-      <div className="absolute inset-0 opacity-[0.05]" style={{ backgroundImage: "linear-gradient(var(--color-violet) 1px, transparent 1px), linear-gradient(90deg, var(--color-violet) 1px, transparent 1px)", backgroundSize: "64px 64px", maskImage: "linear-gradient(to bottom, transparent 0%, #000 16%, #000 86%, transparent 100%)", WebkitMaskImage: "linear-gradient(to bottom, transparent 0%, #000 16%, #000 86%, transparent 100%)" }} />
-      <div className="absolute inset-0 opacity-[0.05]" style={{ backgroundImage: "linear-gradient(var(--color-violet) 1px, transparent 1px), linear-gradient(90deg, var(--color-violet) 1px, transparent 1px)", backgroundSize: "256px 256px", maskImage: "radial-gradient(ellipse 120% 60% at 50% 45%, #000 10%, transparent 80%)", WebkitMaskImage: "radial-gradient(ellipse 120% 60% at 50% 45%, #000 10%, transparent 80%)" }} />
-      <svg viewBox="0 0 1440 520" preserveAspectRatio="xMidYMid slice" fill="none" className="arena-drift absolute inset-x-0 top-[24%] h-[34rem] w-full" style={{ maskImage: "linear-gradient(90deg, #000 0%, #000 18%, transparent 36%, transparent 64%, #000 82%, #000 100%), linear-gradient(180deg, transparent 0%, #000 22%, #000 78%, transparent 100%)", WebkitMaskImage: "linear-gradient(90deg, #000 0%, #000 18%, transparent 36%, transparent 64%, #000 82%, #000 100%), linear-gradient(180deg, transparent 0%, #000 22%, #000 78%, transparent 100%)", maskComposite: "intersect", WebkitMaskComposite: "source-in" }}>
-        <g stroke="var(--color-violet)" strokeOpacity="0.12" strokeDasharray="4 8">
-          <line x1="0" y1="110" x2="1440" y2="110" />
-          <line x1="0" y1="220" x2="1440" y2="220" />
-          <line x1="0" y1="330" x2="1440" y2="330" />
-          <line x1="0" y1="440" x2="1440" y2="440" />
-        </g>
-        <g opacity="0.22">
-          <g fill="#22c55e">
-            <rect x="34.5" y="418.3870014848933" width="3" height="75.73988122839478" rx="1.5" />
-            <rect x="20" y="445.0131743692607" width="32" height="24.986825630739304" rx="4" />
-          </g>
-          <g fill="#22c55e">
-            <rect x="106.5" y="369.9520820878074" width="3" height="84.35670466508714" rx="1.5" />
-            <rect x="92" y="395.36201320547616" width="32" height="49.651161163784536" rx="4" />
-          </g>
-          <g fill="#22c55e">
-            <rect x="178.5" y="364.3334207663686" width="3" height="53.80941939048466" rx="1.5" />
-            <rect x="164" y="395.2848019635678" width="32" height="5" rx="4" />
-          </g>
-          <g fill="#f43f5e">
-            <rect x="250.5" y="382.7158291338385" width="3" height="54.008038223981885" rx="1.5" />
-            <rect x="236" y="395.2848019635678" width="32" height="15.840642806403366" rx="4" />
-          </g>
-          <g fill="#f43f5e">
-            <rect x="322.5" y="395.2785279602931" width="3" height="42.33603736132386" rx="1.5" />
-            <rect x="308" y="411.1254447699712" width="32" height="15.727758600637344" rx="4" />
-          </g>
-          <g fill="#22c55e">
-            <rect x="394.5" y="354.01626538921164" width="3" height="95.46836796656248" rx="1.5" />
-            <rect x="380" y="377.4801021606477" width="32" height="49.37310120996085" rx="4" />
-          </g>
-          <g fill="#f43f5e">
-            <rect x="466.5" y="366.25848996143804" width="3" height="57.18716304309669" rx="1.5" />
-            <rect x="452" y="377.4801021606477" width="32" height="21.31411718882623" rx="4" />
-          </g>
-          <g fill="#22c55e">
-            <rect x="538.5" y="369.0733011274042" width="3" height="59.23006160810587" rx="1.5" />
-            <rect x="524" y="379.40054976776264" width="32" height="19.393669581711265" rx="4" />
-          </g>
-          <g fill="#22c55e">
-            <rect x="610.5" y="290.0692153223979" width="3" height="118.18530598629263" rx="1.5" />
-            <rect x="596" y="325.5409507700431" width="32" height="53.85959899771956" rx="4" />
-          </g>
-          <g fill="#f43f5e">
-            <rect x="682.5" y="295.78117112584437" width="3" height="76.6532485245541" rx="1.5" />
-            <rect x="668" y="325.5409507700431" width="32" height="15.477794640958336" rx="4" />
-          </g>
-          <g fill="#22c55e">
-            <rect x="754.5" y="273.05671748619557" width="3" height="98.34539639271793" rx="1.5" />
-            <rect x="740" y="287.9465052765611" width="32" height="53.072240134440335" rx="4" />
-          </g>
-          <g fill="#22c55e">
-            <rect x="826.5" y="226.07954114709082" width="3" height="74.55328972518441" rx="1.5" />
-            <rect x="812" y="259.5900184543434" width="32" height="28.356486822217676" rx="4" />
-          </g>
-          <g fill="#22c55e">
-            <rect x="898.5" y="200.4224844329435" width="3" height="79.89374755948782" rx="1.5" />
-            <rect x="884" y="230.3220509594682" width="32" height="29.267967494875194" rx="4" />
-          </g>
-          <g fill="#22c55e">
-            <rect x="970.5" y="190.70682984210583" width="3" height="68.82772985354069" rx="1.5" />
-            <rect x="956" y="222.03332187041673" width="32" height="8.288729089051486" rx="4" />
-          </g>
-          <g fill="#22c55e">
-            <rect x="1042.5" y="157.5685354324061" width="3" height="74.27647250492126" rx="1.5" />
-            <rect x="1028" y="180.48150652479413" width="32" height="41.5518153456226" rx="4" />
-          </g>
-          <g fill="#22c55e">
-            <rect x="1114.5" y="95.46677529763463" width="3" height="120.24707249246538" rx="1.5" />
-            <rect x="1100" y="130.4967957972366" width="32" height="49.98471072755754" rx="4" />
-          </g>
-          <g fill="#f43f5e">
-            <rect x="1186.5" y="109.78496691722455" width="3" height="60.889161594472824" rx="1.5" />
-            <rect x="1172" y="130.4967957972366" width="32" height="15.982680397368966" rx="4" />
-          </g>
-          <g fill="#f43f5e">
-            <rect x="1258.5" y="112.62306184671851" width="3" height="59.18393014118075" rx="1.5" />
-            <rect x="1244" y="146.47947619460555" width="32" height="5" rx="4" />
-          </g>
-          <g fill="#22c55e">
-            <rect x="1330.5" y="84.92428410083087" width="3" height="99.65469200138003" rx="1.5" />
-            <rect x="1316" y="119.58531271230461" width="32" height="29.862594430074097" rx="4" />
-          </g>
-          <g fill="#f43f5e">
-            <rect x="1402.5" y="89.3456158026311" width="3" height="90.87166904125363" rx="1.5" />
-            <rect x="1388" y="119.58531271230461" width="32" height="26.2922121251747" rx="4" />
-          </g>
-        </g>
-        <polyline points="36.0,445.0 108.0,420.2 180.0,411.9 252.0,411.7 324.0,414.7 396.0,401.2 468.0,401.9 540.0,398.7 612.0,381.6 684.0,364.4 756.0,346.5 828.0,318.7 900.0,288.9 972.0,268.2 1044.0,236.1 1116.0,204.6 1188.0,182.0 1260.0,165.8 1332.0,145.3 1404.0,138.4" stroke="var(--color-gold-bright)" strokeOpacity="0.4" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
-      </svg>
-      <div className="absolute inset-x-0 bottom-0 h-[24%] overflow-hidden" style={{ perspective: "280px", perspectiveOrigin: "50% 0%" }}>
-        <div className="absolute inset-0 opacity-[0.075]" style={{ transform: "rotateX(72deg)", transformOrigin: "50% 0%", backgroundImage: "linear-gradient(var(--color-violet) 1px, transparent 1px), linear-gradient(90deg, var(--color-violet) 1px, transparent 1px)", backgroundSize: "72px 72px", maskImage: "linear-gradient(to bottom, transparent 0%, #000 40%, transparent 92%)", WebkitMaskImage: "linear-gradient(to bottom, transparent 0%, #000 40%, transparent 92%)" }} />
-      </div>
-      <span className="absolute inset-x-0 bottom-[24%] h-px" style={{ background: "linear-gradient(90deg, transparent, rgb(var(--glow)/0.16) 35%, rgb(var(--glow)/0.12) 65%, transparent)" }} />
-      <span className="arena-particle absolute rounded-full" style={{ left: "17.88%", top: "54.11%", width: "1.2px", height: "1.2px", background: "var(--color-violet)", boxShadow: "0 0 6px 1px rgb(var(--glow)/0.4)", "--p-duration": "20.9s", "--p-delay": "5.0s", "--p-opacity": "0.18" }} />
-      <span className="arena-particle absolute rounded-full" style={{ left: "16.94%", top: "81.62%", width: "1.9px", height: "1.9px", background: "var(--color-violet)", boxShadow: "0 0 6px 1px rgb(var(--glow)/0.4)", "--p-duration": "10.8s", "--p-delay": "3.9s", "--p-opacity": "0.36" }} />
-      <span className="arena-particle absolute rounded-full" style={{ left: "2.05%", top: "57.45%", width: "2.6px", height: "2.6px", background: "var(--color-gold-bright)", boxShadow: "0 0 6px 1px rgb(var(--glow-light)/0.45)", "--p-duration": "13.4s", "--p-delay": "7.2s", "--p-opacity": "0.48" }} />
-      <span className="arena-particle absolute rounded-full" style={{ left: "32.38%", top: "96.11%", width: "2.2px", height: "2.2px", background: "var(--color-gold-bright)", boxShadow: "0 0 6px 1px rgb(var(--glow-light)/0.45)", "--p-duration": "10.8s", "--p-delay": "10.6s", "--p-opacity": "0.48" }} />
-      <span className="arena-particle absolute rounded-full" style={{ left: "70.59%", top: "31.54%", width: "1.8px", height: "1.8px", background: "var(--color-gold-bright)", boxShadow: "0 0 6px 1px rgb(var(--glow-light)/0.45)", "--p-duration": "18.8s", "--p-delay": "8.6s", "--p-opacity": "0.28" }} />
-      <span className="arena-particle absolute rounded-full" style={{ left: "21.61%", top: "79.66%", width: "2px", height: "2px", background: "var(--color-violet)", boxShadow: "0 0 6px 1px rgb(var(--glow)/0.4)", "--p-duration": "17.1s", "--p-delay": "10.9s", "--p-opacity": "0.19" }} />
-      <span className="arena-particle absolute rounded-full" style={{ left: "37.29%", top: "62.58%", width: "1.5px", height: "1.5px", background: "var(--color-gold-bright)", boxShadow: "0 0 6px 1px rgb(var(--glow-light)/0.45)", "--p-duration": "10.5s", "--p-delay": "11.3s", "--p-opacity": "0.34" }} />
-      <span className="arena-particle absolute rounded-full" style={{ left: "34.59%", top: "71.18%", width: "2.1px", height: "2.1px", background: "var(--color-violet)", boxShadow: "0 0 6px 1px rgb(var(--glow)/0.4)", "--p-duration": "18.8s", "--p-delay": "5.8s", "--p-opacity": "0.41" }} />
-      <span className="arena-particle absolute rounded-full" style={{ left: "22.49%", top: "80.83%", width: "1.8px", height: "1.8px", background: "var(--color-gold-bright)", boxShadow: "0 0 6px 1px rgb(var(--glow-light)/0.45)", "--p-duration": "13.4s", "--p-delay": "10.0s", "--p-opacity": "0.33" }} />
-      <span className="arena-particle absolute rounded-full" style={{ left: "48.68%", top: "57.38%", width: "2.3px", height: "2.3px", background: "var(--color-violet)", boxShadow: "0 0 6px 1px rgb(var(--glow)/0.4)", "--p-duration": "16.6s", "--p-delay": "6.7s", "--p-opacity": "0.21" }} />
-      <span className="arena-particle absolute rounded-full" style={{ left: "44.80%", top: "81.51%", width: "1.4px", height: "1.4px", background: "var(--color-gold-bright)", boxShadow: "0 0 6px 1px rgb(var(--glow-light)/0.45)", "--p-duration": "11.1s", "--p-delay": "6.4s", "--p-opacity": "0.22" }} />
-      <span className="arena-particle absolute rounded-full" style={{ left: "81.76%", top: "94.09%", width: "2px", height: "2px", background: "var(--color-violet)", boxShadow: "0 0 6px 1px rgb(var(--glow)/0.4)", "--p-duration": "15.2s", "--p-delay": "4.0s", "--p-opacity": "0.37" }} />
-      <span className="arena-particle absolute rounded-full" style={{ left: "86.00%", top: "66.00%", width: "1.5px", height: "1.5px", background: "var(--color-violet)", boxShadow: "0 0 6px 1px rgb(var(--glow)/0.4)", "--p-duration": "12.7s", "--p-delay": "2.9s", "--p-opacity": "0.24" }} />
-      <span className="arena-particle absolute rounded-full" style={{ left: "5.03%", top: "68.33%", width: "2.5px", height: "2.5px", background: "var(--color-gold-bright)", boxShadow: "0 0 6px 1px rgb(var(--glow-light)/0.45)", "--p-duration": "18.5s", "--p-delay": "3.0s", "--p-opacity": "0.20" }} />
-      <span className="arena-particle absolute rounded-full" style={{ left: "54.52%", top: "87.76%", width: "2.5px", height: "2.5px", background: "var(--color-gold-bright)", boxShadow: "0 0 6px 1px rgb(var(--glow-light)/0.45)", "--p-duration": "18.8s", "--p-delay": "7.2s", "--p-opacity": "0.50" }} />
-      <span className="arena-particle absolute rounded-full" style={{ left: "54.91%", top: "73.83%", width: "1.9px", height: "1.9px", background: "var(--color-violet)", boxShadow: "0 0 6px 1px rgb(var(--glow)/0.4)", "--p-duration": "11.8s", "--p-delay": "9.7s", "--p-opacity": "0.28" }} />
-      <span className="arena-particle absolute rounded-full" style={{ left: "48.60%", top: "61.15%", width: "2.7px", height: "2.7px", background: "var(--color-violet)", boxShadow: "0 0 6px 1px rgb(var(--glow)/0.4)", "--p-duration": "14.3s", "--p-delay": "0.2s", "--p-opacity": "0.28" }} />
-      <span className="arena-particle absolute rounded-full" style={{ left: "78.54%", top: "48.72%", width: "2.2px", height: "2.2px", background: "var(--color-violet)", boxShadow: "0 0 6px 1px rgb(var(--glow)/0.4)", "--p-duration": "15.3s", "--p-delay": "9.1s", "--p-opacity": "0.39" }} />
-      <span className="arena-particle absolute rounded-full" style={{ left: "25.65%", top: "72.16%", width: "2.3px", height: "2.3px", background: "var(--color-violet)", boxShadow: "0 0 6px 1px rgb(var(--glow)/0.4)", "--p-duration": "20.8s", "--p-delay": "11.4s", "--p-opacity": "0.54" }} />
-      <span className="arena-particle absolute rounded-full" style={{ left: "3.03%", top: "59.04%", width: "2.6px", height: "2.6px", background: "var(--color-gold-bright)", boxShadow: "0 0 6px 1px rgb(var(--glow-light)/0.45)", "--p-duration": "16.6s", "--p-delay": "8.4s", "--p-opacity": "0.39" }} />
-      <span className="arena-particle absolute rounded-full" style={{ left: "26.41%", top: "31.56%", width: "2.2px", height: "2.2px", background: "var(--color-gold-bright)", boxShadow: "0 0 6px 1px rgb(var(--glow-light)/0.45)", "--p-duration": "20.2s", "--p-delay": "3.1s", "--p-opacity": "0.33" }} />
-      <span className="arena-particle absolute rounded-full" style={{ left: "11.86%", top: "89.22%", width: "2.4px", height: "2.4px", background: "var(--color-violet)", boxShadow: "0 0 6px 1px rgb(var(--glow)/0.4)", "--p-duration": "19.5s", "--p-delay": "3.2s", "--p-opacity": "0.44" }} />
-      <span className="arena-particle absolute rounded-full" style={{ left: "95.24%", top: "93.54%", width: "1.1px", height: "1.1px", background: "var(--color-violet)", boxShadow: "0 0 6px 1px rgb(var(--glow)/0.4)", "--p-duration": "14.5s", "--p-delay": "12.3s", "--p-opacity": "0.38" }} />
-      <span className="arena-particle absolute rounded-full" style={{ left: "10.89%", top: "28.32%", width: "2px", height: "2px", background: "var(--color-gold-bright)", boxShadow: "0 0 6px 1px rgb(var(--glow-light)/0.45)", "--p-duration": "18.3s", "--p-delay": "13.9s", "--p-opacity": "0.23" }} />
-      <span className="arena-particle absolute rounded-full" style={{ left: "56.85%", top: "92.85%", width: "2.3px", height: "2.3px", background: "var(--color-violet)", boxShadow: "0 0 6px 1px rgb(var(--glow)/0.4)", "--p-duration": "17.8s", "--p-delay": "10.5s", "--p-opacity": "0.51" }} />
-      <span className="arena-particle absolute rounded-full" style={{ left: "75.94%", top: "64.91%", width: "2.6px", height: "2.6px", background: "var(--color-violet)", boxShadow: "0 0 6px 1px rgb(var(--glow)/0.4)", "--p-duration": "11.0s", "--p-delay": "3.3s", "--p-opacity": "0.52" }} />
-      <span className="arena-particle absolute rounded-full" style={{ left: "81.07%", top: "93.54%", width: "1.3px", height: "1.3px", background: "var(--color-gold-bright)", boxShadow: "0 0 6px 1px rgb(var(--glow-light)/0.45)", "--p-duration": "13.0s", "--p-delay": "6.7s", "--p-opacity": "0.46" }} />
-      <span className="arena-particle absolute rounded-full" style={{ left: "33.95%", top: "82.20%", width: "1.5px", height: "1.5px", background: "var(--color-gold-bright)", boxShadow: "0 0 6px 1px rgb(var(--glow-light)/0.45)", "--p-duration": "12.7s", "--p-delay": "4.2s", "--p-opacity": "0.54" }} />
-      <span className="arena-particle absolute rounded-full" style={{ left: "3.27%", top: "51.04%", width: "2px", height: "2px", background: "var(--color-gold-bright)", boxShadow: "0 0 6px 1px rgb(var(--glow-light)/0.45)", "--p-duration": "15.2s", "--p-delay": "1.4s", "--p-opacity": "0.42" }} />
-      <span className="arena-particle absolute rounded-full" style={{ left: "67.89%", top: "47.76%", width: "2px", height: "2px", background: "var(--color-violet)", boxShadow: "0 0 6px 1px rgb(var(--glow)/0.4)", "--p-duration": "12.9s", "--p-delay": "13.5s", "--p-opacity": "0.35" }} />
-      <span className="arena-particle absolute rounded-full" style={{ left: "58.85%", top: "80.66%", width: "1.5px", height: "1.5px", background: "var(--color-gold-bright)", boxShadow: "0 0 6px 1px rgb(var(--glow-light)/0.45)", "--p-duration": "18.3s", "--p-delay": "9.7s", "--p-opacity": "0.45" }} />
-      <span className="arena-particle absolute rounded-full" style={{ left: "62.16%", top: "34.15%", width: "1.2px", height: "1.2px", background: "var(--color-gold-bright)", boxShadow: "0 0 6px 1px rgb(var(--glow-light)/0.45)", "--p-duration": "14.0s", "--p-delay": "9.0s", "--p-opacity": "0.18" }} />
-      <span className="arena-particle absolute rounded-full" style={{ left: "54.51%", top: "80.77%", width: "2.1px", height: "2.1px", background: "var(--color-violet)", boxShadow: "0 0 6px 1px rgb(var(--glow)/0.4)", "--p-duration": "12.4s", "--p-delay": "0.4s", "--p-opacity": "0.48" }} />
-      <span className="arena-particle absolute rounded-full" style={{ left: "2.17%", top: "49.94%", width: "2.3px", height: "2.3px", background: "var(--color-gold-bright)", boxShadow: "0 0 6px 1px rgb(var(--glow-light)/0.45)", "--p-duration": "12.4s", "--p-delay": "0.2s", "--p-opacity": "0.36" }} />
-      <span className="arena-particle absolute rounded-full" style={{ left: "41.86%", top: "37.65%", width: "2.5px", height: "2.5px", background: "var(--color-violet)", boxShadow: "0 0 6px 1px rgb(var(--glow)/0.4)", "--p-duration": "12.9s", "--p-delay": "0.7s", "--p-opacity": "0.50" }} />
-      <span className="arena-particle absolute rounded-full" style={{ left: "59.51%", top: "85.19%", width: "2.3px", height: "2.3px", background: "var(--color-violet)", boxShadow: "0 0 6px 1px rgb(var(--glow)/0.4)", "--p-duration": "13.0s", "--p-delay": "9.6s", "--p-opacity": "0.46" }} />
-      <span className="arena-particle absolute rounded-full" style={{ left: "64.72%", top: "51.47%", width: "1.8px", height: "1.8px", background: "var(--color-gold-bright)", boxShadow: "0 0 6px 1px rgb(var(--glow-light)/0.45)", "--p-duration": "13.3s", "--p-delay": "13.3s", "--p-opacity": "0.38" }} />
-      <span className="arena-particle absolute rounded-full" style={{ left: "88.53%", top: "97.78%", width: "1.2px", height: "1.2px", background: "var(--color-gold-bright)", boxShadow: "0 0 6px 1px rgb(var(--glow-light)/0.45)", "--p-duration": "13.4s", "--p-delay": "13.1s", "--p-opacity": "0.32" }} />
-      <span className="arena-particle absolute rounded-full" style={{ left: "47.66%", top: "36.69%", width: "1.2px", height: "1.2px", background: "var(--color-violet)", boxShadow: "0 0 6px 1px rgb(var(--glow)/0.4)", "--p-duration": "19.5s", "--p-delay": "13.8s", "--p-opacity": "0.49" }} />
-      <span className="arena-particle absolute rounded-full" style={{ left: "93.68%", top: "29.49%", width: "2.1px", height: "2.1px", background: "var(--color-gold-bright)", boxShadow: "0 0 6px 1px rgb(var(--glow-light)/0.45)", "--p-duration": "14.6s", "--p-delay": "0.3s", "--p-opacity": "0.35" }} />
-      <div className="absolute inset-0 opacity-[0.02]" style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E\")", backgroundSize: "180px 180px" }} />
+    <div ref={ref} aria-hidden="true" className="pointer-events-none fixed inset-0 -z-10 overflow-hidden bg-bg" style={{ '--stage-p': 0 } as React.CSSProperties}>
+      <div
+        className="absolute inset-0 opacity-[0.12]"
+        style={{
+          backgroundImage: 'linear-gradient(var(--color-violet) 1px, transparent 1px), linear-gradient(90deg, var(--color-violet) 1px, transparent 1px)',
+          backgroundSize: '3rem 3rem',
+          maskImage: 'radial-gradient(ellipse 85% 65% at 50% 55%, #000 10%, transparent 75%)',
+          WebkitMaskImage: 'radial-gradient(ellipse 85% 65% at 50% 55%, #000 10%, transparent 75%)',
+        }}
+      />
+      <div className="arena-halo absolute left-1/2 top-[58%] h-[30rem] w-[30rem] -translate-x-1/2 -translate-y-1/2 rounded-full blur-3xl lg:left-[68%] lg:top-[55%] lg:h-[48rem] lg:w-[48rem]" style={{ background: 'radial-gradient(closest-side, rgb(var(--glow-deep)/0.6), transparent)' }} />
+      {/* Candles: behind the stage on phones; desktop keeps them on the right only, away from the text and Join button */}
+      <CandleBackdrop
+        className="absolute inset-x-0 bottom-[16%] h-[38%] w-full text-fg opacity-35 lg:bottom-[6%] lg:left-auto lg:h-[60%] lg:w-[58%] lg:[mask-image:linear-gradient(to_right,transparent,#000_30%)]"
+      />
+      {/* Desktop: dark scrim behind the hero's headline column; fades out as the hero scrolls away */}
+      <div
+        className="absolute inset-y-0 left-0 hidden w-[62%] lg:block"
+        style={{
+          opacity: 'calc(1 - var(--stage-p))',
+          background: 'linear-gradient(to right, var(--color-bg) 0%, color-mix(in srgb, var(--color-bg) 90%, transparent) 45%, color-mix(in srgb, var(--color-bg) 55%, transparent) 72%, transparent 100%)',
+        }}
+      />
+      {/* Dims the stage behind the sections after the hero */}
+      <div className="absolute inset-0 bg-bg" style={{ opacity: 'calc(var(--stage-p) * 0.45)' }} />
+      <span className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-accent/40 to-transparent" />
+      <div className="absolute inset-x-0 bottom-0 h-[10rem] bg-gradient-to-b from-transparent via-bg/70 to-bg" />
     </div>
   );
 }
