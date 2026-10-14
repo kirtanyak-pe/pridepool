@@ -2,7 +2,7 @@ import type { ReactNode } from 'react';
 import JoinButton from '../../v2/components/JoinButton';
 import TickerTape from '../../v2/components/TickerTape';
 import CandleBackdrop from '../../v2/components/CandleBackdrop';
-import Odometer from '../../v2/components/Odometer';
+import PoolHeadline from '../components/PoolHeadline';
 import { ANCHORS, ANISH, LAPTOPS, POOL } from '../../v2/content';
 
 /**
@@ -122,9 +122,9 @@ function Headline({ align }: { align: 'center' | 'left' }) {
         <span aria-hidden="true" className="h-1.5 w-1.5 rotate-45 bg-accent" />
         The Pride Pool
       </p>
-      <p className="mt-2.5 text-[2.875rem] font-extrabold tracking-[-0.04em] text-white [text-shadow:0_0_3.75rem_rgb(var(--glow)/0.55)] lg:mt-4 lg:text-[5.75rem]">
-        <Odometer text="₹1,00,00,000" label={POOL.amount} />
-      </p>
+      <div className="mt-2.5 lg:mt-4">
+        <PoolHeadline align={align} />
+      </div>
       <p className="arena-enter mt-1.5 inline-flex items-center gap-1.5 font-mono text-[0.75rem] font-bold uppercase tracking-[0.08em] text-success lg:mt-2 lg:text-[1rem]" style={{ '--e-delay': '0.3s' }}>
         <span aria-hidden="true">▲</span> Brokerage credits for India’s traders
       </p>

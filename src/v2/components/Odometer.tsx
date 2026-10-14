@@ -1,6 +1,6 @@
 /** Slot-machine number: each digit rolls up and lands (styles: .odo-strip in index.css). */
-export default function Odometer({ text, label }: { text: string; label: string }) {
-  let digitIndex = 0;
+export default function Odometer({ text, label, delayOffset = 0 }: { text: string; label: string; /** digits already rolled before this one (keeps the stagger continuous when a number is split) */ delayOffset?: number }) {
+  let digitIndex = delayOffset;
   return (
     <span aria-label={label} role="img" className="inline-flex leading-none tabular-nums">
       {[...text].map((ch, i) => {

@@ -25,6 +25,8 @@ export const ANISH = {
 export const POOL = {
   amount: '₹1 Crore',
   short: '₹1 Cr',
+  /** Headline name of the pool. TODO: confirm "Pride Pool" vs "Prize Pool". */
+  title: 'Pride Pool',
   label: 'Credits pool',
 };
 
