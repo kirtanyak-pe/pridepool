@@ -5,21 +5,26 @@ import CandleBackdrop from './CandleBackdrop';
  * The page background: the hero's stage (grid, green halo, trading chart, edge fades),
  * fixed to the screen. Every section, the hero included, scrolls over it; nothing in it moves.
  *
- * Only its darkness changes with scroll (--stage-p: 0 on the hero → 1 one screen down):
- * - the desktop scrim behind the hero headline fades out (later sections are centred)
- * - a dim layer fades in, so the chart and halo sit back behind text-heavy sections
+ * Only its darkness changes with scroll (p: 0 on the hero → 1 one screen down):
+ * - the desktop scrim behind the hero headline fades out (opacity 1 − p; later sections are centred)
+ * - a dim layer fades in (opacity 0.45·p), so the chart and halo sit back behind text-heavy sections
+ * Only those two layers' opacity is written (will-change: opacity), so the GPU just re-blends them:
+ * the rest of the fixed stage (blurred halo, masked grid, chart) is not repainted while scrolling.
  */
 export default function Background() {
-  const ref = useRef<HTMLDivElement>(null);
+  const scrimRef = useRef<HTMLDivElement>(null);
+  const dimRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
+    const scrim = scrimRef.current;
+    const dim = dimRef.current;
+    if (!scrim || !dim) return;
     let frame = 0;
     const update = () => {
       frame = 0;
-      const p = Math.min(1, Math.max(0, window.scrollY / window.innerHeight));
-      el.style.setProperty('--stage-p', p.toFixed(3));
+      const p = Number(Math.min(1, Math.max(0, window.scrollY / window.innerHeight)).toFixed(3));
+      scrim.style.opacity = String(1 - p);
+      dim.style.opacity = String(p * 0.45);
     };
     const onScroll = () => {
       if (!frame) frame = requestAnimationFrame(update);
@@ -35,7 +40,7 @@ export default function Background() {
   }, []);
 
   return (
-    <div ref={ref} aria-hidden="true" className="pointer-events-none fixed inset-0 -z-10 overflow-hidden bg-bg" style={{ '--stage-p': 0 } as React.CSSProperties}>
+    <div aria-hidden="true" className="pointer-events-none fixed inset-0 -z-10 overflow-hidden bg-bg">
       <div
         className="absolute inset-0 opacity-[0.12]"
         style={{
@@ -52,14 +57,16 @@ export default function Background() {
       />
       {/* Desktop: dark scrim behind the hero's headline column; fades out as the hero scrolls away */}
       <div
+        ref={scrimRef}
         className="absolute inset-y-0 left-0 hidden w-[62%] lg:block"
         style={{
-          opacity: 'calc(1 - var(--stage-p))',
+          opacity: 1,
+          willChange: 'opacity',
           background: 'linear-gradient(to right, var(--color-bg) 0%, color-mix(in srgb, var(--color-bg) 90%, transparent) 45%, color-mix(in srgb, var(--color-bg) 55%, transparent) 72%, transparent 100%)',
         }}
       />
       {/* Dims the stage behind the sections after the hero */}
-      <div className="absolute inset-0 bg-bg" style={{ opacity: 'calc(var(--stage-p) * 0.45)' }} />
+      <div ref={dimRef} className="absolute inset-0 bg-bg" style={{ opacity: 0, willChange: 'opacity' }} />
       <span className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-accent/40 to-transparent" />
       <div className="absolute inset-x-0 bottom-0 h-[10rem] bg-gradient-to-b from-transparent via-bg/70 to-bg" />
     </div>

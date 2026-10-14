@@ -20,6 +20,8 @@ const INTRO_LOCK_MAX_MS = 10000;
 
 // Pause after landing before the hero starts building
 const LANDING_HOLD_MS = 500;
+// Slow networks: the longest the intro waits for the hero photo + font after the hold
+const LANDING_WAIT_MAX_MS = 1500;
 
 /**
  * Redesign V4 — the final version (started as a copy of V3; self-contained: everything it uses lives in src/v4).
@@ -127,7 +129,12 @@ export default function Home({ badgeStyle = 'medal' }: { badgeStyle?: 'medal' | 
   const [introDone, setIntroDone] = useState(false);
   const onIntroDone = useCallback(() => setIntroDone(true), []);
   useEffect(() => {
-    if (introDone || window.scrollY > 10) return;
+    if (introDone) return;
+    // opened mid-page (e.g. a refresh): no lock, and nothing waits for the hero intro
+    if (window.scrollY > 10) {
+      setIntroDone(true);
+      return;
+    }
     // The lock belongs to the hero only: blocks only while the page is at the hero, and ends for good
     // as soon as the page leaves it (e.g. a navbar link), so other sections always scroll freely.
     const onHero = () => window.scrollY <= 10;
@@ -154,10 +161,22 @@ export default function Home({ badgeStyle = 'medal' }: { badgeStyle?: 'medal' | 
     };
   }, [introDone]);
   useEffect(() => {
-    // Warm the hero images during the hold so they're there when the stage builds
-    ['anish.webp', 'laptop-hd.webp'].forEach((src) => (new Image().src = src));
-    const t = window.setTimeout(() => setReady(true), LANDING_HOLD_MS);
-    return () => window.clearTimeout(t);
+    // Warm the hero images during the hold. The intro starts after the hold once Anish's photo is decoded and the
+    // title font is in (on a normal connection both are ready within the hold, so nothing changes); on a slow
+    // network it waits for them, at most LANDING_WAIT_MAX_MS longer, so the photo never pops in after its own fade.
+    let alive = true;
+    const photo = new Image();
+    photo.src = 'anish.webp';
+    new Image().src = 'laptop-800.webp';
+    const wait = (ms: number) => new Promise<void>((r) => window.setTimeout(r, ms));
+    const assets = Promise.all([
+      photo.decode().catch(() => undefined),
+      document.fonts?.load('800 1em Manrope').catch(() => undefined),
+    ]);
+    Promise.race([Promise.all([wait(LANDING_HOLD_MS), assets]), wait(LANDING_HOLD_MS + LANDING_WAIT_MAX_MS)]).then(() => alive && setReady(true));
+    return () => {
+      alive = false;
+    };
   }, []);
 
   return (
@@ -168,7 +187,7 @@ export default function Home({ badgeStyle = 'medal' }: { badgeStyle?: 'medal' | 
         <ArenaHero badgeStyle={badgeStyle} ready={ready} onIntroDone={onIntroDone} />
 
         {/* Round 1 · The Champion */}
-        <Champion />
+        <Champion coverReady={introDone} />
 
         {/* How to enter: the steps to join the pool and grab the prize (replaces The Pool + The Bonus) */}
         <HowToEnter />

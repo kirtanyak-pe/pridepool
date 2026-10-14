@@ -1,6 +1,6 @@
 // GENERATED from the Figma leaderboard (file CCpQIcDySK63UMO0KJkkda, node 2:94).
 // Every podium layer at its exact Figma position, as % of its parent box:
-// box = [left, top, width, height]. Assets live in public/leaderboard/.
+// box = [left, top, width, height]. Assets live in src/v4/leaderboard/svg/ (bundled by art.ts).
 // The leaderboard frame is 2033 design px wide; the podium scene is the top 813.08 px.
 
 export type Box = [number, number, number, number];

@@ -1,9 +1,10 @@
 import type { Box } from './layers';
+import { artUrl } from './artStore';
 
 /**
  * Circular country flag, built like the Figma "Flag/…" components:
  * flag artwork clipped by a circle mask → base ring → gloss → outline.
- * Assets: public/leaderboard/flag-*.svg
+ * Assets: src/v4/leaderboard/svg/flag-*.svg, bundled via art.ts
  */
 export type Country = 'india' | 'usa' | 'uk' | 'singapore';
 type Variant = 'row' | 'podium-india' | 'podium-usa-gold' | 'podium-usa-bronze';
@@ -26,10 +27,12 @@ function files(variant: Variant, country: Country) {
 }
 
 const pos = ([l, t, w, h]: Box) => ({ left: `${l}%`, top: `${t}%`, width: `${w}%`, height: `${h}%` });
-const url = (name: string) => `leaderboard/${name}.svg`;
+const url = artUrl;
 
 export default function Flag({ country, variant = 'row', className = '', style }: { country: Country; variant?: Variant; className?: string; style?: React.CSSProperties }) {
   const f = files(variant, country);
+  // keeps its box but draws nothing until the leaderboard art has loaded (artStore.ts)
+  if (!url(f.base)) return <span role="img" aria-label={NAMES[country]} className={`relative block overflow-hidden ${className}`} style={style} />;
   const mask = `url("${url(f.mask)}")`;
   return (
     <span role="img" aria-label={NAMES[country]} className={`relative block overflow-hidden ${className}`} style={style}>

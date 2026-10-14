@@ -10,6 +10,8 @@ npm run build
 # and use it as 404.html so any unknown URL still loads the app.
 mkdir -p dist/terms-and-conditions
 cp dist/index.html dist/terms-and-conditions/index.html
+# the terms page doesn't show the hero photo: drop its preload there
+sed -i '' '/rel="preload" as="image"/d' dist/terms-and-conditions/index.html
 cp dist/index.html dist/404.html
 touch dist/.nojekyll
 

@@ -11,6 +11,7 @@ import { ANISH, JOIN_LABEL, LAPTOPS, POOL } from '../content';
  * - Once the section lands, the steps play on their own (the rail fills, then moves to the next step).
  * - It keeps playing: tapping a step jumps to it and carries on from there.
  * - Mouse over the active step (its tab or the panel) pauses the fill; it resumes from the same spot on leave.
+ * - It also pauses while the section is off screen.
  * id="enter": the hero's ₹1 Cr and 20 Laptops cards and the navbar link land here.
  *
  * TODO (product): the step copy below is a PLACEHOLDER until the product team shares the real steps.
@@ -85,7 +86,7 @@ function WinVisual() {
         <span className="mt-1.5 text-[0.5625rem] font-bold uppercase tracking-[0.14em] text-fg-subtle lg:text-[0.75rem]">{POOL.label}</span>
       </div>
       <div className="relative w-[44%]">
-        <img src="laptop-hd.webp" alt="" width="2800" height="2858" loading="lazy" decoding="async" className="h-auto w-full drop-shadow-[0_1rem_1.5rem_rgba(0,0,0,0.6)]" />
+        <img src="laptop-800.webp" alt="" width="800" height="817" loading="lazy" decoding="async" className="h-auto w-full drop-shadow-[0_1rem_1.5rem_rgba(0,0,0,0.6)]" />
         <span className="absolute -right-1 -top-1 rounded-full bg-gold px-2 py-0.5 text-[0.75rem] font-extrabold text-bg lg:text-sm">×{LAPTOPS.count}</span>
       </div>
     </div>
@@ -105,12 +106,21 @@ export default function HowToEnter() {
   // mouse resting on the active step's tab or on the panel → pause
   const [hoverTab, setHoverTab] = useState<number | null>(null);
   const [hoverPanel, setHoverPanel] = useState(false);
-  const paused = hoverTab === active || hoverPanel;
+  // …and while the section is off screen (no stepping or re-rendering for nobody)
+  const [onScreen, setOnScreen] = useState(true);
+  const paused = hoverTab === active || hoverPanel || !onScreen;
 
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
     return onLanded(el, () => setLanded(true));
+  }, []);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const io = new IntersectionObserver(([e]) => setOnScreen(e.isIntersecting));
+    io.observe(el);
+    return () => io.disconnect();
   }, []);
 
   // Auto-play: the active step's fill bar is the clock. When it's full, move on (loops after the last step).

@@ -3,7 +3,9 @@
 /* ───────────────────────── Font ───────────────────────── */
 @font-face {
   font-family: "Manrope";
-  src: url("/fonts/Manrope-Variable.woff2") format("woff2");
+  /* Latin subset of Manrope (Greek/Cyrillic/Vietnamese removed; ₹, punctuation and arrows kept): 24.6 KB instead of 53.5 KB */
+  src: url("/fonts/Manrope-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+20B9, U+2122, U+2190-21FF, U+2212, U+2215, U+2248, U+2265, U+FEFF, U+FFFD;
   font-display: swap;
   font-weight: 200 800;
   font-style: normal;
@@ -150,15 +152,18 @@
     font: inherit;
     font-size: max(1rem, 1em);
   }
-  html {
-    cursor:
-      url(/cursor-theme.svg) 5 5,
-      auto;
-  }
-  :where(a[href], button, summary, select, label[for], [role="button"]) {
-    cursor:
-      url(/cursor-theme-hover.svg) 5 5,
-      pointer;
+  /* custom cursors only where there is a mouse (phones would download the SVGs for nothing) */
+  @media (pointer: fine) {
+    html {
+      cursor:
+        url(/cursor-theme.svg) 5 5,
+        auto;
+    }
+    :where(a[href], button, summary, select, label[for], [role="button"]) {
+      cursor:
+        url(/cursor-theme-hover.svg) 5 5,
+        pointer;
+    }
   }
   :where(
       input:not([type="checkbox"]):not([type="radio"]):not([type="button"]):not(
@@ -888,6 +893,32 @@ html.scale-artboard {
   .lb-shimmer, .lb-lift:hover .lb-spin { animation: none !important; }
 }
 
+/* V4: the same gold-crystal light sweep, but moved with transform (composited, no repaint per frame) and only
+   once the leaderboard has landed. Same geometry as .lb-shimmer: a 250%-wide strip whose offset runs
+   −1.95W → +1.95W = translateX(−78% → 78%) of its own width; at rest it sits where background-position 0 put it. */
+.lb-sheen {
+  overflow: hidden;
+  mix-blend-mode: overlay;
+}
+.lb-sheen > span {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 250%;
+  height: 100%;
+  background: linear-gradient(105deg, transparent 35%, rgba(255, 255, 255, 0.35) 50%, transparent 65%);
+}
+.lb.lb-in .lb-sheen > span {
+  animation: lb-sheen 4.5s ease-in-out 2.2s infinite;
+}
+@keyframes lb-sheen {
+  0% { transform: translateX(-78%); }
+  45%, 100% { transform: translateX(78%); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .lb-sheen > span { animation: none !important; }
+}
+
 /* V3 headline: one bright light sweep across the text, like a reflection.
    A copy of the text filled only with a moving white streak (+ glow), played once. */
 .shimmer-once {
@@ -1026,6 +1057,8 @@ html.scale-artboard {
 /* V4 How to enter: stepper */
 .step-fill {
   width: 0%;
+  /* width (not transform): a composited bar gets softer top/bottom edges on this 6px line; the stepper pauses
+     off screen, so the per-frame layout only happens while it is visible */
   animation: step-fill linear forwards; /* duration set inline = how long the step stays */
 }
 @keyframes step-fill {

@@ -23,13 +23,15 @@ export default function useInPageJoinVisible() {
       if (!frame) frame = requestAnimationFrame(update);
     };
     update();
-    // the hero's buttons mount a moment after the page (landing hold): look again shortly after
-    const t = window.setTimeout(update, 800);
+    // the hero's buttons mount a moment after the page (after the landing hold, which can be longer on slow
+    // networks): look again whenever elements are added or removed, not only on scroll
+    const mo = new MutationObserver(schedule);
+    mo.observe(document.body, { childList: true, subtree: true });
     window.addEventListener('scroll', schedule, { passive: true });
     window.addEventListener('resize', schedule);
     return () => {
       cancelAnimationFrame(frame);
-      window.clearTimeout(t);
+      mo.disconnect();
       window.removeEventListener('scroll', schedule);
       window.removeEventListener('resize', schedule);
     };

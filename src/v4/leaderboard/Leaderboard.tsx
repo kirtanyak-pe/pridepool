@@ -1,4 +1,5 @@
 import { onLanded } from '../components/landed';
+import { artUrl, useLeaderboardArt } from './artStore';
 import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react';
 import Odometer from '../components/Odometer';
 import Flag, { type Country } from './Flag';
@@ -50,7 +51,7 @@ const pos = ([l, t, w, h]: Box): CSSProperties => ({ left: `${l}%`, top: `${t}%`
 const u = (n: number) => `calc(${n} * var(--lb-u))`;
 
 function Img({ src, box, className = '' }: { src: string; box: Box; className?: string }) {
-  return <img src={`leaderboard/${src}.svg`} alt="" aria-hidden="true" draggable={false} className={`pointer-events-none absolute block max-w-none select-none ${className}`} style={pos(box)} />;
+  return <img src={artUrl(src)} alt="" aria-hidden="true" draggable={false} className={`pointer-events-none absolute block max-w-none select-none ${className}`} style={pos(box)} />;
 }
 const Layers = ({ layers }: { layers: Layer[] }) => <>{layers.map((l, i) => <Img key={`${l.src}-${i}`} src={l.src} box={l.box} />)}</>;
 
@@ -86,12 +87,12 @@ function Details({
       style={{ left: `${at[0]}%`, top: `${at[1]}%`, gap: u(gaps[1]), filter: `drop-shadow(0 ${u(shadow[0])} ${u(shadow[1])} rgba(0,0,0,0.8))` }}
     >
       <div className="relative flex flex-col items-center" style={{ gap: u(gaps[0]) }}>
-        <img src={`leaderboard/${crown}.svg`} alt="" aria-hidden="true" className="block max-w-none" style={{ width: u(crownSize[0]), height: u(crownSize[1]) }} />
+        <img src={artUrl(crown)} alt="" aria-hidden="true" className="block max-w-none" style={{ width: u(crownSize[0]), height: u(crownSize[1]) }} />
         <p className="font-medium leading-[normal] text-white" style={{ fontSize: u(nameSize), fontFamily: '"Inter", "Inter Variable", var(--font-sans)' }}>
           {leader.name}
         </p>
         {crownShading && (
-          <img src="leaderboard/gold-crown-shading.svg" alt="" aria-hidden="true" className="absolute left-1/2 block max-w-none -translate-x-1/2" style={{ top: u(61.857), width: u(87.978), height: u(11.505) }} />
+          <img src={artUrl('gold-crown-shading')} alt="" aria-hidden="true" className="absolute left-1/2 block max-w-none -translate-x-1/2" style={{ top: u(61.857), width: u(87.978), height: u(11.505) }} />
         )}
       </div>
       <p className="font-semibold leading-[normal]" style={{ fontSize: u(scoreSize), color: scoreColor }}>
@@ -130,9 +131,12 @@ function Coin({ box, origin, delay, float = false, children }: { box: Box; origi
   );
 }
 
-function PodiumScene({ rolling }: { rolling: boolean }) {
+function PodiumScene({ rolling, art }: { rolling: boolean; art: boolean }) {
   return (
     <div className="lb-scene relative -mx-[15%] w-[130%] lg:mx-0 lg:w-full" style={{ aspectRatio: '2033 / 813.0808715820312', containerType: 'inline-size' }}>
+      {/* the scene keeps its size; its layers render once the leaderboard art has loaded (artStore.ts) */}
+      {art && (
+      <>
       {/* Paint order as in Figma: silver, bronze, gold on top */}
       <Podium box={GROUPS.silver} delay="0.2s" label={`2nd place, ${TOP.silver.name}, ${TOP.silver.score}`}>
         <div className="lb-body absolute inset-0">
@@ -170,9 +174,11 @@ function PodiumScene({ rolling }: { rolling: boolean }) {
           {/* Light sweeping across the gold crystal (masked to its shape) */}
           <span
             aria-hidden="true"
-            className="lb-shimmer absolute"
-            style={{ ...pos(GOLD_PODIUM.crystal), maskImage: 'url("leaderboard/gold-crystal.svg")', WebkitMaskImage: 'url("leaderboard/gold-crystal.svg")', maskSize: '100% 100%', WebkitMaskSize: '100% 100%' }}
-          />
+            className="lb-sheen absolute"
+            style={{ ...pos(GOLD_PODIUM.crystal), maskImage: `url("${artUrl('gold-crystal')}")`, WebkitMaskImage: `url("${artUrl('gold-crystal')}")`, maskSize: '100% 100%', WebkitMaskSize: '100% 100%' }}
+          >
+            <span />
+          </span>
         </div>
         <Coin box={GOLD_MEDAL.frame} origin="50% 18.83%" delay="0.45s">
           <div className="absolute inset-0 overflow-hidden" style={{ transform: `scale(${MEDAL_RING_SCALE.gold})`, transformOrigin: '50.12% 18.86%' }}>
@@ -182,6 +188,8 @@ function PodiumScene({ rolling }: { rolling: boolean }) {
         </Coin>
         <Details at={DETAILS.gold} crown="gold-crown" crownSize={[105.303, 67.912]} crownShading gaps={[13.746, 22]} nameSize={36.656} scoreSize={45.82} scoreColor="#ffd873" shadow={[3.384, 10.151]} leader={TOP.gold} rolling={rolling} />
       </Podium>
+      </>
+      )}
     </div>
   );
 }
@@ -233,13 +241,17 @@ function RankingsTable() {
 
 export default function Leaderboard() {
   const ref = useRef<HTMLElement>(null);
-  const [inView, setInView] = useState(false);
+  const [landed, setLanded] = useState(false);
+  // the podium artwork arrives as one chunk after page load (or when this section is near)
+  const art = useLeaderboardArt(ref);
+  // the entrance (podiums rise, medals drop, scores roll) plays once landed AND the artwork is in
+  const inView = landed && art;
 
   // Play the entrance once, when the leaderboard scrolls into view.
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
-    return onLanded(el, () => setInView(true));
+    return onLanded(el, () => setLanded(true));
   }, []);
 
   return (
@@ -258,7 +270,7 @@ export default function Leaderboard() {
       </div>
 
       <div data-sticky-avoid className="relative mx-auto mt-8 w-full max-w-[63.53rem] lg:mt-12">
-        <PodiumScene rolling={inView} />
+        <PodiumScene rolling={inView} art={art} />
         <RankingsTable />
       </div>
     </section>

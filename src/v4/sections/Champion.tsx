@@ -9,7 +9,20 @@ import { onLanded } from '../components/landed';
  * Keeps id="moment" so links to #moment still land here.
  */
 
-function MomentCard() {
+/** Open the connection to the YouTube player when someone is about to tap play (not before: most visitors never do) */
+let playerWarm = false;
+function warmUpPlayer() {
+  if (playerWarm) return;
+  playerWarm = true;
+  const link = document.createElement('link');
+  link.rel = 'preconnect';
+  link.href = 'https://www.youtube-nocookie.com';
+  document.head.appendChild(link);
+}
+
+/** coverReady: load the cover only once the hero intro has let go (it can't be seen before that,
+ *  and on slow networks it would compete with the hero photo) */
+function MomentCard({ coverReady }: { coverReady: boolean }) {
   const [playing, setPlaying] = useState(false);
   return (
     <div data-reveal="true" className="relative mx-auto w-full max-w-[20rem] lg:max-w-[22rem]">
@@ -49,11 +62,19 @@ function MomentCard() {
               <button
                 type="button"
                 onClick={() => setPlaying(true)}
+                onPointerEnter={warmUpPlayer}
+                onTouchStart={warmUpPlayer}
+                onFocus={warmUpPlayer}
                 aria-label={`Play: ${ANISH.name} on stage at the ${ANISH.event}`}
                 className="group absolute inset-0 block size-full"
               >
                 <img
-                  src={`https://i.ytimg.com/vi/${ANISH.videoId}/oar2.jpg`}
+                  src={coverReady ? `https://i.ytimg.com/vi_webp/${ANISH.videoId}/oar2.webp` : undefined}
+                  // YouTube's WebP thumbnail is 92 KB vs 139 KB for the JPEG; fall back to the JPEG if it's ever missing
+                  onError={(e) => {
+                    const img = e.currentTarget;
+                    if (!img.src.includes('/vi/')) img.src = `https://i.ytimg.com/vi/${ANISH.videoId}/oar2.jpg`;
+                  }}
                   alt=""
                   width="1080"
                   height="1920"
@@ -108,7 +129,7 @@ function Beat({ active, quote, delay }: { active: boolean; quote: string; delay?
   );
 }
 
-export default function Champion() {
+export default function Champion({ coverReady = true }: { coverReady?: boolean }) {
   const ref = useRef<HTMLElement>(null);
   const reduced = typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   // 0 = "I came here to become the champion." is big; 1 = "One more minute…" is big
@@ -139,7 +160,7 @@ export default function Champion() {
       <div className="relative mx-auto grid max-w-5xl grid-cols-1 items-center gap-8 lg:grid-cols-[minmax(0,22rem)_minmax(0,1fr)] lg:gap-16">
         {/* The video card: below the heading on phones, left column on desktop */}
         <div className="order-2 lg:order-none">
-          <MomentCard />
+          <MomentCard coverReady={coverReady} />
         </div>
 
         {/* Heading + story. On phones this wrapper dissolves so the heading can sit above the card. */}

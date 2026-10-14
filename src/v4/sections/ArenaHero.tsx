@@ -1,4 +1,4 @@
-import { useEffect, useState, type ReactNode } from 'react';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
 import JoinButton from '../components/JoinButton';
 import PoolHeadline from '../components/PoolHeadline';
 import { ANCHORS, ANISH, LAPTOPS, POOL } from '../content';
@@ -135,10 +135,10 @@ function Laptop() {
         {/* Warm spotlight so the dark laptop reads on the dark stage */}
         <div aria-hidden="true" className="absolute left-1/2 top-1/2 -z-10 h-[150%] w-[150%] -translate-x-1/2 -translate-y-1/2 rounded-full" style={{ background: 'radial-gradient(closest-side, rgba(255,201,120,0.45), rgba(255,201,120,0.12) 55%, transparent)' }} />
         <img
-          src="laptop-hd.webp"
+          src="laptop-800.webp"
           alt=""
-          width="2800"
-          height="2858"
+          width="800"
+          height="817"
           decoding="async"
           className="laptop-float w-[4.5rem] select-none brightness-125 drop-shadow-[0_0_1rem_rgba(255,201,120,0.35)] lg:w-[8rem]"
         />
@@ -208,7 +208,10 @@ export default function ArenaHero({
   const [sweepReplay, setSweepReplay] = useState(0);
   // …and once that last shine has swept across, the hero's Join button gives one shake
   const [shakeJoin, setShakeJoin] = useState(false);
+  const cardsDoneRef = useRef(false);
   const onCardsDone = () => {
+    if (cardsDoneRef.current) return;
+    cardsDoneRef.current = true;
     setCards(3);
     setSweepReplay((n) => (n === 0 ? 1 : n));
     // both cards are down → the page can be scrolled (the last shine plays as you go)
@@ -220,6 +223,18 @@ export default function ArenaHero({
   useEffect(() => {
     if (reduced) onIntroDone?.();
   }, [reduced, onIntroDone]);
+  // Safety net: each step normally advances on its animation's end event; if that event never comes
+  // (e.g. motion settings changed mid-intro), these timers move it on well after the animation's own end.
+  useEffect(() => {
+    if (!titleDone || cards !== 0) return;
+    const t = window.setTimeout(onBadgeLanded, 3000);
+    return () => window.clearTimeout(t);
+  }, [titleDone, cards]);
+  useEffect(() => {
+    if (cards !== 1 && cards !== 2) return;
+    const t = window.setTimeout(() => (cards === 1 ? setCards((c) => (c === 1 ? 2 : c)) : onCardsDone()), 3000);
+    return () => window.clearTimeout(t);
+  }, [cards]); // eslint-disable-line react-hooks/exhaustive-deps
   return (
     <section id="hero" aria-labelledby="hero-heading" className="relative isolate flex h-[52.75rem] snap-start flex-col overflow-hidden lg:h-[56.25rem]">
       <h1 id="hero-heading" className="sr-only">
