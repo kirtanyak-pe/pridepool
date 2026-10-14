@@ -17,7 +17,7 @@ export type Bg = 'violet' | 'green' | 'blue' | 'graphite';
 export type HeroStyle = 'story' | 'trailer';
 export type BadgeStyle = 'medal' | 'stamp';
 
-const DEFAULTS = { version: 'v4' as Version, accent: 'green' as Accent, bg: 'green' as Bg, hero: 'story' as HeroStyle, badge: 'medal' as BadgeStyle };
+const DEFAULTS = { version: 'v4' as Version, accent: 'green' as Accent, bg: 'green' as Bg, hero: 'story' as HeroStyle, badge: 'stamp' as BadgeStyle };
 const VERSIONS: Version[] = ['v1', 'v2', 'v3', 'v4'];
 const ACCENTS: Accent[] = ['violet', 'lime', 'green'];
 const BGS: Bg[] = ['violet', 'green', 'blue', 'graphite'];
@@ -67,14 +67,14 @@ function syncUrl(version: Version, accent: Accent, bg: Bg, hero: HeroStyle, badg
 
 export function usePrototypeSettings() {
   const [version, setVersionState] = useState<Version>(() =>
-    load('v', 'pridepool:version-2', VERSIONS, (raw) => (raw === '1' ? 'v1' : raw === '2' ? 'v2' : raw === '3' ? 'v3' : raw === '4' ? 'v4' : raw), DEFAULTS.version),
+    load('v', 'pridepool:version-3', VERSIONS, (raw) => (raw === '1' ? 'v1' : raw === '2' ? 'v2' : raw === '3' ? 'v3' : raw === '4' ? 'v4' : raw), DEFAULTS.version),
   );
   const [accent, setAccentState] = useState<Accent>(() =>
-    load('accent', 'pridepool:accent-2', ACCENTS, (raw) => raw, DEFAULTS.accent),
+    load('accent', 'pridepool:accent-3', ACCENTS, (raw) => raw, DEFAULTS.accent),
   );
-  const [bg, setBgState] = useState<Bg>(() => load('bg', 'pridepool:bg-2', BGS, (raw) => raw, DEFAULTS.bg));
-  const [hero, setHeroState] = useState<HeroStyle>(() => load('hero', 'pridepool:hero', HEROES, (raw) => raw, DEFAULTS.hero));
-  const [badge, setBadgeState] = useState<BadgeStyle>(() => load('badge', 'pridepool:badge', BADGES, (raw) => raw, DEFAULTS.badge));
+  const [bg, setBgState] = useState<Bg>(() => load('bg', 'pridepool:bg-3', BGS, (raw) => raw, DEFAULTS.bg));
+  const [hero, setHeroState] = useState<HeroStyle>(() => load('hero', 'pridepool:hero-3', HEROES, (raw) => raw, DEFAULTS.hero));
+  const [badge, setBadgeState] = useState<BadgeStyle>(() => load('badge', 'pridepool:badge-3', BADGES, (raw) => raw, DEFAULTS.badge));
 
   // Apply the colours before paint (no flash of the wrong colour). The Original is always violet.
   useLayoutEffect(() => {
@@ -91,7 +91,7 @@ export function usePrototypeSettings() {
   const setVersion = useCallback(
     (next: Version) => {
       setVersionState(next);
-      save('pridepool:version-2', next);
+      save('pridepool:version-3', next);
       syncUrl(next, accent, bg, hero, badge);
       window.scrollTo({ top: 0, behavior: 'instant' });
     },
@@ -101,7 +101,7 @@ export function usePrototypeSettings() {
   const setAccent = useCallback(
     (next: Accent) => {
       setAccentState(next);
-      save('pridepool:accent-2', next);
+      save('pridepool:accent-3', next);
       syncUrl(version, next, bg, hero, badge);
     },
     [version, bg, hero, badge],
@@ -110,7 +110,7 @@ export function usePrototypeSettings() {
   const setBg = useCallback(
     (next: Bg) => {
       setBgState(next);
-      save('pridepool:bg-2', next);
+      save('pridepool:bg-3', next);
       syncUrl(version, accent, next, hero, badge);
     },
     [version, accent, hero, badge],
@@ -119,7 +119,7 @@ export function usePrototypeSettings() {
   const setHero = useCallback(
     (next: HeroStyle) => {
       setHeroState(next);
-      save('pridepool:hero', next);
+      save('pridepool:hero-3', next);
       syncUrl(version, accent, bg, next, badge);
       window.scrollTo({ top: 0, behavior: 'instant' });
     },
@@ -129,7 +129,7 @@ export function usePrototypeSettings() {
   const setBadge = useCallback(
     (next: BadgeStyle) => {
       setBadgeState(next);
-      save('pridepool:badge', next);
+      save('pridepool:badge-3', next);
       syncUrl(version, accent, bg, hero, next);
       window.scrollTo({ top: 0, behavior: 'instant' });
     },
