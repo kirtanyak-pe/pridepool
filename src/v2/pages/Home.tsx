@@ -1,4 +1,5 @@
 import Hero from '../sections/Hero';
+import StoryHero from '../sections/StoryHero';
 import Champion from '../sections/Champion';
 import FinalCall from '../sections/FinalCall';
 import Checkpoint from '../components/Checkpoint';
@@ -19,12 +20,12 @@ import Faqs from '../../v1/sections/Faqs';
  * Story order: trailer (hero) → Round 1 Anish → Round 2 ₹1 Crore pool → Round 3 laptops,
  * each round ending in a Join checkpoint, then the leaderboard and a final call.
  */
-export default function Home() {
+export default function Home({ heroStyle = 'story' }: { heroStyle?: 'story' | 'trailer' }) {
   return (
     <>
       <main id="main" className="relative">
         <Background />
-        <Hero />
+        {heroStyle === 'story' ? <StoryHero /> : <Hero />}
         {/* Fade from hero into the page */}
         <div aria-hidden="true" className="pointer-events-none relative -z-[5] h-0">
           <div className="absolute inset-x-0 top-0 h-48 bg-gradient-to-b from-bg to-transparent sm:h-64" />

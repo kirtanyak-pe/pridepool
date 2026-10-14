@@ -1,4 +1,6 @@
 import JoinButton from '../components/JoinButton';
+import TickerTape from '../components/TickerTape';
+import CandleBackdrop from '../components/CandleBackdrop';
 import { ANCHORS, ANISH, LAPTOPS, POOL } from '../content';
 
 /**
@@ -86,6 +88,7 @@ export default function Hero() {
             }}
           />
         ))}
+        <CandleBackdrop className="absolute inset-x-0 bottom-[14%] h-[40%] w-full text-fg opacity-35 lg:bottom-[8%] lg:h-[55%]" />
         <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-b from-transparent to-bg" />
       </div>
 
@@ -100,7 +103,9 @@ export default function Hero() {
         </div>
       </div>
 
-      <div className="arena-container grid grid-cols-1 pb-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,30rem)] lg:items-end lg:gap-12 lg:pb-0 xl:grid-cols-[minmax(0,1fr)_minmax(0,36rem)]">
+      <TickerTape />
+
+      <div className="arena-container grid grid-cols-1 pb-10 pt-4 lg:pt-0 lg:grid-cols-[minmax(0,1fr)_minmax(0,30rem)] lg:items-end lg:gap-12 lg:pb-0 xl:grid-cols-[minmax(0,1fr)_minmax(0,36rem)]">
         {/* ── Anish (first on phones, right on desktop) ── */}
         <div className="relative mx-auto w-[min(17.5rem,72vw,34svh)] lg:order-2 lg:w-[min(100%,calc((100svh-5rem)*0.696))] lg:justify-self-center">
           <div aria-hidden="true" className="hero-figure-rim pointer-events-none absolute -inset-x-[30%] -top-[6%] bottom-[10%] -z-10" />

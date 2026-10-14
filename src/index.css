@@ -663,3 +663,100 @@
   --color-fg-subtle: #8d8fa0;
   color: var(--color-fg);
 }
+
+/* ───────────────────────── Story-mode hero (redesign) ───────────────────────── */
+/* Scene enter: fade + rise */
+.story-scene {
+  animation: story-in 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+@keyframes story-in {
+  from { opacity: 0; transform: translateY(14px) scale(0.98); }
+  to { opacity: 1; transform: none; }
+}
+/* Progress bar fill for the active scene (its end advances the story) */
+.story-progress {
+  animation: story-progress var(--story-ms, 3600ms) linear forwards;
+}
+@keyframes story-progress {
+  from { width: 0%; }
+  to { width: 100%; }
+}
+/* Medal stamps onto Anish */
+.story-stamp {
+  animation: story-stamp 0.6s cubic-bezier(0.2, 1.4, 0.4, 1) 0.45s both;
+}
+@keyframes story-stamp {
+  from { opacity: 0; transform: scale(2.2) rotate(-18deg); }
+  to { opacity: 1; transform: none; }
+}
+/* Slot-machine digits: each strip holds 0–9 twice and lands on --d */
+.odo-strip {
+  transform: translateY(calc((10 + var(--d)) * -1em));
+  animation: odo-roll 1.5s cubic-bezier(0.2, 0.75, 0.15, 1) both;
+}
+@keyframes odo-roll {
+  from { transform: translateY(0); }
+  to { transform: translateY(calc((10 + var(--d)) * -1em)); }
+}
+/* Items popping in one by one (laptops, reward tiles) */
+.story-pop {
+  animation: story-pop 0.42s cubic-bezier(0.2, 1.4, 0.4, 1) both;
+}
+@keyframes story-pop {
+  from { opacity: 0; transform: translateY(-10px) scale(0.6); }
+  to { opacity: 1; transform: none; }
+}
+/* ₹ credit coins rising behind the pool number */
+.story-coin {
+  animation: story-coin var(--c-ms, 3.2s) ease-out var(--c-delay, 0s) infinite;
+}
+@keyframes story-coin {
+  0% { opacity: 0; transform: translateY(30px) scale(0.7); }
+  20% { opacity: 0.9; }
+  100% { opacity: 0; transform: translateY(-140px) scale(1); }
+}
+
+/* ───────────────────────── Trading feel (redesign) ───────────────────────── */
+/* Ticker tape: two copies of the items slide left forever */
+.ticker-track {
+  animation: ticker 32s linear infinite;
+}
+@keyframes ticker {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+/* Candles grow from their base, one after another */
+.candle-grow {
+  transform-box: fill-box;
+  transform-origin: center bottom;
+  animation: candle-grow 0.5s cubic-bezier(0.2, 0.8, 0.3, 1) both;
+}
+@keyframes candle-grow {
+  from { opacity: 0; transform: scaleY(0); }
+  to { opacity: 1; transform: none; }
+}
+/* Trend line draws itself (path uses pathLength="1") */
+.chart-draw {
+  stroke-dasharray: 1;
+  animation: chart-draw 2.4s cubic-bezier(0.4, 0, 0.2, 1) 0.4s both;
+}
+@keyframes chart-draw {
+  from { stroke-dashoffset: 1; }
+  to { stroke-dashoffset: 0; }
+}
+/* Last candle "live" pulse */
+.candle-live {
+  animation: candle-live 1.6s ease-in-out 2.2s infinite alternate;
+}
+@keyframes candle-live {
+  from { opacity: 1; }
+  to { opacity: 0.45; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ticker-track,
+  .candle-grow,
+  .chart-draw,
+  .candle-live {
+    animation: none !important;
+  }
+}

@@ -23,6 +23,7 @@ After `npm run deploy`, the live link updates in about a minute.
 A floating button in the top-right corner opens the prototype controls. They are not part of the website.
 
 - **Version:** Original or Redesign.
+- **First screen** (Redesign only): Story (animated scenes: Anish → ₹1 Crore → 20 laptops → all rewards) or Static.
 - **Accent colour** (Redesign only): Violet (the original colour), Lemonn lime (the brand green from the Lemonn logo) or Trading green.
 - **Background colour** (Redesign only): the "second colour" in the background glows, grid, light behind Anish, heading glows and leaderboard bars. Violet (original), Green, Blue or Grey.
 
@@ -60,8 +61,8 @@ src/
   v2/              REDESIGN
     content.ts       All redesign copy and links in one place (Join link + label, Anish's rank wording, …)
     pages/Home.tsx   The redesigned page, in story order. Imports from ../../v1/ = not redesigned yet
-    sections/        Hero.tsx, Champion.tsx (Round 1), FinalCall.tsx
-    components/      JoinButton.tsx, Checkpoint.tsx, StickyJoin.tsx, VideoMoment.tsx
+    sections/        StoryHero.tsx (animated first screen), Hero.tsx (static), Champion.tsx (Round 1), FinalCall.tsx
+    components/      JoinButton.tsx, Checkpoint.tsx, StickyJoin.tsx, VideoMoment.tsx, TickerTape.tsx, CandleBackdrop.tsx
   prototype/       PROTOTYPE ONLY — version + accent controls. Not part of the website.
 public/            Images, logos, cursors, font
 ```
@@ -70,7 +71,7 @@ public/            Images, logos, cursors, font
 
 | Part | Status |
 | --- | --- |
-| Hero | ✅ Redesigned (`v2/sections/Hero.tsx`) |
+| First screen | ✅ Two versions to A/B: Story mode (`StoryHero.tsx`: auto-playing scenes, tap to skip, hold to pause, Join fixed) and Static (`Hero.tsx`). Both have the ticker tape + candle chart climbing to ₹1 Cr |
 | Join button system (checkpoints, final call, floating bar/card) | ✅ Built (`v2/components/`, `v2/sections/FinalCall.tsx`) |
 | Section order | ✅ Story order: Anish → ₹1 Crore pool → laptops (`v2/pages/Home.tsx`) |
 | Round 1 · The Champion | ✅ New section (`v2/sections/Champion.tsx`): player card, two-beat quote story, in-page video. Replaces the old video block |

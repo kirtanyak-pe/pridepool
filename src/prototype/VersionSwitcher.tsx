@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import type { Accent, Bg, Version } from './settings';
+import type { Accent, Bg, HeroStyle, Version } from './settings';
 
 const VERSION_OPTIONS: { value: Version; label: string }[] = [
   { value: 'v1', label: 'Original' },
@@ -10,6 +10,11 @@ const ACCENT_OPTIONS: { value: Accent; label: string; swatch: string }[] = [
   { value: 'violet', label: 'Violet', swatch: '#c45fd8' },
   { value: 'lime', label: 'Lime', swatch: '#a1e600' },
   { value: 'green', label: 'Green', swatch: '#4ade80' },
+];
+
+const HERO_OPTIONS: { value: HeroStyle; label: string }[] = [
+  { value: 'story', label: 'Story (animated)' },
+  { value: 'trailer', label: 'Static' },
 ];
 
 const BG_OPTIONS: { value: Bg; label: string; swatch: string }[] = [
@@ -26,6 +31,8 @@ type Props = {
   onAccentChange: (a: Accent) => void;
   bg: Bg;
   onBgChange: (b: Bg) => void;
+  hero: HeroStyle;
+  onHeroChange: (h: HeroStyle) => void;
 };
 
 /** A row of segmented buttons (radio group). */
@@ -71,7 +78,7 @@ function Segmented<T extends string>({
  * Deliberately styled unlike the site so nobody mistakes it for part of the campaign.
  * Remove this folder and its lines in main.tsx before shipping.
  */
-export default function VersionSwitcher({ version, onVersionChange, accent, onAccentChange, bg, onBgChange }: Props) {
+export default function VersionSwitcher({ version, onVersionChange, accent, onAccentChange, bg, onBgChange, hero, onHeroChange }: Props) {
   const [open, setOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
 
@@ -135,6 +142,11 @@ export default function VersionSwitcher({ version, onVersionChange, accent, onAc
             />
           </div>
 
+          <p className="mt-4 text-xs font-semibold text-white/80">First screen {version === 'v1' && <span className="font-normal text-white/50">· Redesign only</span>}</p>
+          <div className="mt-1.5">
+            <Segmented label="First screen" options={HERO_OPTIONS} value={hero} onChange={onHeroChange} disabled={version === 'v1'} />
+          </div>
+
           <p className="mt-4 text-xs font-semibold text-white/80">Accent colour {version === 'v1' && <span className="font-normal text-white/50">· Redesign only</span>}</p>
           <div className="mt-1.5">
             <Segmented label="Accent colour" options={ACCENT_OPTIONS} value={accent} onChange={onAccentChange} disabled={version === 'v1'} />
@@ -148,7 +160,7 @@ export default function VersionSwitcher({ version, onVersionChange, accent, onAc
           </div>
 
           <p className="mt-4 text-[0.6875rem] leading-snug text-white/45">
-            Share exactly what you see: the link updates as you switch (<code className="text-white/70">?v=2&amp;accent=lime&amp;bg=green</code>).
+            Share exactly what you see: the link updates as you switch (<code className="text-white/70">?v=2&amp;hero=story&amp;accent=lime</code>).
           </p>
         </div>
       )}
