@@ -83,7 +83,7 @@ export default function PoolHeadline({ align = 'center', onComplete, replay = 0 
     <div aria-hidden="true" className={align === 'center' ? 'text-center' : 'text-left'}>
       {/* Line 1: ₹1,00,00,000 → ₹1 Crore, shrinking at the same time */}
       <p
-        className={`font-extrabold leading-none tracking-[-0.04em] text-white [text-shadow:0_0_3.75rem_rgb(var(--glow)/0.55)] ${final ? 'text-[1.875rem] lg:text-[3.25rem]' : 'text-[2.875rem] lg:text-[5.75rem]'}`}
+        className={`font-extrabold leading-none tracking-[-0.04em] text-white [text-shadow:0_0_3.75rem_rgb(var(--glow)/0.55)] ${final ? 'text-[2.25rem] lg:text-[3.25rem]' : 'text-[3.25rem] lg:text-[5.75rem]'}`}
         style={{ transition: `font-size 0.7s ${ease}` }}
         onTransitionEnd={(e) => {
           // The light sweep starts only once the shrink has really finished, so it always lines up with the text
@@ -127,7 +127,7 @@ export default function PoolHeadline({ align = 'center', onComplete, replay = 0 
       <div className="grid" style={{ gridTemplateRows: final ? '1fr' : '0fr', transition: `grid-template-rows 0.7s ${ease}` }}>
         <div className="overflow-hidden">
           <p
-            className="pb-[0.08em] pt-[0.12em] text-[3.25rem] font-extrabold uppercase leading-[0.95] tracking-[-0.03em] lg:text-[6.5rem]"
+            className="pb-[0.08em] pt-[0.12em] text-[3.75rem] font-extrabold uppercase leading-[0.95] tracking-[-0.03em] lg:text-[6.5rem]"
             style={{ transform: final ? 'none' : 'translateY(40%) scale(1.15)', opacity: final ? 1 : 0, transition: `transform 0.8s ${ease}, opacity 0.5s ease`, transformOrigin: align === 'center' ? 'center top' : 'left top' }}
           >
             <span className="relative inline-block">

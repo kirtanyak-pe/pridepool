@@ -48,12 +48,12 @@ function Pedestal({
       <div className={`relative flex w-full flex-1 items-end justify-center ${tucked ? 'z-0' : 'z-10'}`}>{item}</div>
       {/* Pedestal block: 3D key, accent rim on top */}
       {value && (
-      <div className={`key-cap relative mt-2 flex w-full flex-col items-center justify-center rounded-xl px-1.5 py-2.5 text-center lg:rounded-2xl lg:py-4 ${tucked ? 'z-10' : ''}`}>
+      <div className={`key-cap relative mt-2 flex w-full flex-col items-center justify-center rounded-xl px-1.5 py-3 text-center lg:rounded-2xl lg:py-4 ${tucked ? 'z-10' : ''}`}>
         <span aria-hidden="true" className="absolute inset-x-3 top-0 h-px bg-gradient-to-r from-transparent via-accent/70 to-transparent" />
         {/* impact ring when the card is stamped down */}
         {stamp === 'play' && <span aria-hidden="true" className="card-stamp-impact pointer-events-none absolute -inset-1.5 rounded-[1rem] border-2 border-accent/70 lg:rounded-[1.25rem]" />}
-        <span className="text-[1rem] font-extrabold uppercase leading-none tracking-[-0.01em] text-fg lg:text-[1.625rem]">{value}</span>
-        <span className="mt-1 text-[0.5625rem] font-bold uppercase leading-tight tracking-[0.14em] text-fg-subtle lg:text-[0.75rem]">{label}</span>
+        <span className="text-[1.125rem] font-extrabold uppercase leading-none tracking-[-0.01em] text-fg lg:text-[1.625rem]">{value}</span>
+        <span className="mt-1 text-[0.625rem] font-bold uppercase leading-tight tracking-[0.14em] text-fg-subtle lg:text-[0.75rem]">{label}</span>
       </div>
       )}
     </a>
@@ -155,7 +155,7 @@ function Anish({ badge, showBadge, onBadgeLanded }: { badge: 'medal' | 'stamp'; 
     <div className="relative">
       {showBadge && badge === 'medal' && <Medal onLanded={onBadgeLanded} className="-left-[34%] top-[4%] w-[5.25rem] lg:-left-[24%] lg:top-[5%] lg:w-[8.75rem]" />}
       {/* the stamp prints behind his image, at his top-right */}
-      {showBadge && badge === 'stamp' && <Stamp onLanded={onBadgeLanded} className="-right-[24%] -top-[8%] lg:-right-[24%] lg:top-[3%]" />}
+      {showBadge && badge === 'stamp' && <Stamp onLanded={onBadgeLanded} className="-right-[24%] top-0 lg:-right-[24%] lg:top-[3%]" />}
       <div aria-hidden="true" className="hero-figure-rim figure-glow-in pointer-events-none absolute -inset-x-[35%] -top-[8%] bottom-[5%] -z-10" />
       <img
         src="anish.webp"
@@ -164,7 +164,7 @@ function Anish({ badge, showBadge, onBadgeLanded }: { badge: 'medal' | 'stamp'; 
         height="904"
         decoding="async"
         fetchPriority="high"
-        className="arena-enter relative z-[1] h-[17.5rem] w-auto max-w-none select-none lg:h-[31rem]"
+        className="arena-enter relative z-[1] h-[22rem] w-auto max-w-none select-none lg:h-[31rem]"
         style={{ '--e-delay': '0.55s', maskImage: 'linear-gradient(to bottom, #000 82%, transparent 100%)', WebkitMaskImage: 'linear-gradient(to bottom, #000 82%, transparent 100%)' }}
       />
     </div>
@@ -266,7 +266,7 @@ export default function ArenaHero({
             tucked
             value={POOL.short}
             label={POOL.label}
-            className="z-10 -mr-16 w-[7.5rem] lg:-mr-[7.75rem] lg:w-[13.5rem]"
+            className="z-10 -mr-16 w-[8.75rem] lg:-mr-[7.75rem] lg:w-[13.5rem]"
             delay="0.35s"
             stamp={stampOf(1)}
             onStamped={() => setCards(2)}
@@ -283,7 +283,7 @@ export default function ArenaHero({
             tucked
             value={`${LAPTOPS.count} ${LAPTOPS.label}`}
             label="To win"
-            className="z-10 -ml-16 w-[7.5rem] lg:-ml-[7.75rem] lg:w-[13.5rem]"
+            className="z-10 -ml-16 w-[8.75rem] lg:-ml-[7.75rem] lg:w-[13.5rem]"
             delay="0.5s"
             stamp={stampOf(2)}
             onStamped={onCardsDone}
