@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import { useState, type ReactNode } from 'react';
 import JoinButton from '../../v2/components/JoinButton';
 import TickerTape from '../../v2/components/TickerTape';
 import CandleBackdrop from '../../v2/components/CandleBackdrop';
@@ -47,12 +47,33 @@ function Medal({ className = '' }: { className?: string }) {
   return (
     <div
       className={`story-stamp absolute z-20 flex aspect-square flex-col items-center justify-center rounded-full border border-white/60 text-bg shadow-[inset_0_2px_0_rgba(255,255,255,0.9),inset_0_-3px_0_rgba(0,0,0,0.18),0_5px_0_#8f8fa3,0_14px_24px_-6px_rgba(0,0,0,0.8)] ${className}`}
-      style={{ background: 'radial-gradient(circle at 35% 28%, #ffffff 0%, var(--color-silver) 45%, #a9a9bd 100%)', animationDelay: '1s' }}
+      style={{ background: 'radial-gradient(circle at 35% 28%, #ffffff 0%, var(--color-silver) 45%, #a9a9bd 100%)' }}
       aria-label={`World's ${ANISH.rank} trader`}
     >
       <span aria-hidden="true" className="text-[0.5rem] font-extrabold uppercase leading-none tracking-[0.18em] opacity-70 lg:text-[0.8125rem]">World</span>
       <span aria-hidden="true" className="my-0.5 text-[1.625rem] font-extrabold leading-none tracking-[-0.04em] lg:my-1 lg:text-[2.875rem]">{ANISH.rank}</span>
       <span aria-hidden="true" className="text-[0.5rem] font-extrabold uppercase leading-none tracking-[0.18em] opacity-70 lg:text-[0.8125rem]">Trader</span>
+    </div>
+  );
+}
+
+/** Rubber stamp "WORLD'S #2 TRADER": drops in 3D, slams down and prints behind Anish (styles: .rank-stamp). */
+function Stamp({ className = '' }: { className?: string }) {
+  return (
+    <div className={`pointer-events-none absolute z-0 ${className}`} aria-label={`World's ${ANISH.rank} trader`} role="img">
+      {/* impact ring when it lands */}
+      <span aria-hidden="true" className="rank-stamp-impact absolute inset-[-12%] rounded-[1.25rem] border-2 border-accent/70" />
+      <div
+        aria-hidden="true"
+        className="rank-stamp flex flex-col items-center justify-center rounded-[0.9rem] border-[0.2rem] border-accent px-3 py-2 text-accent lg:rounded-[1.4rem] lg:border-[0.3rem] lg:px-5 lg:py-3.5"
+        style={{ boxShadow: 'inset 0 0 0 0.3rem var(--color-bg), inset 0 0 0 0.42rem currentColor, 0 0 1.5rem rgb(var(--accent-glow-rgb) / 0.35)', textShadow: '0 0 1rem rgb(var(--accent-glow-rgb) / 0.55)' }}
+      >
+        <span className="flex items-center gap-1.5 text-[0.625rem] font-extrabold uppercase leading-none tracking-[0.2em] lg:text-[1rem]">
+          <span>★</span>World’s<span>★</span>
+        </span>
+        <span className="my-1 text-[2.25rem] font-extrabold leading-none tracking-[-0.04em] lg:text-[3.75rem]">{ANISH.rank}</span>
+        <span className="text-[0.75rem] font-extrabold uppercase leading-none tracking-[0.24em] lg:text-[1.25rem]">Trader</span>
+      </div>
     </div>
   );
 }
@@ -96,10 +117,12 @@ function Laptop() {
   );
 }
 
-function Anish() {
+function Anish({ badge, showBadge }: { badge: 'medal' | 'stamp'; showBadge: boolean }) {
   return (
     <div className="relative">
-      <Medal className="-left-[34%] top-[4%] w-[5.25rem] lg:-left-[24%] lg:top-[5%] lg:w-[8.75rem]" />
+      {showBadge && badge === 'medal' && <Medal className="-left-[34%] top-[4%] w-[5.25rem] lg:-left-[24%] lg:top-[5%] lg:w-[8.75rem]" />}
+      {/* the stamp prints behind his image, at his top-right */}
+      {showBadge && badge === 'stamp' && <Stamp className="-right-[42%] top-[1%] lg:-right-[38%] lg:top-[3%]" />}
       <div aria-hidden="true" className="hero-figure-rim pointer-events-none absolute -inset-x-[35%] -top-[8%] bottom-[5%] -z-10" />
       <img
         src="anish.webp"
@@ -108,17 +131,17 @@ function Anish() {
         height="904"
         decoding="async"
         fetchPriority="high"
-        className="arena-enter h-[17.5rem] w-auto max-w-none select-none lg:h-[31rem]"
+        className="arena-enter relative z-[1] h-[17.5rem] w-auto max-w-none select-none lg:h-[31rem]"
         style={{ '--e-delay': '0.55s', maskImage: 'linear-gradient(to bottom, #000 82%, transparent 100%)', WebkitMaskImage: 'linear-gradient(to bottom, #000 82%, transparent 100%)' }}
       />
     </div>
   );
 }
 
-function Headline({ align }: { align: 'center' | 'left' }) {
+function Headline({ align, onComplete }: { align: 'center' | 'left'; onComplete: () => void }) {
   return (
     <div className={align === 'center' ? 'text-center' : 'text-left'}>
-      <PoolHeadline align={align} />
+      <PoolHeadline align={align} onComplete={onComplete} />
       <p className="arena-enter mt-1.5 inline-flex items-center gap-1.5 font-mono text-[0.75rem] font-bold uppercase tracking-[0.08em] text-success lg:mt-2 lg:text-[1rem]" style={{ '--e-delay': '0.3s' }}>
         <span aria-hidden="true">▲</span> Brokerage credits for India’s traders
       </p>
@@ -126,7 +149,10 @@ function Headline({ align }: { align: 'center' | 'left' }) {
   );
 }
 
-export default function ArenaHero() {
+export default function ArenaHero({ badgeStyle = 'medal' }: { badgeStyle?: 'medal' | 'stamp' }) {
+  // The rank badge waits until the title animation has fully finished, so the two never compete.
+  const [titleDone, setTitleDone] = useState(false);
+  const onTitleDone = () => setTitleDone(true);
   return (
     <section id="hero" aria-labelledby="hero-heading" className="relative isolate flex h-[52.75rem] flex-col overflow-hidden lg:h-[56.25rem]">
       <h1 id="hero-heading" className="sr-only">
@@ -173,7 +199,7 @@ export default function ArenaHero() {
       <div className="arena-container flex min-h-0 flex-1 flex-col lg:flex-row lg:items-center lg:gap-12">
         {/* Desktop: headline column with the Join button */}
         <div className="hidden w-[36rem] shrink-0 lg:block">
-          <Headline align="left" />
+          <Headline align="left" onComplete={onTitleDone} />
           <p className="arena-enter mt-6 max-w-[30rem] text-[1.25rem] font-medium leading-relaxed text-fg-muted" style={{ '--e-delay': '0.4s' }}>
             Celebrating <strong className="font-bold text-fg">{ANISH.name}</strong>, India’s World {ANISH.rank} at the {ANISH.event}, with {POOL.amount} in brokerage credits and {LAPTOPS.count} laptops.
           </p>
@@ -188,7 +214,7 @@ export default function ArenaHero() {
 
         {/* Mobile: headline on top */}
         <div className="shrink-0 pt-5 lg:hidden">
-          <Headline align="center" />
+          <Headline align="center" onComplete={onTitleDone} />
         </div>
 
         {/* The reward stage — everything stays on screen */}
@@ -196,7 +222,7 @@ export default function ArenaHero() {
           <Pedestal href={ANCHORS.pool} item={<CoinStack />} value={POOL.short} label={POOL.label} className="w-[6.25rem] lg:w-[11.5rem]" delay="0.35s" />
           <Pedestal
             href={ANCHORS.champion}
-            item={<Anish />}
+            item={<Anish badge={badgeStyle} showBadge={titleDone} />}
             value="Anish"
             label={`World ${ANISH.rank} trader`}
             className="w-[8.75rem] lg:w-[15rem]"

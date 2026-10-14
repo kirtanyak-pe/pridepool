@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import type { Accent, Bg, HeroStyle, Version } from './settings';
+import type { Accent, Bg, BadgeStyle, HeroStyle, Version } from './settings';
 
 const VERSION_OPTIONS: { value: Version; label: string }[] = [
   { value: 'v1', label: 'Original' },
@@ -18,6 +18,11 @@ const HERO_OPTIONS: { value: HeroStyle; label: string }[] = [
   { value: 'trailer', label: 'Static' },
 ];
 
+const BADGE_OPTIONS: { value: BadgeStyle; label: string }[] = [
+  { value: 'medal', label: 'Medal' },
+  { value: 'stamp', label: 'Stamp' },
+];
+
 const BG_OPTIONS: { value: Bg; label: string; swatch: string }[] = [
   { value: 'violet', label: 'Violet', swatch: '#7b1f8f' },
   { value: 'green', label: 'Green', swatch: '#047857' },
@@ -34,6 +39,8 @@ type Props = {
   onBgChange: (b: Bg) => void;
   hero: HeroStyle;
   onHeroChange: (h: HeroStyle) => void;
+  badge: BadgeStyle;
+  onBadgeChange: (b: BadgeStyle) => void;
 };
 
 /** A row of segmented buttons (radio group). */
@@ -79,7 +86,7 @@ function Segmented<T extends string>({
  * Deliberately styled unlike the site so nobody mistakes it for part of the campaign.
  * Remove this folder and its lines in main.tsx before shipping.
  */
-export default function VersionSwitcher({ version, onVersionChange, accent, onAccentChange, bg, onBgChange, hero, onHeroChange }: Props) {
+export default function VersionSwitcher({ version, onVersionChange, accent, onAccentChange, bg, onBgChange, hero, onHeroChange, badge, onBadgeChange }: Props) {
   const [open, setOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
 
@@ -146,6 +153,11 @@ export default function VersionSwitcher({ version, onVersionChange, accent, onAc
           <p className="mt-4 text-xs font-semibold text-white/80">First screen {version !== 'v2' && <span className="font-normal text-white/50">· V2 only</span>}</p>
           <div className="mt-1.5">
             <Segmented label="First screen" options={HERO_OPTIONS} value={hero} onChange={onHeroChange} disabled={version !== 'v2'} />
+          </div>
+
+          <p className="mt-4 text-xs font-semibold text-white/80">Rank badge {version !== 'v3' && <span className="font-normal text-white/50">· V3 only</span>}</p>
+          <div className="mt-1.5">
+            <Segmented label="Rank badge" options={BADGE_OPTIONS} value={badge} onChange={onBadgeChange} disabled={version !== 'v3'} />
           </div>
 
           <p className="mt-4 text-xs font-semibold text-white/80">Accent colour {version === 'v1' && <span className="font-normal text-white/50">· Redesign only</span>}</p>

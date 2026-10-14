@@ -7,18 +7,21 @@ import { useCallback, useLayoutEffect, useState } from 'react';
  *   accent:  the redesign's accent colour: Join buttons, chips, checkmarks (the Original always stays violet)
  *   bg:      the redesign's background colour: glows, grid, leaderboard bars (the Original always stays violet)
  *   hero:    the redesign's first screen: story mode (animated scenes) or trailer (static)
+ *   badge:   V3 rank badge: circular medal beside Anish, or a 3D stamp printed behind him
  * Read from the URL (?v=2&accent=lime&bg=violet), else the last choice on this device, else the defaults.
  */
 export type Version = 'v1' | 'v2' | 'v3';
 export type Accent = 'violet' | 'lime' | 'green';
 export type Bg = 'violet' | 'green' | 'blue' | 'graphite';
 export type HeroStyle = 'story' | 'trailer';
+export type BadgeStyle = 'medal' | 'stamp';
 
-const DEFAULTS = { version: 'v3' as Version, accent: 'green' as Accent, bg: 'green' as Bg, hero: 'story' as HeroStyle };
+const DEFAULTS = { version: 'v3' as Version, accent: 'green' as Accent, bg: 'green' as Bg, hero: 'story' as HeroStyle, badge: 'medal' as BadgeStyle };
 const VERSIONS: Version[] = ['v1', 'v2', 'v3'];
 const ACCENTS: Accent[] = ['violet', 'lime', 'green'];
 const BGS: Bg[] = ['violet', 'green', 'blue', 'graphite'];
 const HEROES: HeroStyle[] = ['story', 'trailer'];
+const BADGES: BadgeStyle[] = ['medal', 'stamp'];
 
 function load<T extends string>(param: string, key: string, allowed: T[], map: (raw: string) => string, fallback: T): T {
   const fromUrl = new URLSearchParams(window.location.search).get(param);
@@ -41,7 +44,7 @@ function save(key: string, value: string) {
 }
 
 /** Keep the current choice in the URL so a shared link opens the same thing. */
-function syncUrl(version: Version, accent: Accent, bg: Bg, hero: HeroStyle) {
+function syncUrl(version: Version, accent: Accent, bg: Bg, hero: HeroStyle, badge: BadgeStyle) {
   const url = new URL(window.location.href);
   url.searchParams.set('v', version.slice(1));
   if (version !== 'v1') {
@@ -55,6 +58,8 @@ function syncUrl(version: Version, accent: Accent, bg: Bg, hero: HeroStyle) {
   else {
     url.searchParams.delete('hero');
   }
+  if (version === 'v3') url.searchParams.set('badge', badge);
+  else url.searchParams.delete('badge');
   url.hash = '';
   window.history.replaceState(null, '', url);
 }
@@ -68,6 +73,7 @@ export function usePrototypeSettings() {
   );
   const [bg, setBgState] = useState<Bg>(() => load('bg', 'pridepool:bg-2', BGS, (raw) => raw, DEFAULTS.bg));
   const [hero, setHeroState] = useState<HeroStyle>(() => load('hero', 'pridepool:hero', HEROES, (raw) => raw, DEFAULTS.hero));
+  const [badge, setBadgeState] = useState<BadgeStyle>(() => load('badge', 'pridepool:badge', BADGES, (raw) => raw, DEFAULTS.badge));
 
   // Apply the colours before paint (no flash of the wrong colour). The Original is always violet.
   useLayoutEffect(() => {
@@ -85,39 +91,49 @@ export function usePrototypeSettings() {
     (next: Version) => {
       setVersionState(next);
       save('pridepool:version', next);
-      syncUrl(next, accent, bg, hero);
+      syncUrl(next, accent, bg, hero, badge);
       window.scrollTo({ top: 0, behavior: 'instant' });
     },
-    [accent, bg, hero],
+    [accent, bg, hero, badge],
   );
 
   const setAccent = useCallback(
     (next: Accent) => {
       setAccentState(next);
       save('pridepool:accent-2', next);
-      syncUrl(version, next, bg, hero);
+      syncUrl(version, next, bg, hero, badge);
     },
-    [version, bg, hero],
+    [version, bg, hero, badge],
   );
 
   const setBg = useCallback(
     (next: Bg) => {
       setBgState(next);
       save('pridepool:bg-2', next);
-      syncUrl(version, accent, next, hero);
+      syncUrl(version, accent, next, hero, badge);
     },
-    [version, accent, hero],
+    [version, accent, hero, badge],
   );
 
   const setHero = useCallback(
     (next: HeroStyle) => {
       setHeroState(next);
       save('pridepool:hero', next);
-      syncUrl(version, accent, bg, next);
+      syncUrl(version, accent, bg, next, badge);
       window.scrollTo({ top: 0, behavior: 'instant' });
     },
-    [version, accent, bg],
+    [version, accent, bg, badge],
   );
 
-  return { version, setVersion, accent, setAccent, bg, setBg, hero, setHero };
+  const setBadge = useCallback(
+    (next: BadgeStyle) => {
+      setBadgeState(next);
+      save('pridepool:badge', next);
+      syncUrl(version, accent, bg, hero, next);
+      window.scrollTo({ top: 0, behavior: 'instant' });
+    },
+    [version, accent, bg, hero],
+  );
+
+  return { version, setVersion, accent, setAccent, bg, setBg, hero, setHero, badge, setBadge };
 }

@@ -14,7 +14,7 @@ const path = window.location.pathname.replace(/\/$/, '');
 const isTerms = path.endsWith('/terms-and-conditions');
 
 function App() {
-  const { version, setVersion, accent, setAccent, bg, setBg, hero, setHero } = usePrototypeSettings();
+  const { version, setVersion, accent, setAccent, bg, setBg, hero, setHero, badge, setBadge } = usePrototypeSettings();
   useReveal(`${path}:${version}:${hero}`);
 
   useEffect(() => {
@@ -27,8 +27,8 @@ function App() {
 
   return (
     <>
-      {version === 'v3' ? <StageHome /> : version === 'v2' ? <RedesignHome heroStyle={hero} /> : <OriginalHome />}
-      <VersionSwitcher version={version} onVersionChange={setVersion} accent={accent} onAccentChange={setAccent} bg={bg} onBgChange={setBg} hero={hero} onHeroChange={setHero} />
+      {version === 'v3' ? <StageHome badgeStyle={badge} /> : version === 'v2' ? <RedesignHome heroStyle={hero} /> : <OriginalHome />}
+      <VersionSwitcher version={version} onVersionChange={setVersion} accent={accent} onAccentChange={setAccent} bg={bg} onBgChange={setBg} hero={hero} onHeroChange={setHero} badge={badge} onBadgeChange={setBadge} />
     </>
   );
 }

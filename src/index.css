@@ -869,3 +869,29 @@ html.scale-artboard {
 @media (prefers-reduced-motion: reduce) {
   .shimmer-once { display: none; }
 }
+
+/* V3 rank stamp (A/B "Stamp"): drops from above, slams down, settles tilted — printed behind Anish.
+   Depth is faked with scale + a shadow that tightens on impact (no true 3D transforms, which some
+   browsers fail to paint after the animation). */
+.rank-stamp {
+  transform: rotate(-9deg);
+  animation: rank-stamp 0.8s cubic-bezier(0.2, 0.9, 0.3, 1.15) both;
+}
+@keyframes rank-stamp {
+  0% { opacity: 0; transform: translateY(-45%) rotate(-24deg) scale(1.9); filter: drop-shadow(0 2.5rem 1.75rem rgba(0, 0, 0, 0.65)); }
+  55% { opacity: 1; transform: rotate(-9deg) scale(0.93); filter: drop-shadow(0 0.25rem 0.25rem rgba(0, 0, 0, 0.5)); }
+  72% { transform: rotate(-9deg) scale(1.05); }
+  100% { opacity: 1; transform: rotate(-9deg); filter: none; }
+}
+.rank-stamp-impact {
+  transform: rotate(-9deg);
+  animation: rank-stamp-impact 0.7s ease-out 0.42s both;
+}
+@keyframes rank-stamp-impact {
+  from { opacity: 0.8; transform: rotate(-9deg) scale(0.9); }
+  to { opacity: 0; transform: rotate(-9deg) scale(1.45); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .rank-stamp { animation: none; }
+  .rank-stamp-impact { display: none; }
+}

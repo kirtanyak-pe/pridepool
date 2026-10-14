@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import Odometer from '../../v2/components/Odometer';
 import { POOL } from '../../v2/content';
 
@@ -16,18 +16,25 @@ const HOLD_MS = 80; // tiny beat so the full number registers
 const ease = 'cubic-bezier(0.22, 1, 0.36, 1)';
 
 /** One-time light sweep: a copy of the text, filled only with a bright streak (styles: .shimmer-once). */
-function Sweep({ children, delay = '0s' }: { children: React.ReactNode; delay?: string }) {
+function Sweep({ children, delay = '0s', onDone }: { children: React.ReactNode; delay?: string; onDone?: () => void }) {
   return (
-    <span aria-hidden="true" className="shimmer-once pointer-events-none absolute inset-0 whitespace-nowrap" style={{ animationDelay: delay }}>
+    <span aria-hidden="true" className="shimmer-once pointer-events-none absolute inset-0 whitespace-nowrap" style={{ animationDelay: delay }} onAnimationEnd={onDone}>
       {children}
     </span>
   );
 }
 
-export default function PoolHeadline({ align = 'center' }: { align?: 'center' | 'left' }) {
+/** onComplete fires once, when the whole title animation — including the light sweep — has finished. */
+export default function PoolHeadline({ align = 'center', onComplete }: { align?: 'center' | 'left'; onComplete?: () => void }) {
   const reduced = typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const [phase, setPhase] = useState<Phase>(reduced ? 'final' : 'roll');
   const [sweep, setSweep] = useState(false);
+  const doneRef = useRef(false);
+  const complete = useCallback(() => {
+    if (doneRef.current) return;
+    doneRef.current = true;
+    onComplete?.();
+  }, [onComplete]);
 
   // Widths of the two tails in em, so the line re-centres smoothly while it shrinks
   const zerosRef = useRef<HTMLSpanElement>(null);
@@ -43,10 +50,18 @@ export default function PoolHeadline({ align = 'center' }: { align?: 'center' | 
   }, []);
 
   useEffect(() => {
-    if (reduced) return;
+    if (reduced) {
+      complete();
+      return;
+    }
     const t = window.setTimeout(() => setPhase('final'), ROLL_DONE_MS + HOLD_MS);
-    return () => window.clearTimeout(t);
-  }, [reduced]);
+    // Safety net: never hold back what follows the title for more than ~6s
+    const fallback = window.setTimeout(complete, 6000);
+    return () => {
+      window.clearTimeout(t);
+      window.clearTimeout(fallback);
+    };
+  }, [reduced, complete]);
 
   const final = phase === 'final';
 
@@ -103,7 +118,7 @@ export default function PoolHeadline({ align = 'center' }: { align?: 'center' | 
           >
             <span className="relative inline-block">
               <span className="text-grad-silver">{POOL.title}</span>
-              {sweep && <Sweep delay="0.3s">{POOL.title}</Sweep>}
+              {sweep && <Sweep delay="0.3s" onDone={complete}>{POOL.title}</Sweep>}
             </span>
           </p>
         </div>

@@ -29,12 +29,13 @@ A floating button in the top-right corner opens the prototype controls. They are
 
 - **Version:** Original, V2 Story or V3 Stage (`?v=1` / `?v=2` / `?v=3`).
 - **First screen** (V2 only): Story (animated scenes: Anish → ₹1 Crore → 20 laptops → all rewards) or Static.
+- **Rank badge** (V3 only): Medal (circular "WORLD · #2 · TRADER" beside Anish) or Stamp ("WORLD'S #2 TRADER" stamped in 3D behind him). Either appears only after the title animation has finished.
 - **Accent colour** (Redesign only): Violet (the original colour), Lemonn lime (the brand green from the Lemonn logo) or Trading green.
 - **Background colour** (Redesign only): the "second colour" in the background glows, grid, light behind Anish, heading glows and leaderboard bars. Violet (original), Green, Blue or Grey.
 
 The link updates as you switch, so you can share exactly what you see, e.g. for A/B tests:
 `?v=1` = Original, `?v=2&accent=lime&bg=violet` = Redesign, lime accent, violet background.
-Values: `accent` = `violet` | `lime` | `green`; `bg` = `violet` | `green` | `blue` | `graphite`.
+Values: `accent` = `violet` | `lime` | `green`; `bg` = `violet` | `green` | `blue` | `graphite`; `badge` = `medal` | `stamp` (V3).
 With no parameters, the page shows the last choice on that device, or V3 with green accent and green background.
 
 ## The Join button system (redesign)

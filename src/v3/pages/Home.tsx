@@ -18,12 +18,12 @@ import Background from '../../v1/components/Background';
  * Then the three rounds (each ending in a Join checkpoint), the Figma leaderboard,
  * the final call, a short FAQ and a slim footer. The page scales like an image (html.scale-artboard).
  */
-export default function Home() {
+export default function Home({ badgeStyle = 'medal' }: { badgeStyle?: 'medal' | 'stamp' }) {
   return (
     <>
       <main id="main" className="relative">
         <Background />
-        <ArenaHero />
+        <ArenaHero badgeStyle={badgeStyle} />
         <div aria-hidden="true" className="pointer-events-none relative -z-[5] h-0">
           <div className="absolute inset-x-0 top-0 h-48 bg-gradient-to-b from-bg to-transparent sm:h-64" />
         </div>
