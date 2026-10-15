@@ -151,7 +151,17 @@ function PodiumScene({ rolling, art }: { rolling: boolean; art: boolean }) {
           <div className="absolute inset-0" style={{ transform: `scale(${MEDAL_RING_SCALE.silver})`, transformOrigin: '49.7% 49.91%' }}>
             <Layers layers={SILVER_MEDAL} />
           </div>
-          <Flag country="india" variant="podium-india" className="absolute" style={pos(SILVER_FLAG_BOX)} />
+          {/* the India flag flips over to Anish now and then (animation: .lb-flip in index.css) */}
+          <div className="lb-flip absolute" style={pos(SILVER_FLAG_BOX)}>
+            <div className="lb-flip-card">
+              <span className="lb-flip-face">
+                <Flag country="india" variant="podium-india" className="size-full" />
+              </span>
+              <span className="lb-flip-face lb-flip-back">
+                <img src="anish-face.webp" alt="" width="192" height="192" decoding="async" draggable={false} className="block size-full" />
+              </span>
+            </div>
+          </div>
         </Coin>
       </Podium>
 
