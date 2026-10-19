@@ -495,12 +495,13 @@ function VipStamp({ play, className = '' }: { play: boolean; className?: string 
 /**
  * 2 · Floating (the chosen one): a widget docked to the right edge of the screen:
  * Booming Bulls bull icon · "Exclusive / VIP ACCESS / only for you" · Get now →.
- * It slides in once the leaderboard fills half the screen and slides back out when you leave the section.
+ * It slides in once the leaderboard fills 70% of the screen (phones: half) and slides back out when you leave the section.
  * Desktop: it sits on the same line as the "The Leaderboard" heading and moves with it as you scroll; once the
  * heading has gone up under the navbar it stops a little below the navbar and stays there.
  * Phones: centred at the bottom, just above the fixed Join bar (85px tall), growing in from the bottom (scale 0 → 1).
  */
-const VIP_SHOW_SHARE = 0.5; // it shows while the leaderboard fills at least this much of the screen
+// it shows while the leaderboard fills at least this much of the screen (desktop 70%, phones 50%)
+const VIP_SHOW_SHARE = { desktop: 0.7, phone: 0.5 };
 const VIP_NAV_GAP = 20; // desktop: how far below the navbar it stops (px)
 
 function VipFloat({ section }: { section: React.RefObject<HTMLElement | null> }) {
@@ -550,7 +551,8 @@ function VipFloat({ section }: { section: React.RefObject<HTMLElement | null> })
       frame = 0;
       const r = el.getBoundingClientRect();
       const visible = Math.min(r.bottom, window.innerHeight) - Math.max(r.top, 0);
-      setShown(visible >= window.innerHeight * VIP_SHOW_SHARE);
+      const share = window.matchMedia('(min-width: 1024px)').matches ? VIP_SHOW_SHARE.desktop : VIP_SHOW_SHARE.phone;
+      setShown(visible >= window.innerHeight * share);
     };
     const schedule = () => {
       if (!frame) frame = requestAnimationFrame(check);
