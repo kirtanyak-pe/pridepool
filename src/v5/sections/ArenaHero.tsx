@@ -271,7 +271,7 @@ export default function ArenaHero({
             Celebrating <strong className="font-bold text-fg">{ANISH.name}</strong>, India’s World {ANISH.rank} at the {ANISH.event}, with a {POOL.amount} brokerage pool and {LAPTOPS.count} laptops.
           </p>
           <div className="arena-enter mt-8" style={{ '--e-delay': '0.6s' }}>
-            <JoinBlock location="hero" align="left" shake={shakeJoin} />
+            <JoinBlock location="hero" align="left" shake={shakeJoin} wide />
           </div>
         </div>
 
@@ -315,7 +315,7 @@ export default function ArenaHero({
 
         {/* Mobile: Join never leaves the first screen */}
         <div className="arena-enter mt-4 shrink-0 lg:hidden" style={{ '--e-delay': '0.6s' }}>
-          <JoinBlock location="hero" shake={shakeJoin} />
+          <JoinBlock location="hero" shake={shakeJoin} wide />
         </div>
       </div>
       )}

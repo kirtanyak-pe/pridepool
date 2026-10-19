@@ -27,10 +27,10 @@ function Reveal({ k }: { k: string }) {
 function App() {
   const { version, setVersion, accent, setAccent, bg, setBg, hero, setHero, badge, setBadge } = usePrototypeSettings();
   const { vip, setVip } = useVipStyle();
-  // PROTOTYPE ONLY: Shift+L cycles the V5 VIP card (Current → Floating → Banner)
+  // PROTOTYPE ONLY: Shift+L cycles the V5 VIP card (Floating → Tilted → Banner)
   useEffect(() => {
     if (version !== 'v5') return;
-    const order = ['current', 'float', 'banner'] as const;
+    const order = ['float', 'current', 'banner'] as const;
     const onKey = (e: KeyboardEvent) => {
       if (!e.shiftKey || e.metaKey || e.ctrlKey || e.altKey || e.key.toLowerCase() !== 'l') return;
       if ((e.target as Element | null)?.closest?.('input, textarea, select, [contenteditable]')) return;

@@ -21,8 +21,8 @@ const HERO_OPTIONS: { value: HeroStyle; label: string }[] = [
 ];
 
 const VIP_OPTIONS: { value: VipStyle; label: string }[] = [
-  { value: 'current', label: 'Current' },
   { value: 'float', label: 'Floating' },
+  { value: 'current', label: 'Tilted' },
   { value: 'banner', label: 'Banner' },
 ];
 

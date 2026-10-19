@@ -98,10 +98,24 @@ export default function JoinButton({ location, size = 'lg', inPage = true, varia
 }
 
 /** Existing user (Open Lemonn App) + New user (Sign Up & Join), side by side */
-export function JoinPair({ location, inPage = true, compact = false, className = '' }: { location: JoinLocation; inPage?: boolean; compact?: boolean; className?: string }) {
+export function JoinPair({
+  location,
+  inPage = true,
+  compact = false,
+  tight = false,
+  className = '',
+}: {
+  location: JoinLocation;
+  inPage?: boolean;
+  compact?: boolean;
+  /** hero: the two buttons close together (8px / 16px) */
+  tight?: boolean;
+  className?: string;
+}) {
   const size = compact ? 'pairSm' : 'pair';
+  const gap = tight ? 'gap-2 lg:gap-4' : `gap-2.5 ${compact ? 'lg:gap-3' : 'lg:gap-[3.75rem]'}`;
   return (
-    <div className={`grid grid-cols-2 gap-2.5 ${compact ? 'lg:gap-3' : 'lg:gap-[3.75rem]'} ${className}`}>
+    <div className={`grid grid-cols-2 ${gap} ${className}`}>
       <JoinButton location={location} size={size} action="open" inPage={inPage} />
       <JoinButton location={location} size={size} inPage={inPage} />
     </div>
@@ -114,6 +128,7 @@ export function JoinBlock({
   align = 'center',
   shake = false,
   compact = false,
+  wide = false,
   inPage = true,
   className = '',
 }: {
@@ -122,12 +137,14 @@ export function JoinBlock({
   /** the hero's one-time nudge once the intro has finished */
   shake?: boolean;
   compact?: boolean;
+  /** hero: buttons closer together and a bit wider */
+  wide?: boolean;
   inPage?: boolean;
   className?: string;
 }) {
   return (
-    <div className={`${align === 'center' ? 'mx-auto text-center' : 'text-left'} max-w-[30rem] ${className}`}>
-      <JoinPair location={location} compact={compact} inPage={inPage} className={shake ? 'join-shake' : ''} />
+    <div className={`${align === 'center' ? 'mx-auto text-center' : 'text-left'} ${wide ? 'max-w-[34rem]' : 'max-w-[30rem]'} ${className}`}>
+      <JoinPair location={location} compact={compact} tight={wide} inPage={inPage} className={shake ? 'join-shake' : ''} />
       <p
         className={`flex rounded-xl border border-accent/40 bg-accent/[0.08] text-left font-semibold leading-snug text-fg shadow-[0_0_1.5rem_-0.5rem_rgb(var(--accent-glow-rgb)/0.45)] ${compact ? 'mt-4 items-center gap-1.5 whitespace-nowrap px-2.5 py-1.5 text-[0.625rem]' : 'mt-5 items-center gap-2 whitespace-nowrap px-3 py-2 text-[0.625rem] lg:mt-6 lg:gap-2.5 lg:px-4 lg:py-2.5 lg:text-[0.8125rem]'}`}
       >

@@ -145,7 +145,7 @@ export type VipStyle = 'current' | 'float' | 'banner';
 const VIP_STYLES: VipStyle[] = ['current', 'float', 'banner'];
 
 export function useVipStyle() {
-  const [vip, setVipState] = useState<VipStyle>(() => load('vip', 'pridepool:vip', VIP_STYLES, (raw) => raw, 'current'));
+  const [vip, setVipState] = useState<VipStyle>(() => load('vip', 'pridepool:vip', VIP_STYLES, (raw) => raw, 'float'));
   const setVip = useCallback((next: VipStyle) => {
     setVipState(next);
     save('pridepool:vip', next);

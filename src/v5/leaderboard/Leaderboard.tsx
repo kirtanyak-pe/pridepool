@@ -455,13 +455,16 @@ function VipStars({ children, left = true }: { children: ReactNode; left?: boole
   );
 }
 
-function UnlockPill({ className = '' }: { className?: string }) {
+function UnlockPill({ className = '', label = 'Unlock now' }: { className?: string; label?: string }) {
   return (
     <span
       aria-hidden="true"
       className={`inline-flex shrink-0 items-center gap-1 rounded-full bg-accent font-extrabold uppercase leading-none tracking-[0.14em] text-[var(--accent-ink)] ${className}`}
     >
-      Unlock now <span className="transition-transform duration-200 group-hover:translate-x-0.5">→</span>
+      {label}
+      <svg viewBox="0 0 16 16" fill="none" className="size-[1.1em] shrink-0 transition-transform duration-200 group-hover:translate-x-0.5">
+        <path d="M3 8h9.5M8.5 3.5 13 8l-4.5 4.5" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
     </span>
   );
 }
@@ -490,11 +493,17 @@ function VipStamp({ play, className = '' }: { play: boolean; className?: string 
 }
 
 /**
- * 2 · Floating: a one-line widget docked to the right edge of the screen, vertically centred. It slides in while the
- * leaderboard fills the middle of the screen and slides back out when you leave the section.
+ * 2 · Floating (the chosen one): a widget docked to the right edge of the screen:
+ * Booming Bulls bull icon · "Exclusive / VIP ACCESS / only for you" · Get now →.
+ * It slides in at the middle of the screen while the leaderboard fills the middle of the screen; as soon as you
+ * scroll on, it glides up to the top-right, a little below the navbar, and stays there; it slides back out when
+ * you leave the section (and comes back in the middle next time).
  */
+const VIP_DOCK_AFTER_PX = 24; // scrolled this far since it appeared → it moves up under the navbar
+
 function VipFloat({ section }: { section: React.RefObject<HTMLElement | null> }) {
   const [shown, setShown] = useState(false);
+  const [docked, setDocked] = useState(false);
   useEffect(() => {
     const el = section.current;
     if (!el) return;
@@ -503,23 +512,36 @@ function VipFloat({ section }: { section: React.RefObject<HTMLElement | null> })
     io.observe(el);
     return () => io.disconnect();
   }, [section]);
+  useEffect(() => {
+    if (!shown) {
+      setDocked(false); // next time it appears in the middle again
+      return;
+    }
+    const start = window.scrollY;
+    const onScroll = () => {
+      if (Math.abs(window.scrollY - start) > VIP_DOCK_AFTER_PX) setDocked(true);
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, [shown]);
   return (
     <div
       aria-hidden={!shown}
       inert={!shown}
-      className={`fixed right-0 top-1/2 z-40 -translate-y-1/2 transition-transform duration-500 ease-arena-out motion-reduce:transition-none ${shown ? 'translate-x-0' : 'pointer-events-none translate-x-[calc(100%+1rem)]'}`}
+      className={`fixed right-0 z-40 transition-[top,translate] duration-500 ease-arena-out motion-reduce:transition-none ${docked ? 'top-[5.25rem] translate-y-0 lg:top-[6.5rem]' : 'top-1/2 -translate-y-1/2'} ${shown ? 'translate-x-0' : 'pointer-events-none translate-x-[calc(100%+1rem)]'}`}
     >
       <a
         {...VIP_LINK}
-        className="btn-key-light group flex items-center gap-2 whitespace-nowrap rounded-l-xl rounded-r-none border-r-0 py-2 pl-3 pr-2.5 [--k:4px] lg:gap-4 lg:rounded-l-[1.25rem] lg:py-3.5 lg:pl-5 lg:pr-5 lg:[--k:5px]"
+        aria-label="Booming Bulls: exclusive VIP access, only for you. Get now (opens in a new tab)"
+        className="btn-key-light group flex items-center gap-2.5 whitespace-nowrap rounded-l-xl rounded-r-none border-r-0 py-2 pl-3 pr-2.5 [--k:4px] lg:gap-4 lg:rounded-l-[1.25rem] lg:py-3 lg:pl-4 lg:pr-5 lg:[--k:5px]"
       >
-        <span aria-hidden="true" className="text-[0.4375rem] font-extrabold uppercase leading-none tracking-[0.12em] text-black/55 lg:text-[0.6875rem] lg:tracking-[0.18em]">
-          Booming Bulls
+        <img src="booming-bulls-icon.svg" alt="" aria-hidden="true" width="21" height="24" className="h-7 w-auto shrink-0 lg:h-10" />
+        <span aria-hidden="true" className="flex flex-col items-start leading-none">
+          <span className="text-[0.5rem] font-bold uppercase tracking-[0.14em] text-black/55 lg:text-[0.6875rem]">Exclusive</span>
+          <span className="my-0.5 text-[0.9375rem] font-extrabold uppercase tracking-[-0.02em] text-[#0b0b12] lg:my-1 lg:text-[1.5rem]">VIP Access</span>
+          <span className="text-[0.5rem] font-bold uppercase tracking-[0.14em] text-black/55 lg:text-[0.6875rem]">only for you</span>
         </span>
-        <span aria-hidden="true" className="flex items-center gap-1 text-[0.8125rem] font-extrabold uppercase leading-none tracking-[-0.02em] text-[#0b0b12] lg:gap-1.5 lg:text-[1.5rem]">
-          VIP Access<span className="text-[0.5em] text-gold">★</span>
-        </span>
-        <UnlockPill className="px-2 py-1 text-[0.5rem] tracking-[0.08em] lg:px-3.5 lg:py-2 lg:text-[0.75rem] lg:tracking-[0.14em]" />
+        <UnlockPill label="Get now" className="px-2.5 py-1.5 text-[0.5625rem] tracking-[0.08em] lg:px-4 lg:py-2.5 lg:text-[0.8125rem] lg:tracking-[0.14em]" />
       </a>
     </div>
   );
@@ -554,7 +576,7 @@ function view(board: Board | null) {
   };
 }
 
-export default function Leaderboard({ board = BOARD, vipStyle = 'current' }: { board?: Board | null; vipStyle?: VipStyle }) {
+export default function Leaderboard({ board = BOARD, vipStyle = 'float' }: { board?: Board | null; vipStyle?: VipStyle }) {
   const ref = useRef<HTMLElement>(null);
   const data = view(board);
   const [page, setPage] = useState(1);
