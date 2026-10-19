@@ -450,14 +450,14 @@ function RankingsTable({
 function VipStamp({ play, className = '' }: { play: boolean; className?: string }) {
   return (
     <div className={`w-fit ${className} ${play ? 'stamp-press' : 'pointer-events-none opacity-0'}`}>
-      {/* impact ring when it lands */}
-      <span aria-hidden="true" className={`absolute inset-[-12%] rounded-[1.25rem] border-2 border-accent/70 ${play ? 'stamp-press-impact' : 'hidden'}`} />
+      {/* impact ring when it lands (never catches clicks: it stays over the card, invisible, after the flash) */}
+      <span aria-hidden="true" className={`pointer-events-none absolute inset-[-12%] rounded-[1.25rem] border-2 border-accent/70 ${play ? 'stamp-press-impact' : 'hidden'}`} />
       <a
         href={VIP_URL}
         target="_blank"
         rel="noopener"
         aria-label="Booming Bulls VIP Access: unlock now (opens in a new tab)"
-        className="btn-key-light group flex flex-col items-center justify-center rounded-2xl px-4 py-2.5 text-center [--k:5px] lg:rounded-[1.25rem] lg:px-6 lg:py-3.5 lg:[--k:6px]"
+        className="btn-key-light group relative z-10 flex flex-col items-center justify-center rounded-2xl px-4 py-2.5 text-center [--k:5px] lg:rounded-[1.25rem] lg:px-6 lg:py-3.5 lg:[--k:6px]"
       >
         <span aria-hidden="true" className="text-[0.5625rem] font-extrabold uppercase leading-none tracking-[0.2em] text-black/55 lg:text-[0.75rem]">
           Booming Bulls
