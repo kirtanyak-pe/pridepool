@@ -497,14 +497,15 @@ function VipStamp({ play, className = '' }: { play: boolean; className?: string 
  * Booming Bulls bull icon · "Exclusive / VIP ACCESS / only for you" · Get now →.
  * It slides in once the leaderboard fills 70% of the screen (phones: half) and slides back out when you leave the section.
  * Desktop: it sits on the same line as the "The Leaderboard" heading and moves with it as you scroll; once the
- * heading has gone up under the navbar it stops a little below the navbar and stays there.
+ * heading has gone up under the navbar it stops 40px below the navbar and stays there. While it shows, the navbar's
+ * two buttons turn secondary (html[data-vip-float-desk] in index.css).
  * Phones: full width (16px in from each side), 24px above the fixed Join bar (85px tall), growing in from the
  * bottom (scale 0 → 1), and only while that bar is showing. Icon + text on the left, Get now on the right.
  * Flat on phones (no grey 3D edge, --k:0); desktop keeps the key edge.
  */
 // it shows while the leaderboard fills at least this much of the screen (desktop 70%, phones 50%)
 const VIP_SHOW_SHARE = { desktop: 0.7, phone: 0.5 };
-const VIP_NAV_GAP = 20; // desktop: how far below the navbar it stops (px)
+const VIP_NAV_GAP = 40; // desktop: how far below the navbar it stops (px)
 
 function VipFloat({ section }: { section: React.RefObject<HTMLElement | null> }) {
   const [shown, setShown] = useState(false);
@@ -522,8 +523,12 @@ function VipFloat({ section }: { section: React.RefObject<HTMLElement | null> })
     const root = document.documentElement;
     if (shown && !desktop) root.dataset.vipFloat = '';
     else delete root.dataset.vipFloat;
+    // desktop: the navbar's Open Lemonn App + Join step back the same way while the card shows
+    if (shown && desktop) root.dataset.vipFloatDesk = '';
+    else delete root.dataset.vipFloatDesk;
     return () => {
       delete root.dataset.vipFloat;
+      delete root.dataset.vipFloatDesk;
     };
   }, [shown, desktop]);
   // Desktop: follow the heading's line, but never above the navbar (+ a small gap)
