@@ -1,17 +1,17 @@
 import { StrictMode, Suspense, lazy, useEffect } from 'react';
 import { createRoot } from 'react-dom/client';
 import './index.css';
-import FinalHome from './v4/pages/Home';
+import LiveHome from './v5/pages/Home';
 import useReveal from './v1/components/useReveal';
 // PROTOTYPE ONLY: version + accent switcher. Remove these two imports, the switcher below and src/prototype/ before shipping.
 import { usePrototypeSettings, useVipStyle } from './prototype/settings';
 import VersionSwitcher from './prototype/VersionSwitcher';
 
-// V4 (final) is in the main bundle; the older prototype versions and the Terms page load only when opened
+// V5 (the default) is in the main bundle; the other prototype versions and the Terms pages load only when opened
 const OriginalHome = lazy(() => import('./v1/pages/Home'));
 const RedesignHome = lazy(() => import('./v2/pages/Home'));
 const StageHome = lazy(() => import('./v3/pages/Home'));
-const LiveHome = lazy(() => import('./v5/pages/Home'));
+const FinalHome = lazy(() => import('./v4/pages/Home'));
 const TermsPage = lazy(() => import('./v1/pages/TermsPage'));
 const LiveTermsPage = lazy(() => import('./v5/pages/TermsPage'));
 

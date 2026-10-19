@@ -5,7 +5,7 @@ import { useCallback, useLayoutEffect, useState } from 'react';
  *   version: v1 = Original (the live site as it was), v2 = Redesign (story/static first screen),
  *            v3 = Redesign (reward-stage first screen, page scales like an image)
  *            v4 = Final version (copy of V3, self-contained in src/v4)
- *            v5 = V4 + the product team's edits from pridepool.in (self-contained in src/v5)
+ *            v5 = V4 + the product team's edits from pridepool.in (self-contained in src/v5) — the default
  *   accent:  the redesign's accent colour: Join buttons, chips, checkmarks (the Original always stays violet)
  *   bg:      the redesign's background colour: glows, grid, leaderboard bars (the Original always stays violet)
  *   hero:    the redesign's first screen: story mode (animated scenes) or trailer (static)
@@ -18,7 +18,7 @@ export type Bg = 'violet' | 'green' | 'blue' | 'graphite';
 export type HeroStyle = 'story' | 'trailer';
 export type BadgeStyle = 'medal' | 'stamp';
 
-const DEFAULTS = { version: 'v4' as Version, accent: 'green' as Accent, bg: 'green' as Bg, hero: 'story' as HeroStyle, badge: 'stamp' as BadgeStyle };
+const DEFAULTS = { version: 'v5' as Version, accent: 'green' as Accent, bg: 'green' as Bg, hero: 'story' as HeroStyle, badge: 'stamp' as BadgeStyle };
 const VERSIONS: Version[] = ['v1', 'v2', 'v3', 'v4', 'v5'];
 const ACCENTS: Accent[] = ['violet', 'lime', 'green'];
 const BGS: Bg[] = ['violet', 'green', 'blue', 'graphite'];
@@ -68,7 +68,7 @@ function syncUrl(version: Version, accent: Accent, bg: Bg, hero: HeroStyle, badg
 
 export function usePrototypeSettings() {
   const [version, setVersionState] = useState<Version>(() =>
-    load('v', 'pridepool:version-3', VERSIONS, (raw) => (raw === '1' ? 'v1' : raw === '2' ? 'v2' : raw === '3' ? 'v3' : raw === '4' ? 'v4' : raw === '5' ? 'v5' : raw), DEFAULTS.version),
+    load('v', 'pridepool:version-4', VERSIONS, (raw) => (raw === '1' ? 'v1' : raw === '2' ? 'v2' : raw === '3' ? 'v3' : raw === '4' ? 'v4' : raw === '5' ? 'v5' : raw), DEFAULTS.version),
   );
   const [accent, setAccentState] = useState<Accent>(() =>
     load('accent', 'pridepool:accent-3', ACCENTS, (raw) => raw, DEFAULTS.accent),
@@ -92,7 +92,7 @@ export function usePrototypeSettings() {
   const setVersion = useCallback(
     (next: Version) => {
       setVersionState(next);
-      save('pridepool:version-3', next);
+      save('pridepool:version-4', next);
       syncUrl(next, accent, bg, hero, badge);
       window.scrollTo({ top: 0, behavior: 'instant' });
     },
