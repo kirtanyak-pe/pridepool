@@ -515,6 +515,16 @@ function VipFloat({ section }: { section: React.RefObject<HTMLElement | null> })
     mq.addEventListener('change', on);
     return () => mq.removeEventListener('change', on);
   }, []);
+  // Phones: while the card shows, the Join bar's white "Open Lemonn App" steps back to a secondary look
+  // (two white buttons would leave no focus point). CSS: html[data-vip-float] in index.css.
+  useEffect(() => {
+    const root = document.documentElement;
+    if (shown && !desktop) root.dataset.vipFloat = '';
+    else delete root.dataset.vipFloat;
+    return () => {
+      delete root.dataset.vipFloat;
+    };
+  }, [shown, desktop]);
   // Desktop: follow the heading's line, but never above the navbar (+ a small gap)
   useEffect(() => {
     if (!desktop) return;
