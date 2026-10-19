@@ -460,6 +460,45 @@
     --k: 1px;
     translate: 0 5px;
   }
+  /* V5: the light 3D key — "Open Lemonn App" (existing users), beside the green Join key */
+  .btn-key-light {
+    --k: 5px;
+    color: #0b0b12;
+    box-shadow:
+      inset 0 2px 0 #fff,
+      inset 0 -2px 0 #0000000f,
+      0 var(--k) 0 #b9b5c6,
+      0 calc(var(--k) + 1px) 0 1px #00000047,
+      0 calc(var(--k) + 10px) 20px -8px #000000b3;
+    background: linear-gradient(#fff, #eceaf2);
+    border: 1px solid #0000002b;
+    border-radius: 9999px;
+    transition:
+      translate 0.15s cubic-bezier(0.2, 0.7, 0.3, 1),
+      box-shadow 0.15s cubic-bezier(0.2, 0.7, 0.3, 1),
+      opacity 0.2s ease-out,
+      filter 0.15s ease-out;
+  }
+  .btn-key-light:hover {
+    --k: 4px;
+    filter: brightness(1.04);
+    translate: 0 1px;
+  }
+  .btn-key-light:active {
+    --k: 1px;
+    translate: 0 4px;
+  }
+  /* V5: a thick 3D slab (the How-to-enter step card); depth, side colour and an extra glow are set per use */
+  .slab-3d {
+    --slab-depth: 0.75rem;
+    box-shadow:
+      inset 0 1px 0 #ffffff24,
+      inset 0 -3px 0 #00000059,
+      0 var(--slab-depth) 0 var(--slab-side, #04060f),
+      0 var(--slab-depth) 0 1px rgb(var(--glow) / 0.14),
+      0 calc(var(--slab-depth) + 1rem) 2.5rem -0.5rem #000000e6,
+      var(--slab-extra, 0 0 #0000);
+  }
   .neu-inset {
     background: #03060f;
     border: 1px solid #00000080;
@@ -705,14 +744,15 @@
   from { opacity: 0; transform: scale(2.2) rotate(-18deg); }
   to { opacity: 1; transform: none; }
 }
-/* Slot-machine digits: each strip holds 0–9 twice and lands on --d */
+/* Slot-machine digits: each strip holds 0–9 twice and lands on --d.
+   Row height and roll time are settable (V5: taller 1.4em rows with faded edges, quicker 0.9s roll). */
 .odo-strip {
-  transform: translateY(calc((10 + var(--d)) * -1em));
-  animation: odo-roll 1.5s cubic-bezier(0.2, 0.75, 0.15, 1) both;
+  transform: translateY(calc((10 + var(--d)) * -1 * var(--odo-row, 1em)));
+  animation: odo-roll var(--odo-ms, 1.5s) cubic-bezier(0.2, 0.75, 0.15, 1) both;
 }
 @keyframes odo-roll {
   from { transform: translateY(0); }
-  to { transform: translateY(calc((10 + var(--d)) * -1em)); }
+  to { transform: translateY(calc((10 + var(--d)) * -1 * var(--odo-row, 1em))); }
 }
 /* Items popping in one by one (laptops, reward tiles) */
 .story-pop {
@@ -1213,4 +1253,42 @@ html.has-candle-cursor * {
 @keyframes card-stamp-impact {
   from { opacity: 0.85; transform: scale(0.97); }
   to { opacity: 0; transform: scale(1.25); }
+}
+
+/* ───────── V5 (src/v5): the live site's tweaks to shared styles, only while V5 is on screen (html.v5-live) ───────── */
+html.v5-live.reveal-ready [data-reveal] {
+  transition:
+    opacity 0.45s var(--ease-arena-out) var(--reveal-delay, 0s),
+    transform 0.45s var(--ease-arena-out) var(--reveal-delay, 0s);
+}
+html.v5-live.reveal-ready .key-cap[data-reveal] {
+  transition:
+    opacity 0.45s var(--ease-arena-out) var(--reveal-delay, 0s),
+    transform 0.45s var(--ease-arena-out) var(--reveal-delay, 0s),
+    translate 0.22s cubic-bezier(0.2, 0.7, 0.3, 1),
+    box-shadow 0.22s cubic-bezier(0.2, 0.7, 0.3, 1);
+}
+/* leaderboard entrance: quicker rise, medals drop in sooner, rows slide in faster */
+html.v5-live .lb.lb-in [data-podium] {
+  animation: lb-rise 0.6s cubic-bezier(0.22, 1, 0.36, 1) var(--d, 0s) both;
+}
+html.v5-live .lb.lb-in [data-coin] {
+  animation: lb-coin 0.6s cubic-bezier(0.2, 1.25, 0.4, 1) calc(var(--d, 0s) + 0.25s) both;
+}
+html.v5-live .lb.lb-in [data-row] {
+  animation: lb-row 0.4s cubic-bezier(0.22, 1, 0.36, 1) var(--d, 0s) both;
+}
+/* the beam cards' 1px border keeps a soft accent tint where the moving beam isn't */
+html.v5-live .arena-beam {
+  background: color-mix(in srgb, var(--accent-glow) 30%, transparent);
+}
+@media (prefers-reduced-motion: reduce) {
+  html.v5-live .step-in {
+    animation: none;
+  }
+}
+/* no snapping in V5, so sections are as tall as their content (not a full screen each) */
+html.v5-live .fold {
+  display: block;
+  min-height: 0;
 }

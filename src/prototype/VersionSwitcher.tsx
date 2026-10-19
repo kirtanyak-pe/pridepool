@@ -6,6 +6,7 @@ const VERSION_OPTIONS: { value: Version; label: string }[] = [
   { value: 'v2', label: 'V2' },
   { value: 'v3', label: 'V3' },
   { value: 'v4', label: 'V4 Final' },
+  { value: 'v5', label: 'V5 Live site' },
 ];
 
 const ACCENT_OPTIONS: { value: Accent; label: string; swatch: string }[] = [
@@ -156,9 +157,9 @@ export default function VersionSwitcher({ version, onVersionChange, accent, onAc
             <Segmented label="First screen" options={HERO_OPTIONS} value={hero} onChange={onHeroChange} disabled={version !== 'v2'} />
           </div>
 
-          <p className="mt-4 text-xs font-semibold text-white/80">Rank badge {version !== 'v3' && version !== 'v4' && <span className="font-normal text-white/50">· V3/V4 only</span>}</p>
+          <p className="mt-4 text-xs font-semibold text-white/80">Rank badge {version !== 'v3' && version !== 'v4' && version !== 'v5' && <span className="font-normal text-white/50">· V3–V5 only</span>}</p>
           <div className="mt-1.5">
-            <Segmented label="Rank badge" options={BADGE_OPTIONS} value={badge} onChange={onBadgeChange} disabled={version !== 'v3' && version !== 'v4'} />
+            <Segmented label="Rank badge" options={BADGE_OPTIONS} value={badge} onChange={onBadgeChange} disabled={version !== 'v3' && version !== 'v4' && version !== 'v5'} />
           </div>
 
           <p className="mt-4 text-xs font-semibold text-white/80">Accent colour {version === 'v1' && <span className="font-normal text-white/50">· Redesign only</span>}</p>
