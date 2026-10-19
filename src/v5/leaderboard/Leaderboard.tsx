@@ -444,11 +444,12 @@ function RankingsTable({
  * Booming Bulls VIP Access card: a white 3D key like the "Open Lemonn App" button (.btn-key-light: thick edge,
  * sinks a little on hover, presses down on tap), so it reads as clickable. It's stamped onto the page once the
  * leaderboard lands (same press-in as the hero's World's #2 stamp, .stamp-press) and keeps that tilt.
- * Desktop: to the right of the heading. Phones: centred under it (no free space around the podium there).
+ * Desktop: in the open space above the bronze podium, right of the gold one. Phones: centred under the heading
+ * (no free space around the podium there). `className` places it.
  */
-function VipStamp({ play }: { play: boolean }) {
+function VipStamp({ play, className = '' }: { play: boolean; className?: string }) {
   return (
-    <div className={`relative mx-auto w-fit lg:absolute lg:right-0 lg:top-6 lg:mx-0 ${play ? 'stamp-press' : 'pointer-events-none opacity-0'}`}>
+    <div className={`w-fit ${className} ${play ? 'stamp-press' : 'pointer-events-none opacity-0'}`}>
       {/* impact ring when it lands */}
       <span aria-hidden="true" className={`absolute inset-[-12%] rounded-[1.25rem] border-2 border-accent/70 ${play ? 'stamp-press-impact' : 'hidden'}`} />
       <a
@@ -537,13 +538,16 @@ export default function Leaderboard({ board = BOARD }: { board?: Board | null })
             'Standings unavailable'
           )}
         </p>
-        <div className="mt-7 lg:mt-0">
-          <VipStamp play={landed} />
+        {/* phones: under the heading */}
+        <div className="mt-7 lg:hidden">
+          <VipStamp play={landed} className="relative mx-auto" />
         </div>
       </div>
 
       {data ? (
         <div data-sticky-avoid className="relative mx-auto mt-8 w-full max-w-[63.53rem] lg:mt-12">
+          {/* desktop: above the bronze podium */}
+          <VipStamp play={landed} className="absolute right-[3%] top-[-1%] z-20 hidden lg:block" />
           <PodiumScene rolling={inView} art={art} top={data.top} />
           <RankingsTable contest={data.contest} rows={rows} page={page} pages={pages} loading={false} error={null} onPage={onPage} />
         </div>
