@@ -498,8 +498,8 @@ function VipStamp({ play, className = '' }: { play: boolean; className?: string 
  * It slides in once the leaderboard fills 70% of the screen (phones: half) and slides back out when you leave the section.
  * Desktop: it sits on the same line as the "The Leaderboard" heading and moves with it as you scroll; once the
  * heading has gone up under the navbar it stops a little below the navbar and stays there.
- * Phones: centred at the bottom, 20px above the fixed Join bar (85px tall), growing in from the bottom (scale 0 → 1),
- * and only while that bar is showing. It hugs its content (phone sizes are 1.3× the original compact card).
+ * Phones: full width (16px in from each side), 24px above the fixed Join bar (85px tall), growing in from the
+ * bottom (scale 0 → 1), and only while that bar is showing. Icon + text on the left, Get now on the right.
  */
 // it shows while the leaderboard fills at least this much of the screen (desktop 70%, phones 50%)
 const VIP_SHOW_SHARE = { desktop: 0.7, phone: 0.5 };
@@ -593,14 +593,14 @@ function VipFloat({ section }: { section: React.RefObject<HTMLElement | null> })
       className={`fixed z-40 ease-arena-out [filter:drop-shadow(0_0.75rem_1.25rem_rgba(0,0,0,0.85))_drop-shadow(0_0_0.5rem_rgba(0,0,0,0.55))] motion-reduce:transition-none ${
         desktop
           ? `right-0 transition-[translate] duration-500 ${shown ? 'translate-x-0' : 'pointer-events-none translate-x-[calc(100%+1rem)]'}`
-          : // phones: centred, 20px above the fixed Join bar (border + 0.75rem + 3.5rem button + 1rem + safe area); w-max = hug
-            `bottom-[calc(5.25rem+1px+1.25rem+env(safe-area-inset-bottom,0px))] left-1/2 w-max origin-bottom -translate-x-1/2 transition-[scale,opacity] duration-300 ${shown ? 'scale-100 opacity-100' : 'pointer-events-none scale-0 opacity-0'}`
+          : // phones: 16px from each side, 24px above the fixed Join bar (border + 0.75rem + 3.5rem button + 1rem + safe area)
+            `bottom-[calc(5.25rem+1px+1.5rem+env(safe-area-inset-bottom,0px))] inset-x-4 origin-bottom transition-[scale,opacity] duration-300 ${shown ? 'scale-100 opacity-100' : 'pointer-events-none scale-0 opacity-0'}`
       }`}
     >
       <a
         {...VIP_LINK}
         aria-label="Booming Bulls: exclusive VIP access, only for you. Get now (opens in a new tab)"
-        className="btn-key-light group flex items-center gap-3 whitespace-nowrap rounded-[0.975rem] py-2.5 pl-4 pr-3 [--k:5px] lg:gap-4 lg:rounded-l-[1.25rem] lg:rounded-r-none lg:border-r-0 lg:py-3 lg:pl-4 lg:pr-5 lg:[--k:5px]"
+        className="btn-key-light group flex items-center gap-3 whitespace-nowrap rounded-[0.975rem] py-2.5 pl-4 pr-4 [--k:5px] lg:gap-4 lg:rounded-l-[1.25rem] lg:rounded-r-none lg:border-r-0 lg:py-3 lg:pl-4 lg:pr-5 lg:[--k:5px]"
       >
         <img src="booming-bulls-icon.svg" alt="" aria-hidden="true" width="21" height="24" className="h-9 w-auto shrink-0 lg:h-10" />
         <span aria-hidden="true" className="flex flex-col items-start leading-none">
@@ -608,7 +608,7 @@ function VipFloat({ section }: { section: React.RefObject<HTMLElement | null> })
           <span className="my-[0.1625rem] text-[1.22rem] font-extrabold uppercase tracking-[-0.02em] text-[#0b0b12] lg:my-1 lg:text-[1.5rem]">VIP Access</span>
           <span className="text-[0.65rem] font-bold uppercase tracking-[0.14em] text-black/55 lg:text-[0.6875rem]">only for you</span>
         </span>
-        <UnlockPill label="Get now" className="px-3 py-2 text-[0.73rem] tracking-[0.08em] lg:px-4 lg:py-2.5 lg:text-[0.8125rem] lg:tracking-[0.14em]" />
+        <UnlockPill label="Get now" className="ml-auto px-3 py-2 text-[0.73rem] tracking-[0.08em] lg:ml-0 lg:px-4 lg:py-2.5 lg:text-[0.8125rem] lg:tracking-[0.14em]" />
       </a>
     </div>
   );
