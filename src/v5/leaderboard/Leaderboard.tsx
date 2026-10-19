@@ -498,7 +498,8 @@ function VipStamp({ play, className = '' }: { play: boolean; className?: string 
  * It slides in once the leaderboard fills 70% of the screen (phones: half) and slides back out when you leave the section.
  * Desktop: it sits on the same line as the "The Leaderboard" heading and moves with it as you scroll; once the
  * heading has gone up under the navbar it stops a little below the navbar and stays there.
- * Phones: centred at the bottom, just above the fixed Join bar (85px tall), growing in from the bottom (scale 0 → 1).
+ * Phones: centred at the bottom, 20px above the fixed Join bar (85px tall), growing in from the bottom (scale 0 → 1),
+ * and only while that bar is showing. It hugs its content (phone sizes are 1.3× the original compact card).
  */
 // it shows while the leaderboard fills at least this much of the screen (desktop 70%, phones 50%)
 const VIP_SHOW_SHARE = { desktop: 0.7, phone: 0.5 };
@@ -551,8 +552,11 @@ function VipFloat({ section }: { section: React.RefObject<HTMLElement | null> })
       frame = 0;
       const r = el.getBoundingClientRect();
       const visible = Math.min(r.bottom, window.innerHeight) - Math.max(r.top, 0);
-      const share = window.matchMedia('(min-width: 1024px)').matches ? VIP_SHOW_SHARE.desktop : VIP_SHOW_SHARE.phone;
-      setShown(visible >= window.innerHeight * share);
+      const isDesktop = window.matchMedia('(min-width: 1024px)').matches;
+      const share = isDesktop ? VIP_SHOW_SHARE.desktop : VIP_SHOW_SHARE.phone;
+      // phones: it sits on top of the fixed Join bar, so it only shows while that bar is showing
+      const barShown = isDesktop || document.querySelector('aside[aria-label="Join the pool"]')?.getAttribute('aria-hidden') === 'false';
+      setShown(visible >= window.innerHeight * share && barShown);
     };
     const schedule = () => {
       if (!frame) frame = requestAnimationFrame(check);
@@ -560,8 +564,12 @@ function VipFloat({ section }: { section: React.RefObject<HTMLElement | null> })
     check();
     window.addEventListener('scroll', schedule, { passive: true });
     window.addEventListener('resize', schedule);
+    // the Join bar shows / hides on its own rules (StickyJoin): follow it
+    const bar = new MutationObserver(schedule);
+    bar.observe(document.body, { subtree: true, attributes: true, attributeFilter: ['aria-hidden'] });
     return () => {
       cancelAnimationFrame(frame);
+      bar.disconnect();
       window.removeEventListener('scroll', schedule);
       window.removeEventListener('resize', schedule);
     };
@@ -574,22 +582,22 @@ function VipFloat({ section }: { section: React.RefObject<HTMLElement | null> })
       className={`fixed z-40 ease-arena-out motion-reduce:transition-none ${
         desktop
           ? `right-0 transition-[translate] duration-500 ${shown ? 'translate-x-0' : 'pointer-events-none translate-x-[calc(100%+1rem)]'}`
-          : // phones: centred, 10px above the fixed Join bar (border + 0.75rem + 3.5rem button + 1rem + safe area)
-            `bottom-[calc(5.25rem+1px+0.625rem+env(safe-area-inset-bottom,0px))] left-1/2 origin-bottom -translate-x-1/2 transition-[scale,opacity] duration-300 ${shown ? 'scale-100 opacity-100' : 'pointer-events-none scale-0 opacity-0'}`
+          : // phones: centred, 20px above the fixed Join bar (border + 0.75rem + 3.5rem button + 1rem + safe area); w-max = hug
+            `bottom-[calc(5.25rem+1px+1.25rem+env(safe-area-inset-bottom,0px))] left-1/2 w-max origin-bottom -translate-x-1/2 transition-[scale,opacity] duration-300 ${shown ? 'scale-100 opacity-100' : 'pointer-events-none scale-0 opacity-0'}`
       }`}
     >
       <a
         {...VIP_LINK}
         aria-label="Booming Bulls: exclusive VIP access, only for you. Get now (opens in a new tab)"
-        className="btn-key-light group flex items-center gap-2.5 whitespace-nowrap rounded-xl py-2 pl-3 pr-2.5 [--k:4px] lg:gap-4 lg:rounded-l-[1.25rem] lg:rounded-r-none lg:border-r-0 lg:py-3 lg:pl-4 lg:pr-5 lg:[--k:5px]"
+        className="btn-key-light group flex items-center gap-3 whitespace-nowrap rounded-[0.975rem] py-2.5 pl-4 pr-3 [--k:5px] lg:gap-4 lg:rounded-l-[1.25rem] lg:rounded-r-none lg:border-r-0 lg:py-3 lg:pl-4 lg:pr-5 lg:[--k:5px]"
       >
-        <img src="booming-bulls-icon.svg" alt="" aria-hidden="true" width="21" height="24" className="h-7 w-auto shrink-0 lg:h-10" />
+        <img src="booming-bulls-icon.svg" alt="" aria-hidden="true" width="21" height="24" className="h-9 w-auto shrink-0 lg:h-10" />
         <span aria-hidden="true" className="flex flex-col items-start leading-none">
-          <span className="text-[0.5rem] font-bold uppercase tracking-[0.14em] text-black/55 lg:text-[0.6875rem]">Exclusive</span>
-          <span className="my-0.5 text-[0.9375rem] font-extrabold uppercase tracking-[-0.02em] text-[#0b0b12] lg:my-1 lg:text-[1.5rem]">VIP Access</span>
-          <span className="text-[0.5rem] font-bold uppercase tracking-[0.14em] text-black/55 lg:text-[0.6875rem]">only for you</span>
+          <span className="text-[0.65rem] font-bold uppercase tracking-[0.14em] text-black/55 lg:text-[0.6875rem]">Exclusive</span>
+          <span className="my-[0.1625rem] text-[1.22rem] font-extrabold uppercase tracking-[-0.02em] text-[#0b0b12] lg:my-1 lg:text-[1.5rem]">VIP Access</span>
+          <span className="text-[0.65rem] font-bold uppercase tracking-[0.14em] text-black/55 lg:text-[0.6875rem]">only for you</span>
         </span>
-        <UnlockPill label="Get now" className="px-2.5 py-1.5 text-[0.5625rem] tracking-[0.08em] lg:px-4 lg:py-2.5 lg:text-[0.8125rem] lg:tracking-[0.14em]" />
+        <UnlockPill label="Get now" className="px-3 py-2 text-[0.73rem] tracking-[0.08em] lg:px-4 lg:py-2.5 lg:text-[0.8125rem] lg:tracking-[0.14em]" />
       </a>
     </div>
   );
