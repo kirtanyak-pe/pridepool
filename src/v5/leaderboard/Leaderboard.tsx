@@ -547,7 +547,7 @@ export default function Leaderboard({ board = BOARD }: { board?: Board | null })
       {data ? (
         <div data-sticky-avoid className="relative mx-auto mt-8 w-full max-w-[63.53rem] lg:mt-12">
           {/* desktop: above the bronze podium */}
-          <VipStamp play={landed} className="absolute right-[3%] top-[-1%] z-20 hidden lg:block" />
+          <VipStamp play={landed} className="absolute right-[-10%] top-[-4rem] z-20 hidden lg:block" />
           <PodiumScene rolling={inView} art={art} top={data.top} />
           <RankingsTable contest={data.contest} rows={rows} page={page} pages={pages} loading={false} error={null} onPage={onPage} />
         </div>
