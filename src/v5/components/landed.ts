@@ -1,12 +1,11 @@
 /**
- * "Landed" = a section has arrived at the top of the screen, just below the Navbar
- * (the end of a snap). Section animations wait for this, so they play while you look at them,
- * not while you're still scrolling towards them.
+ * "Landed" = a section has come into view. Section animations wait for this, so they play while you look at
+ * them, not before you get there.
  *
- * The observer watches a thin band just under the Navbar (8%–15% of the screen height).
- * A section touches it when its top reaches the band, or while you're inside it (e.g. after a nav-link jump).
+ * V5 scrolls freely (no snapping), so a section counts as arrived as soon as its top is 10% of the screen
+ * height into the view — its animations start right away, whatever the sections above are still doing.
  */
-export const LANDED_OPTIONS: IntersectionObserverInit = { rootMargin: '-8% 0px -85% 0px', threshold: 0 };
+export const LANDED_OPTIONS: IntersectionObserverInit = { rootMargin: '0px 0px -10% 0px', threshold: 0 };
 
 /** Calls back once, when the element lands (immediately with reduced motion). Returns a cleanup. */
 export function onLanded(el: Element, cb: () => void): () => void {

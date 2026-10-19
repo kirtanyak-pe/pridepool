@@ -495,11 +495,12 @@ function VipStamp({ play, className = '' }: { play: boolean; className?: string 
 /**
  * 2 · Floating (the chosen one): a widget docked to the right edge of the screen:
  * Booming Bulls bull icon · "Exclusive / VIP ACCESS / only for you" · Get now →.
- * It slides in at the middle of the screen while the leaderboard fills the middle of the screen; as soon as you
+ * It slides in at the middle of the screen once the leaderboard fills half the screen; as soon as you
  * scroll on, it glides up to the top-right, a little below the navbar, and stays there; it slides back out when
  * you leave the section (and comes back in the middle next time).
  */
 const VIP_DOCK_AFTER_PX = 24; // scrolled this far since it appeared → it moves up under the navbar
+const VIP_SHOW_SHARE = 0.5; // it shows while the leaderboard fills at least this much of the screen
 
 function VipFloat({ section }: { section: React.RefObject<HTMLElement | null> }) {
   const [shown, setShown] = useState(false);
@@ -507,10 +508,25 @@ function VipFloat({ section }: { section: React.RefObject<HTMLElement | null> })
   useEffect(() => {
     const el = section.current;
     if (!el) return;
-    // "in the section" = the section crosses the middle band of the screen
-    const io = new IntersectionObserver(([e]) => setShown(e.isIntersecting), { rootMargin: '-35% 0px -35% 0px' });
-    io.observe(el);
-    return () => io.disconnect();
+    // "in the section" = the leaderboard fills at least half the screen
+    let frame = 0;
+    const check = () => {
+      frame = 0;
+      const r = el.getBoundingClientRect();
+      const visible = Math.min(r.bottom, window.innerHeight) - Math.max(r.top, 0);
+      setShown(visible >= window.innerHeight * VIP_SHOW_SHARE);
+    };
+    const schedule = () => {
+      if (!frame) frame = requestAnimationFrame(check);
+    };
+    check();
+    window.addEventListener('scroll', schedule, { passive: true });
+    window.addEventListener('resize', schedule);
+    return () => {
+      cancelAnimationFrame(frame);
+      window.removeEventListener('scroll', schedule);
+      window.removeEventListener('resize', schedule);
+    };
   }, [section]);
   useEffect(() => {
     if (!shown) {
@@ -601,7 +617,7 @@ export default function Leaderboard({ board = BOARD, vipStyle = 'float' }: { boa
   }, []);
 
   return (
-    <section ref={ref} id="leaderboard" aria-labelledby="leaderboard-heading" className={`lb fold arena-container relative overflow-x-clip py-12 lg:py-16 ${inView ? 'lb-in' : ''}`}>
+    <section ref={ref} id="leaderboard" aria-labelledby="leaderboard-heading" className={`lb fold arena-container relative overflow-x-clip py-12 lg:py-16 ${landed ? 'lb-landed' : ''} ${inView ? 'lb-in' : ''}`}>
       <div data-reveal="true" className="relative text-center">
         <p className="inline-flex items-center gap-2 rounded-full neu-inset px-3.5 py-1.5 text-[0.6875rem] font-bold uppercase tracking-[0.16em] text-accent">
           <span aria-hidden="true" className="h-1.5 w-1.5 rotate-45 bg-accent" />

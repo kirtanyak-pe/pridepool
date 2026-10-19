@@ -1292,3 +1292,8 @@ html.v5-live .fold {
   display: block;
   min-height: 0;
 }
+/* V5: the leaderboard table and its rows slide in as soon as the section lands — they don't wait for the
+   podium artwork (that one plays its own entrance once it's loaded) */
+html.v5-live .lb.lb-landed [data-row] {
+  animation: lb-row 0.4s cubic-bezier(0.22, 1, 0.36, 1) var(--d, 0s) both;
+}
