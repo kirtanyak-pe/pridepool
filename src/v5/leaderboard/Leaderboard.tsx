@@ -495,16 +495,52 @@ function VipStamp({ play, className = '' }: { play: boolean; className?: string 
 /**
  * 2 · Floating (the chosen one): a widget docked to the right edge of the screen:
  * Booming Bulls bull icon · "Exclusive / VIP ACCESS / only for you" · Get now →.
- * It slides in at the middle of the screen once the leaderboard fills half the screen; as soon as you
- * scroll on, it glides up to the top-right, a little below the navbar, and stays there; it slides back out when
- * you leave the section (and comes back in the middle next time).
+ * It slides in once the leaderboard fills half the screen and slides back out when you leave the section.
+ * Desktop: it sits on the same line as the "The Leaderboard" heading and moves with it as you scroll; once the
+ * heading has gone up under the navbar it stops a little below the navbar and stays there.
+ * Phones: centred at the bottom, just above the fixed Join bar (85px tall), growing in from the bottom (scale 0 → 1).
  */
-const VIP_DOCK_AFTER_PX = 24; // scrolled this far since it appeared → it moves up under the navbar
 const VIP_SHOW_SHARE = 0.5; // it shows while the leaderboard fills at least this much of the screen
+const VIP_NAV_GAP = 20; // desktop: how far below the navbar it stops (px)
 
 function VipFloat({ section }: { section: React.RefObject<HTMLElement | null> }) {
   const [shown, setShown] = useState(false);
-  const [docked, setDocked] = useState(false);
+  const boxRef = useRef<HTMLDivElement>(null);
+  const [desktop, setDesktop] = useState(() => typeof window !== 'undefined' && window.matchMedia('(min-width: 1024px)').matches);
+  useEffect(() => {
+    const mq = window.matchMedia('(min-width: 1024px)');
+    const on = () => setDesktop(mq.matches);
+    mq.addEventListener('change', on);
+    return () => mq.removeEventListener('change', on);
+  }, []);
+  // Desktop: follow the heading's line, but never above the navbar (+ a small gap)
+  useEffect(() => {
+    if (!desktop) return;
+    const el = section.current;
+    const box = boxRef.current;
+    const heading = el?.querySelector('#leaderboard-heading');
+    if (!el || !box || !heading) return;
+    let frame = 0;
+    const place = () => {
+      frame = 0;
+      const h = heading.getBoundingClientRect();
+      const nav = document.querySelector('header')?.getBoundingClientRect().bottom ?? 0;
+      const top = Math.max(h.top + h.height / 2 - box.offsetHeight / 2, nav + VIP_NAV_GAP);
+      box.style.top = `${Math.round(top)}px`;
+    };
+    const schedule = () => {
+      if (!frame) frame = requestAnimationFrame(place);
+    };
+    place();
+    window.addEventListener('scroll', schedule, { passive: true });
+    window.addEventListener('resize', schedule);
+    return () => {
+      cancelAnimationFrame(frame);
+      window.removeEventListener('scroll', schedule);
+      window.removeEventListener('resize', schedule);
+      box.style.top = '';
+    };
+  }, [desktop, section]);
   useEffect(() => {
     const el = section.current;
     if (!el) return;
@@ -528,28 +564,22 @@ function VipFloat({ section }: { section: React.RefObject<HTMLElement | null> })
       window.removeEventListener('resize', schedule);
     };
   }, [section]);
-  useEffect(() => {
-    if (!shown) {
-      setDocked(false); // next time it appears in the middle again
-      return;
-    }
-    const start = window.scrollY;
-    const onScroll = () => {
-      if (Math.abs(window.scrollY - start) > VIP_DOCK_AFTER_PX) setDocked(true);
-    };
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
-  }, [shown]);
   return (
     <div
+      ref={boxRef}
       aria-hidden={!shown}
       inert={!shown}
-      className={`fixed right-0 z-40 transition-[top,translate] duration-500 ease-arena-out motion-reduce:transition-none ${docked ? 'top-[5.25rem] translate-y-0 lg:top-[6.5rem]' : 'top-1/2 -translate-y-1/2'} ${shown ? 'translate-x-0' : 'pointer-events-none translate-x-[calc(100%+1rem)]'}`}
+      className={`fixed z-40 ease-arena-out motion-reduce:transition-none ${
+        desktop
+          ? `right-0 transition-[translate] duration-500 ${shown ? 'translate-x-0' : 'pointer-events-none translate-x-[calc(100%+1rem)]'}`
+          : // phones: centred, 10px above the fixed Join bar (border + 0.75rem + 3.5rem button + 1rem + safe area)
+            `bottom-[calc(5.25rem+1px+0.625rem+env(safe-area-inset-bottom,0px))] left-1/2 origin-bottom -translate-x-1/2 transition-[scale,opacity] duration-300 ${shown ? 'scale-100 opacity-100' : 'pointer-events-none scale-0 opacity-0'}`
+      }`}
     >
       <a
         {...VIP_LINK}
         aria-label="Booming Bulls: exclusive VIP access, only for you. Get now (opens in a new tab)"
-        className="btn-key-light group flex items-center gap-2.5 whitespace-nowrap rounded-l-xl rounded-r-none border-r-0 py-2 pl-3 pr-2.5 [--k:4px] lg:gap-4 lg:rounded-l-[1.25rem] lg:py-3 lg:pl-4 lg:pr-5 lg:[--k:5px]"
+        className="btn-key-light group flex items-center gap-2.5 whitespace-nowrap rounded-xl py-2 pl-3 pr-2.5 [--k:4px] lg:gap-4 lg:rounded-l-[1.25rem] lg:rounded-r-none lg:border-r-0 lg:py-3 lg:pl-4 lg:pr-5 lg:[--k:5px]"
       >
         <img src="booming-bulls-icon.svg" alt="" aria-hidden="true" width="21" height="24" className="h-7 w-auto shrink-0 lg:h-10" />
         <span aria-hidden="true" className="flex flex-col items-start leading-none">
