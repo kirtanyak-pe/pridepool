@@ -500,6 +500,7 @@ function VipStamp({ play, className = '' }: { play: boolean; className?: string 
  * heading has gone up under the navbar it stops a little below the navbar and stays there.
  * Phones: full width (16px in from each side), 24px above the fixed Join bar (85px tall), growing in from the
  * bottom (scale 0 → 1), and only while that bar is showing. Icon + text on the left, Get now on the right.
+ * Flat on phones (no grey 3D edge, --k:0); desktop keeps the key edge.
  */
 // it shows while the leaderboard fills at least this much of the screen (desktop 70%, phones 50%)
 const VIP_SHOW_SHARE = { desktop: 0.7, phone: 0.5 };
@@ -600,7 +601,7 @@ function VipFloat({ section }: { section: React.RefObject<HTMLElement | null> })
       <a
         {...VIP_LINK}
         aria-label="Booming Bulls: exclusive VIP access, only for you. Get now (opens in a new tab)"
-        className="btn-key-light group flex items-center gap-3 whitespace-nowrap rounded-[0.975rem] py-2.5 pl-4 pr-4 [--k:5px] lg:gap-4 lg:rounded-l-[1.25rem] lg:rounded-r-none lg:border-r-0 lg:py-3 lg:pl-4 lg:pr-5 lg:[--k:5px]"
+        className="btn-key-light group flex items-center gap-3 whitespace-nowrap rounded-[0.975rem] py-2.5 pl-4 pr-4 [--k:0px] lg:gap-4 lg:rounded-l-[1.25rem] lg:rounded-r-none lg:border-r-0 lg:py-3 lg:pl-4 lg:pr-5 lg:[--k:5px]"
       >
         <img src="booming-bulls-icon.svg" alt="" aria-hidden="true" width="21" height="24" className="h-9 w-auto shrink-0 lg:h-10" />
         <span aria-hidden="true" className="flex flex-col items-start leading-none">
