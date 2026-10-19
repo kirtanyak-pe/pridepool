@@ -579,7 +579,8 @@ function VipFloat({ section }: { section: React.RefObject<HTMLElement | null> })
       ref={boxRef}
       aria-hidden={!shown}
       inert={!shown}
-      className={`fixed z-40 ease-arena-out motion-reduce:transition-none ${
+      // a dark shadow under the card + a soft dark halo, so it never melts into white cards behind it
+      className={`fixed z-40 ease-arena-out [filter:drop-shadow(0_0.75rem_1.25rem_rgba(0,0,0,0.85))_drop-shadow(0_0_0.5rem_rgba(0,0,0,0.55))] motion-reduce:transition-none ${
         desktop
           ? `right-0 transition-[translate] duration-500 ${shown ? 'translate-x-0' : 'pointer-events-none translate-x-[calc(100%+1rem)]'}`
           : // phones: centred, 20px above the fixed Join bar (border + 0.75rem + 3.5rem button + 1rem + safe area); w-max = hug
