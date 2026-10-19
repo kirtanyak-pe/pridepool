@@ -139,3 +139,19 @@ export function usePrototypeSettings() {
 
   return { version, setVersion, accent, setAccent, bg, setBg, hero, setHero, badge, setBadge };
 }
+
+/** V5 leaderboard: where the Booming Bulls VIP Access card sits (?vip=current|float|banner). */
+export type VipStyle = 'current' | 'float' | 'banner';
+const VIP_STYLES: VipStyle[] = ['current', 'float', 'banner'];
+
+export function useVipStyle() {
+  const [vip, setVipState] = useState<VipStyle>(() => load('vip', 'pridepool:vip', VIP_STYLES, (raw) => raw, 'current'));
+  const setVip = useCallback((next: VipStyle) => {
+    setVipState(next);
+    save('pridepool:vip', next);
+    const url = new URL(window.location.href);
+    url.searchParams.set('vip', next);
+    window.history.replaceState(null, '', url);
+  }, []);
+  return { vip, setVip };
+}

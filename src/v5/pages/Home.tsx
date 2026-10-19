@@ -33,7 +33,7 @@ const HAS_MOUSE =
  * Then the live leaderboard, the champion's moment, how to enter, the final call, the FAQ and the footer.
  * Free scrolling (no section snapping, no hero scroll lock). The page scales like an image (html.scale-artboard).
  */
-export default function Home({ badgeStyle = 'medal' }: { badgeStyle?: 'medal' | 'stamp' }) {
+export default function Home({ badgeStyle = 'medal', vipStyle = 'current' }: { badgeStyle?: 'medal' | 'stamp'; vipStyle?: 'current' | 'float' | 'banner' }) {
   const [ready, setReady] = useState(false);
   // V5-only style differences in the shared index.css hang off html.v5-live (quicker reveals, leaderboard entrance…)
   useEffect(() => {
@@ -106,7 +106,7 @@ export default function Home({ badgeStyle = 'medal' }: { badgeStyle?: 'medal' | 
       <main id="main" className="relative">
         <Background />
         <ArenaHero badgeStyle={badgeStyle} ready={ready} onIntroDone={onIntroDone} />
-        <Leaderboard />
+        <Leaderboard vipStyle={vipStyle} />
 
         {/* The Champion */}
         <Champion coverReady={introDone} />

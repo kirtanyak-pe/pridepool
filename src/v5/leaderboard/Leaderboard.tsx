@@ -440,37 +440,105 @@ function RankingsTable({
   );
 }
 
+/* ── Booming Bulls VIP Access card: three placements to compare (prototype switcher "VIP card", Shift+L) ── */
+export type VipStyle = 'current' | 'float' | 'banner';
+
+const VIP_LINK = { href: VIP_URL, target: '_blank', rel: 'noopener', 'aria-label': 'Booming Bulls VIP Access: unlock now (opens in a new tab)' } as const;
+
+function VipStars({ children }: { children: ReactNode }) {
+  return (
+    <>
+      <span className="text-[0.5em] text-gold">★</span>
+      {children}
+      <span className="text-[0.5em] text-gold">★</span>
+    </>
+  );
+}
+
+function UnlockPill({ className = '' }: { className?: string }) {
+  return (
+    <span
+      aria-hidden="true"
+      className={`inline-flex shrink-0 items-center gap-1 rounded-full bg-accent font-extrabold uppercase leading-none tracking-[0.14em] text-[var(--accent-ink)] ${className}`}
+    >
+      Unlock now <span className="transition-transform duration-200 group-hover:translate-x-0.5">→</span>
+    </span>
+  );
+}
+
 /**
- * Booming Bulls VIP Access card: a white 3D key like the "Open Lemonn App" button (.btn-key-light: thick edge,
- * sinks a little on hover, presses down on tap), so it reads as clickable. It's stamped onto the page once the
- * leaderboard lands (same press-in as the hero's World's #2 stamp, .stamp-press) and keeps that tilt.
- * Desktop: in the open space above the bronze podium, right of the gold one. Phones: centred under the heading
- * (no free space around the podium there). `className` places it.
+ * 1 · Current: a white 3D key like the "Open Lemonn App" button (.btn-key-light: thick edge, sinks on hover, presses
+ * on tap), stamped onto the page once the leaderboard lands (.stamp-press, keeps the tilt).
+ * Desktop: beside the Live pill, right of the podiums. Phones: centred under the heading. `className` places it.
  */
 function VipStamp({ play, className = '' }: { play: boolean; className?: string }) {
   return (
     <div className={`w-fit ${className} ${play ? 'stamp-press' : 'pointer-events-none opacity-0'}`}>
       {/* impact ring when it lands (never catches clicks: it stays over the card, invisible, after the flash) */}
       <span aria-hidden="true" className={`pointer-events-none absolute inset-[-12%] rounded-[1.25rem] border-2 border-accent/70 ${play ? 'stamp-press-impact' : 'hidden'}`} />
-      <a
-        href={VIP_URL}
-        target="_blank"
-        rel="noopener"
-        aria-label="Booming Bulls VIP Access: unlock now (opens in a new tab)"
-        className="btn-key-light group relative z-10 flex flex-col items-center justify-center rounded-2xl px-4 py-2.5 text-center [--k:5px] lg:rounded-[1.25rem] lg:px-6 lg:py-3.5 lg:[--k:6px]"
-      >
+      <a {...VIP_LINK} className="btn-key-light group relative z-10 flex flex-col items-center justify-center rounded-2xl px-4 py-2.5 text-center [--k:5px] lg:rounded-[1.25rem] lg:px-6 lg:py-3.5 lg:[--k:6px]">
         <span aria-hidden="true" className="text-[0.5625rem] font-extrabold uppercase leading-none tracking-[0.2em] text-black/55 lg:text-[0.75rem]">
           Booming Bulls
         </span>
         <span aria-hidden="true" className="my-1.5 flex items-center gap-1.5 whitespace-nowrap text-[1.375rem] font-extrabold uppercase leading-none tracking-[-0.02em] text-[#0b0b12] lg:my-2 lg:gap-2 lg:text-[2rem]">
-          <span className="text-[0.5em] text-gold">★</span>VIP Access<span className="text-[0.5em] text-gold">★</span>
+          <VipStars>VIP Access</VipStars>
         </span>
-        <span
-          aria-hidden="true"
-          className="inline-flex items-center gap-1 rounded-full bg-accent px-3 py-1 text-[0.625rem] font-extrabold uppercase leading-none tracking-[0.14em] text-[var(--accent-ink)] lg:px-3.5 lg:py-1.5 lg:text-[0.75rem]"
-        >
-          Unlock now <span className="transition-transform duration-200 group-hover:translate-x-0.5">→</span>
+        <UnlockPill className="px-3 py-1 text-[0.625rem] lg:px-3.5 lg:py-1.5 lg:text-[0.75rem]" />
+      </a>
+    </div>
+  );
+}
+
+/**
+ * 2 · Floating: a widget docked to the right edge of the screen, vertically centred. It slides in while the
+ * leaderboard fills the middle of the screen and slides back out when you leave the section.
+ */
+function VipFloat({ section }: { section: React.RefObject<HTMLElement | null> }) {
+  const [shown, setShown] = useState(false);
+  useEffect(() => {
+    const el = section.current;
+    if (!el) return;
+    // "in the section" = the section crosses the middle band of the screen
+    const io = new IntersectionObserver(([e]) => setShown(e.isIntersecting), { rootMargin: '-35% 0px -35% 0px' });
+    io.observe(el);
+    return () => io.disconnect();
+  }, [section]);
+  return (
+    <div
+      aria-hidden={!shown}
+      inert={!shown}
+      className={`fixed right-0 top-1/2 z-40 -translate-y-1/2 transition-transform duration-500 ease-arena-out motion-reduce:transition-none ${shown ? 'translate-x-0' : 'pointer-events-none translate-x-[calc(100%+1rem)]'}`}
+    >
+      <a
+        {...VIP_LINK}
+        className="btn-key-light group flex w-[7.5rem] flex-col items-center rounded-l-2xl rounded-r-none border-r-0 px-2.5 py-3 text-center [--k:4px] lg:w-[10.5rem] lg:rounded-l-[1.25rem] lg:px-4 lg:py-4 lg:[--k:5px]"
+      >
+        <span aria-hidden="true" className="text-[0.5rem] font-extrabold uppercase leading-none tracking-[0.18em] text-black/55 lg:text-[0.625rem]">
+          Booming Bulls
         </span>
+        <span aria-hidden="true" className="mt-1.5 flex flex-col items-center text-[1.125rem] font-extrabold uppercase leading-[0.95] tracking-[-0.02em] text-[#0b0b12] lg:mt-2 lg:text-[1.625rem]">
+          <span className="text-[0.55em] text-gold">★ ★ ★</span>
+          VIP
+          <span>Access</span>
+        </span>
+        <UnlockPill className="mt-2.5 px-2.5 py-1 text-[0.5rem] lg:mt-3 lg:px-3 lg:py-1.5 lg:text-[0.625rem]" />
+      </a>
+    </div>
+  );
+}
+
+/** 3 · Banner: a wide horizontal card centred under the Live pill (stamped in level, .card-stamp). */
+function VipBanner({ play }: { play: boolean }) {
+  return (
+    <div className={`mx-auto mt-6 w-full max-w-[34rem] lg:mt-7 ${play ? 'card-stamp' : 'pointer-events-none opacity-0'}`}>
+      <a {...VIP_LINK} className="btn-key-light group flex items-center justify-between gap-3 rounded-2xl px-4 py-3 text-left [--k:5px] lg:gap-5 lg:rounded-[1.25rem] lg:px-6 lg:py-4 lg:[--k:6px]">
+        <span aria-hidden="true" className="flex min-w-0 flex-col">
+          <span className="text-[0.5625rem] font-extrabold uppercase leading-none tracking-[0.2em] text-black/55 lg:text-[0.6875rem]">Booming Bulls</span>
+          <span className="mt-1.5 flex items-center gap-1.5 whitespace-nowrap text-[1.25rem] font-extrabold uppercase leading-none tracking-[-0.02em] text-[#0b0b12] lg:text-[1.75rem]">
+            <VipStars>VIP Access</VipStars>
+          </span>
+        </span>
+        <UnlockPill className="px-3 py-2 text-[0.625rem] lg:px-4 lg:py-2.5 lg:text-[0.8125rem]" />
       </a>
     </div>
   );
@@ -488,7 +556,7 @@ function view(board: Board | null) {
   };
 }
 
-export default function Leaderboard({ board = BOARD }: { board?: Board | null }) {
+export default function Leaderboard({ board = BOARD, vipStyle = 'current' }: { board?: Board | null; vipStyle?: VipStyle }) {
   const ref = useRef<HTMLElement>(null);
   const data = view(board);
   const [page, setPage] = useState(1);
@@ -538,16 +606,19 @@ export default function Leaderboard({ board = BOARD }: { board?: Board | null })
             'Standings unavailable'
           )}
         </p>
-        {/* phones: under the heading */}
-        <div className="mt-7 lg:hidden">
-          <VipStamp play={landed} className="relative mx-auto" />
-        </div>
+        {vipStyle === 'current' && (
+          // phones: under the heading
+          <div className="mt-7 lg:hidden">
+            <VipStamp play={landed} className="relative mx-auto" />
+          </div>
+        )}
+        {vipStyle === 'banner' && <VipBanner play={landed} />}
       </div>
 
       {data ? (
         <div data-sticky-avoid className="relative mx-auto mt-8 w-full max-w-[63.53rem] lg:mt-12">
-          {/* desktop: above the bronze podium */}
-          <VipStamp play={landed} className="absolute right-[-10%] top-[-4rem] z-20 hidden lg:block" />
+          {/* desktop: beside the Live pill, right of the podiums */}
+          {vipStyle === 'current' && <VipStamp play={landed} className="absolute right-[-10%] top-[-4rem] z-20 hidden lg:block" />}
           <PodiumScene rolling={inView} art={art} top={data.top} />
           <RankingsTable contest={data.contest} rows={rows} page={page} pages={pages} loading={false} error={null} onPage={onPage} />
         </div>
@@ -556,6 +627,7 @@ export default function Leaderboard({ board = BOARD }: { board?: Board | null })
           Standings are temporarily unavailable. Check back shortly.
         </p>
       )}
+      {vipStyle === 'float' && <VipFloat section={ref} />}
     </section>
   );
 }

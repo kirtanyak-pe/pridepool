@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import type { Accent, Bg, BadgeStyle, HeroStyle, Version } from './settings';
+import type { Accent, Bg, BadgeStyle, HeroStyle, Version, VipStyle } from './settings';
 
 const VERSION_OPTIONS: { value: Version; label: string }[] = [
   { value: 'v1', label: 'Original' },
@@ -18,6 +18,12 @@ const ACCENT_OPTIONS: { value: Accent; label: string; swatch: string }[] = [
 const HERO_OPTIONS: { value: HeroStyle; label: string }[] = [
   { value: 'story', label: 'Story (animated)' },
   { value: 'trailer', label: 'Static' },
+];
+
+const VIP_OPTIONS: { value: VipStyle; label: string }[] = [
+  { value: 'current', label: 'Current' },
+  { value: 'float', label: 'Floating' },
+  { value: 'banner', label: 'Banner' },
 ];
 
 const BADGE_OPTIONS: { value: BadgeStyle; label: string }[] = [
@@ -43,6 +49,8 @@ type Props = {
   onHeroChange: (h: HeroStyle) => void;
   badge: BadgeStyle;
   onBadgeChange: (b: BadgeStyle) => void;
+  vip: VipStyle;
+  onVipChange: (v: VipStyle) => void;
 };
 
 /** A row of segmented buttons (radio group). */
@@ -88,7 +96,7 @@ function Segmented<T extends string>({
  * Deliberately styled unlike the site so nobody mistakes it for part of the campaign.
  * Remove this folder and its lines in main.tsx before shipping.
  */
-export default function VersionSwitcher({ version, onVersionChange, accent, onAccentChange, bg, onBgChange, hero, onHeroChange, badge, onBadgeChange }: Props) {
+export default function VersionSwitcher({ version, onVersionChange, accent, onAccentChange, bg, onBgChange, hero, onHeroChange, badge, onBadgeChange, vip, onVipChange }: Props) {
   const [open, setOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
 
@@ -160,6 +168,11 @@ export default function VersionSwitcher({ version, onVersionChange, accent, onAc
           <p className="mt-4 text-xs font-semibold text-white/80">Rank badge {version !== 'v3' && version !== 'v4' && version !== 'v5' && <span className="font-normal text-white/50">· V3–V5 only</span>}</p>
           <div className="mt-1.5">
             <Segmented label="Rank badge" options={BADGE_OPTIONS} value={badge} onChange={onBadgeChange} disabled={version !== 'v3' && version !== 'v4' && version !== 'v5'} />
+          </div>
+
+          <p className="mt-4 text-xs font-semibold text-white/80">VIP card <span className="font-normal text-white/50">· {version !== 'v5' ? 'V5 only' : 'Shift+L to cycle'}</span></p>
+          <div className="mt-1.5">
+            <Segmented label="VIP card" options={VIP_OPTIONS} value={vip} onChange={onVipChange} disabled={version !== 'v5'} />
           </div>
 
           <p className="mt-4 text-xs font-semibold text-white/80">Accent colour {version === 'v1' && <span className="font-normal text-white/50">· Redesign only</span>}</p>
