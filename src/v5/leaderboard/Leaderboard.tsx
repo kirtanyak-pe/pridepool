@@ -449,7 +449,9 @@ function VipStamp({ play }: { play: boolean }) {
   return (
     <a
       href={VIP_URL}
-      aria-label="Booming Bulls VIP Access: unlock now"
+      target="_blank"
+      rel="noopener"
+      aria-label="Booming Bulls VIP Access: unlock now (opens in a new tab)"
       className={`group relative mx-auto block w-fit transition-transform duration-200 hover:scale-[1.04] focus-visible:scale-[1.04] motion-reduce:transition-none lg:absolute lg:right-0 lg:top-6 lg:mx-0 ${play ? '' : 'pointer-events-none opacity-0'}`}
     >
       {/* impact ring when it lands */}

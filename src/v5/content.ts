@@ -63,5 +63,5 @@ export const ANCHORS = {
   laptops: '#enter',
 };
 
-/** Leaderboard stamp: Booming Bulls VIP access. TODO (product): the VIP Access link. */
-export const VIP_URL = '#';
+/** Leaderboard stamp: Booming Bulls VIP access (opens in a new tab). */
+export const VIP_URL = 'https://booming-bulls-mocha.vercel.app/';
