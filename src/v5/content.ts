@@ -62,3 +62,6 @@ export const ANCHORS = {
   pool: '#enter',
   laptops: '#enter',
 };
+
+/** Leaderboard stamp: Booming Bulls VIP access. TODO (product): the VIP Access link. */
+export const VIP_URL = '#';

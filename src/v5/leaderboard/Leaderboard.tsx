@@ -3,7 +3,7 @@ import { artUrl, useLeaderboardArt } from './artStore';
 import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react';
 import Odometer from '../components/Odometer';
 import Flag from './Flag';
-import { POOL } from '../content';
+import { POOL, VIP_URL } from '../content';
 import { BOARD, PAGE_SIZE, pageRows, type Board, type Entry } from './board';
 import {
   BRONZE_MEDAL,
@@ -440,6 +440,37 @@ function RankingsTable({
   );
 }
 
+/**
+ * Rubber stamp "BOOMING BULLS · ★ VIP ACCESS ★ · UNLOCK NOW →", in the same style as the hero's World's #2 stamp
+ * (.stamp-press): pressed onto the page once the leaderboard lands. The whole stamp is the link.
+ * Desktop: to the right of the heading. Phones: centred under it (no free space around the podium there).
+ */
+function VipStamp({ play }: { play: boolean }) {
+  return (
+    <a
+      href={VIP_URL}
+      aria-label="Booming Bulls VIP Access: unlock now"
+      className={`group relative mx-auto block w-fit transition-transform duration-200 hover:scale-[1.04] focus-visible:scale-[1.04] motion-reduce:transition-none lg:absolute lg:right-0 lg:top-6 lg:mx-0 ${play ? '' : 'pointer-events-none opacity-0'}`}
+    >
+      {/* impact ring when it lands */}
+      <span aria-hidden="true" className={`absolute inset-[-12%] rounded-[1.25rem] border-2 border-accent/70 ${play ? 'stamp-press-impact' : 'hidden'}`} />
+      <span
+        aria-hidden="true"
+        className={`flex flex-col items-center justify-center rounded-[0.9rem] border-[0.2rem] border-accent px-3.5 py-2 text-accent lg:rounded-[1.2rem] lg:border-[0.25rem] lg:px-5 lg:py-3 ${play ? 'stamp-press' : ''}`}
+        style={{ boxShadow: 'inset 0 0 0 0.3rem var(--color-bg), inset 0 0 0 0.42rem currentColor, 0 0 1.5rem rgb(var(--accent-glow-rgb) / 0.35)', textShadow: '0 0 1rem rgb(var(--accent-glow-rgb) / 0.55)' }}
+      >
+        <span className="text-[0.5625rem] font-extrabold uppercase leading-none tracking-[0.2em] lg:text-[0.8125rem]">Booming Bulls</span>
+        <span className="my-1.5 flex items-center gap-1.5 whitespace-nowrap text-[1.375rem] font-extrabold uppercase leading-none tracking-[-0.02em] lg:my-2 lg:gap-2 lg:text-[2.125rem]">
+          <span className="text-[0.5em]">★</span>VIP Access<span className="text-[0.5em]">★</span>
+        </span>
+        <span className="flex items-center gap-1 border-t-2 border-current pt-1.5 text-[0.75rem] font-extrabold uppercase leading-none tracking-[0.18em] lg:pt-2 lg:text-[1rem]">
+          Unlock now <span className="transition-transform duration-200 group-hover:translate-x-0.5">→</span>
+        </span>
+      </span>
+    </a>
+  );
+}
+
 /** Board → what the section shows (empty podium places read "Up for grabs") */
 function view(board: Board | null) {
   if (!board || board.status === 'unavailable') return null;
@@ -502,6 +533,9 @@ export default function Leaderboard({ board = BOARD }: { board?: Board | null })
             'Standings unavailable'
           )}
         </p>
+        <div className="mt-7 lg:mt-0">
+          <VipStamp play={landed} />
+        </div>
       </div>
 
       {data ? (
