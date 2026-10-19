@@ -445,10 +445,10 @@ export type VipStyle = 'current' | 'float' | 'banner';
 
 const VIP_LINK = { href: VIP_URL, target: '_blank', rel: 'noopener', 'aria-label': 'Booming Bulls VIP Access: unlock now (opens in a new tab)' } as const;
 
-function VipStars({ children }: { children: ReactNode }) {
+function VipStars({ children, left = true }: { children: ReactNode; left?: boolean }) {
   return (
     <>
-      <span className="text-[0.5em] text-gold">★</span>
+      {left && <span className="text-[0.5em] text-gold">★</span>}
       {children}
       <span className="text-[0.5em] text-gold">★</span>
     </>
@@ -490,7 +490,7 @@ function VipStamp({ play, className = '' }: { play: boolean; className?: string 
 }
 
 /**
- * 2 · Floating: a widget docked to the right edge of the screen, vertically centred. It slides in while the
+ * 2 · Floating: a one-line widget docked to the right edge of the screen, vertically centred. It slides in while the
  * leaderboard fills the middle of the screen and slides back out when you leave the section.
  */
 function VipFloat({ section }: { section: React.RefObject<HTMLElement | null> }) {
@@ -511,17 +511,15 @@ function VipFloat({ section }: { section: React.RefObject<HTMLElement | null> })
     >
       <a
         {...VIP_LINK}
-        className="btn-key-light group flex w-[7.5rem] flex-col items-center rounded-l-2xl rounded-r-none border-r-0 px-2.5 py-3 text-center [--k:4px] lg:w-[10.5rem] lg:rounded-l-[1.25rem] lg:px-4 lg:py-4 lg:[--k:5px]"
+        className="btn-key-light group flex items-center gap-2 whitespace-nowrap rounded-l-xl rounded-r-none border-r-0 py-2 pl-3 pr-2.5 [--k:4px] lg:gap-4 lg:rounded-l-[1.25rem] lg:py-3.5 lg:pl-5 lg:pr-5 lg:[--k:5px]"
       >
-        <span aria-hidden="true" className="text-[0.5rem] font-extrabold uppercase leading-none tracking-[0.18em] text-black/55 lg:text-[0.625rem]">
+        <span aria-hidden="true" className="text-[0.4375rem] font-extrabold uppercase leading-none tracking-[0.12em] text-black/55 lg:text-[0.6875rem] lg:tracking-[0.18em]">
           Booming Bulls
         </span>
-        <span aria-hidden="true" className="mt-1.5 flex flex-col items-center text-[1.125rem] font-extrabold uppercase leading-[0.95] tracking-[-0.02em] text-[#0b0b12] lg:mt-2 lg:text-[1.625rem]">
-          <span className="text-[0.55em] text-gold">★ ★ ★</span>
-          VIP
-          <span>Access</span>
+        <span aria-hidden="true" className="flex items-center gap-1 text-[0.8125rem] font-extrabold uppercase leading-none tracking-[-0.02em] text-[#0b0b12] lg:gap-1.5 lg:text-[1.5rem]">
+          VIP Access<span className="text-[0.5em] text-gold">★</span>
         </span>
-        <UnlockPill className="mt-2.5 px-2.5 py-1 text-[0.5rem] lg:mt-3 lg:px-3 lg:py-1.5 lg:text-[0.625rem]" />
+        <UnlockPill className="px-2 py-1 text-[0.5rem] tracking-[0.08em] lg:px-3.5 lg:py-2 lg:text-[0.75rem] lg:tracking-[0.14em]" />
       </a>
     </div>
   );
@@ -535,7 +533,7 @@ function VipBanner({ play }: { play: boolean }) {
         <span aria-hidden="true" className="flex min-w-0 flex-col">
           <span className="text-[0.5625rem] font-extrabold uppercase leading-none tracking-[0.2em] text-black/55 lg:text-[0.6875rem]">Booming Bulls</span>
           <span className="mt-1.5 flex items-center gap-1.5 whitespace-nowrap text-[1.25rem] font-extrabold uppercase leading-none tracking-[-0.02em] text-[#0b0b12] lg:text-[1.75rem]">
-            <VipStars>VIP Access</VipStars>
+            <VipStars left={false}>VIP Access</VipStars>
           </span>
         </span>
         <UnlockPill className="px-3 py-2 text-[0.625rem] lg:px-4 lg:py-2.5 lg:text-[0.8125rem]" />
