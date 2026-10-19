@@ -441,35 +441,37 @@ function RankingsTable({
 }
 
 /**
- * Rubber stamp "BOOMING BULLS · ★ VIP ACCESS ★ · UNLOCK NOW →", in the same style as the hero's World's #2 stamp
- * (.stamp-press): pressed onto the page once the leaderboard lands. The whole stamp is the link.
+ * Booming Bulls VIP Access card: a white 3D key like the "Open Lemonn App" button (.btn-key-light: thick edge,
+ * sinks a little on hover, presses down on tap), so it reads as clickable. It's stamped onto the page once the
+ * leaderboard lands (same press-in as the hero's World's #2 stamp, .stamp-press) and keeps that tilt.
  * Desktop: to the right of the heading. Phones: centred under it (no free space around the podium there).
  */
 function VipStamp({ play }: { play: boolean }) {
   return (
-    <a
-      href={VIP_URL}
-      target="_blank"
-      rel="noopener"
-      aria-label="Booming Bulls VIP Access: unlock now (opens in a new tab)"
-      className={`group relative mx-auto block w-fit transition-transform duration-200 hover:scale-[1.04] focus-visible:scale-[1.04] motion-reduce:transition-none lg:absolute lg:right-0 lg:top-6 lg:mx-0 ${play ? '' : 'pointer-events-none opacity-0'}`}
-    >
+    <div className={`relative mx-auto w-fit lg:absolute lg:right-0 lg:top-6 lg:mx-0 ${play ? 'stamp-press' : 'pointer-events-none opacity-0'}`}>
       {/* impact ring when it lands */}
       <span aria-hidden="true" className={`absolute inset-[-12%] rounded-[1.25rem] border-2 border-accent/70 ${play ? 'stamp-press-impact' : 'hidden'}`} />
-      <span
-        aria-hidden="true"
-        className={`flex flex-col items-center justify-center rounded-[0.9rem] border-[0.2rem] border-accent px-3.5 py-2 text-accent lg:rounded-[1.2rem] lg:border-[0.25rem] lg:px-5 lg:py-3 ${play ? 'stamp-press' : ''}`}
-        style={{ boxShadow: 'inset 0 0 0 0.3rem var(--color-bg), inset 0 0 0 0.42rem currentColor, 0 0 1.5rem rgb(var(--accent-glow-rgb) / 0.35)', textShadow: '0 0 1rem rgb(var(--accent-glow-rgb) / 0.55)' }}
+      <a
+        href={VIP_URL}
+        target="_blank"
+        rel="noopener"
+        aria-label="Booming Bulls VIP Access: unlock now (opens in a new tab)"
+        className="btn-key-light group flex flex-col items-center justify-center rounded-2xl px-4 py-2.5 text-center [--k:5px] lg:rounded-[1.25rem] lg:px-6 lg:py-3.5 lg:[--k:6px]"
       >
-        <span className="text-[0.5625rem] font-extrabold uppercase leading-none tracking-[0.2em] lg:text-[0.8125rem]">Booming Bulls</span>
-        <span className="my-1.5 flex items-center gap-1.5 whitespace-nowrap text-[1.375rem] font-extrabold uppercase leading-none tracking-[-0.02em] lg:my-2 lg:gap-2 lg:text-[2.125rem]">
-          <span className="text-[0.5em]">★</span>VIP Access<span className="text-[0.5em]">★</span>
+        <span aria-hidden="true" className="text-[0.5625rem] font-extrabold uppercase leading-none tracking-[0.2em] text-black/55 lg:text-[0.75rem]">
+          Booming Bulls
         </span>
-        <span className="flex items-center gap-1 border-t-2 border-current pt-1.5 text-[0.75rem] font-extrabold uppercase leading-none tracking-[0.18em] lg:pt-2 lg:text-[1rem]">
+        <span aria-hidden="true" className="my-1.5 flex items-center gap-1.5 whitespace-nowrap text-[1.375rem] font-extrabold uppercase leading-none tracking-[-0.02em] text-[#0b0b12] lg:my-2 lg:gap-2 lg:text-[2rem]">
+          <span className="text-[0.5em] text-gold">★</span>VIP Access<span className="text-[0.5em] text-gold">★</span>
+        </span>
+        <span
+          aria-hidden="true"
+          className="inline-flex items-center gap-1 rounded-full bg-accent px-3 py-1 text-[0.625rem] font-extrabold uppercase leading-none tracking-[0.14em] text-[var(--accent-ink)] lg:px-3.5 lg:py-1.5 lg:text-[0.75rem]"
+        >
           Unlock now <span className="transition-transform duration-200 group-hover:translate-x-0.5">→</span>
         </span>
-      </span>
-    </a>
+      </a>
+    </div>
   );
 }
 
